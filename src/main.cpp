@@ -1,6 +1,5 @@
 #include <iostream>
 #include <SDL.h>
-#include <SDL_image.h>
 #include "resources.h"
 #include "cleanup.h"
 #include "logger.h"
@@ -16,12 +15,6 @@ int main(int argc, char* argv[])
 {
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
 		Logger::logSDLError("SDL_Init");
-		return 1;
-	}
-
-	if ((IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) != IMG_INIT_PNG) {
-		Logger::logSDLError("IMG_Init");
-		SDL_Quit();
 		return 1;
 	}
 
@@ -45,7 +38,6 @@ int main(int argc, char* argv[])
 	SDL_Texture* spritesheetTexture = spritesheet.load(renderer);
 	if (spritesheetTexture == nullptr) {
 		cleanup(spritesheetTexture, renderer, window);
-		IMG_Quit();
 		SDL_Quit();
 		return 1;
 	}
@@ -69,14 +61,13 @@ int main(int argc, char* argv[])
 			}
 		}
 
+		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+
+
 		//Render the scene
 		SDL_RenderClear(renderer);
 
-		SDL_Rect rect;
-		rect.x = 0;
-		rect.y = 0;
-		rect.w = 640;
-		rect.h = 480;
+		SDL_Rect rect{225, 192, 31, 16}; // x, y, w, h
 		Sprite sprite(renderer, spritesheetTexture, rect);
 		sprite.render(0, 0);
 
@@ -84,7 +75,6 @@ int main(int argc, char* argv[])
 	}
 
 	cleanup(spritesheetTexture, renderer, window);
-	IMG_Quit();
 	SDL_Quit();
 
 	return 0;
