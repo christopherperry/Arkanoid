@@ -9,11 +9,16 @@
 #include "TextureLoader.h"
 #include "sprites/SpriteRenderer.h"
 
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
 
 // The tiles are square 31x31
 const int TILE_SIZE = 31;
+
+// Let's do 11 bricks and a wall on each side for now
+const int NUM_TILES_WIDE = 13;
+const int NUM_TILES_HIGH = 16;
+
+constexpr int WINDOW_WIDTH = TILE_SIZE * NUM_TILES_WIDE;
+constexpr int WINDOW_HEIGHT = TILE_SIZE * NUM_TILES_HIGH;
 
 enum SpriteId
 {
@@ -111,7 +116,7 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	SDL_Window *window = SDL_CreateWindow("Hello World!", 100, 100, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+	SDL_Window *window = SDL_CreateWindow("Hello World!", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
 	if (window == nullptr) {
 		Logger::logSDLError("SDL_CreateWindow");
 		SDL_Quit();
@@ -167,7 +172,7 @@ int main(int argc, char *argv[])
 		//Render the scene
 		SDL_RenderClear(renderer);
 
-		spriteRenderer.render(spritesheet, spriteId, SCREEN_WIDTH / 2.0, SCREEN_HEIGHT / 2.0);
+		spriteRenderer.render(spritesheet, spriteId, WINDOW_WIDTH / 2.0, WINDOW_HEIGHT / 2.0);
 
 		SDL_RenderPresent(renderer);
 	}
