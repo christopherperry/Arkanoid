@@ -15,33 +15,39 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\logger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\sprites\spritesheet.cpp">
+    <ClCompile Include="src\TextureLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\sprites\sprite.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\logger.cpp">
+    <ClCompile Include="src\sprites\SpriteRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\sprites\sprite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\sprites\spritesheet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\cleanup.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\logger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\resources.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\sprites\sprite.h">
+    <ClInclude Include="src\TextureLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\logger.h">
+    <ClInclude Include="src\sprites\SpriteRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

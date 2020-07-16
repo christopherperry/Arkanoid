@@ -1,22 +1,11 @@
 #pragma once
 
 #include <SDL.h>
-#include <string>
+#include <map>
+#include "sprite.h"
 
-class Spritesheet
+struct Spritesheet
 {
-private:
-	std::string filename;
-public:
-	Spritesheet(const std::string filename);
-
-	/**
-	 * Loads an image into a texture on the rendering device.
-	 *
-	 * @param file The image file to load
-	 * @param ren The renderer to load the texture onto
-	 * @return the loaded texture, or nullptr if something went wrong.
-	*/
-	SDL_Texture* load(SDL_Renderer* renderer);
-
+	SDL_Texture* texture;
+	std::map<int, Sprite> sprites;
 };
