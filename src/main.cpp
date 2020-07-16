@@ -36,14 +36,20 @@ enum SpriteId
 	WALL_LEFT_STRAIGHT,
 	WALL_LEFT_RIVETED,
 	WALL_RIGHT_STRAIGHT,
-	WALL_RIGHT_RIVETED
+	WALL_RIGHT_RIVETED,
+	WALL_TOP_PLAIN,
+	WALL_TOP_RIVETED,
+	WALL_TOP_EMITER_IDLE,
+	WALL_TOP_EMITER_ANIM_1,
+	WALL_TOP_EMITER_ANIM_2,
+	WALL_TOP_EMITER_OPEN,
 };
 
 SpriteId& operator++(SpriteId& s, int)
 {
 	switch (s)
 	{
-	case WALL_RIGHT_RIVETED:
+	case WALL_TOP_EMITER_OPEN:
 		return s = BRICK_YELLOW;
 	default:
 		return s = (SpriteId)(s + 1);
@@ -55,7 +61,7 @@ SpriteId& operator--(SpriteId& s, int)
 	switch (s)
 	{
 	case BRICK_YELLOW:
-		return s = WALL_RIGHT_RIVETED;
+		return s = WALL_TOP_EMITER_OPEN;
 	default:
 		return s = (SpriteId)(s - 1);
 	}
@@ -83,7 +89,15 @@ std::map<int, Sprite> defineSprites()
 		{WALL_LEFT_STRAIGHT, Sprite({129, 257, 31, 31})},
 		{WALL_LEFT_RIVETED, Sprite({129, 225, 31, 31})},
 		{WALL_RIGHT_STRAIGHT, Sprite({193, 257, 31, 31})},
-		{WALL_RIGHT_RIVETED, Sprite({193, 225, 31, 31})}
+		{WALL_RIGHT_RIVETED, Sprite({193, 225, 31, 31})},
+		{WALL_TOP_PLAIN, Sprite({193, 289, 31, 31})},
+		{WALL_TOP_RIVETED, Sprite({129, 289, 31, 31})},
+
+		// Wall top emiter 
+		{WALL_TOP_EMITER_IDLE, Sprite({161, 289, 31, 31})},
+		{WALL_TOP_EMITER_ANIM_1, Sprite({161, 257, 31, 31})},
+		{WALL_TOP_EMITER_ANIM_2, Sprite({161, 225, 31, 31})},
+		{WALL_TOP_EMITER_OPEN, Sprite({161, 193, 31, 31})},
 	};
 
 	return sprites;
