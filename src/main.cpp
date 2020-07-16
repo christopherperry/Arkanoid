@@ -11,11 +11,13 @@
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
-//We'll just be using square tiles for now
-const int TILE_SIZE = 40;
+
+// The tiles are square 31x31
+const int TILE_SIZE = 31;
 
 enum SpriteId
 {
+	// Bricks
 	BRICK_YELLOW,
 	BRICK_GREEN,
 	BRICK_RED,
@@ -26,14 +28,22 @@ enum SpriteId
 	BRICK_PURPLE,
 	BRICK_GREY_IDLE,
 	BRICK_GREY_ANIM_1,
-	BRICK_GRAY_ANIM_2
+	BRICK_GRAY_ANIM_2,
+
+	// Walls
+	WALL_CORNER_TOP_LEFT,
+	WALL_CORNER_TOP_RIGHT,
+	WALL_LEFT_STRAIGHT,
+	WALL_LEFT_RIVETED,
+	WALL_RIGHT_STRAIGHT,
+	WALL_RIGHT_RIVETED
 };
 
 SpriteId& operator++(SpriteId& s, int)
 {
 	switch (s)
 	{
-	case BRICK_GRAY_ANIM_2:
+	case WALL_RIGHT_RIVETED:
 		return s = BRICK_YELLOW;
 	default:
 		return s = (SpriteId)(s + 1);
@@ -45,15 +55,16 @@ SpriteId& operator--(SpriteId& s, int)
 	switch (s)
 	{
 	case BRICK_YELLOW:
-		return s = BRICK_GRAY_ANIM_2;
+		return s = WALL_RIGHT_RIVETED;
 	default:
 		return s = (SpriteId)(s - 1);
 	}
 }
 
-std::map<int, Sprite> defineBrickSprites()
+std::map<int, Sprite> defineSprites()
 {
-	std::map<int, Sprite> bricks = {
+	std::map<int, Sprite> sprites = {
+		// Bricks
 		{BRICK_YELLOW, Sprite({225, 193, 31, 16})},
 		{BRICK_GREEN, Sprite({225, 225, 31, 16})},
 		{BRICK_RED, Sprite({225, 257, 31, 16})},
@@ -64,10 +75,18 @@ std::map<int, Sprite> defineBrickSprites()
 		{BRICK_PURPLE, Sprite({257, 289, 31, 16})},
 		{BRICK_GREY_IDLE, Sprite({161, 1, 31, 16})},
 		{BRICK_GREY_ANIM_1, Sprite({129, 1, 31, 16})},
-		{BRICK_GRAY_ANIM_2, Sprite({161, 1, 31, 16})}
+		{BRICK_GRAY_ANIM_2, Sprite({161, 1, 31, 16})},
+
+		// Walls
+		{WALL_CORNER_TOP_LEFT, Sprite({129, 193, 31, 31})},
+		{WALL_CORNER_TOP_RIGHT, Sprite({193, 193, 31, 31})},
+		{WALL_LEFT_STRAIGHT, Sprite({129, 257, 31, 31})},
+		{WALL_LEFT_RIVETED, Sprite({129, 225, 31, 31})},
+		{WALL_RIGHT_STRAIGHT, Sprite({193, 257, 31, 31})},
+		{WALL_RIGHT_RIVETED, Sprite({193, 225, 31, 31})}
 	};
 
-	return bricks;
+	return sprites;
 }
 
 // This particular signature of main is required by SDL.
@@ -100,7 +119,7 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	std::map<int, Sprite> bricks = defineBrickSprites();
+	std::map<int, Sprite> bricks = defineSprites();
 	Spritesheet spritesheet{texture, bricks};
 	SpriteRenderer spriteRenderer{renderer};
 
