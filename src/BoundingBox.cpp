@@ -12,10 +12,10 @@ BoundingBox::BoundingBox(SDL_Rect bounds)
 	this->bounds = bounds;
 }
 
-void BoundingBox::moveTo(int x, int y)
+void BoundingBox::moveTo(SDL_Point position)
 {
-	bounds.x = x;
-	bounds.y = y;
+	bounds.x = position.x;
+	bounds.y = position.y;
 }
 
 bool BoundingBox::collidesWith(BoundingBox& other)

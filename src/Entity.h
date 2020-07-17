@@ -1,19 +1,19 @@
 #pragma once
 
+#include <SDL.h>
 #include "BoundingBox.h"
 #include "sprites/sprite.h"
 
 class Entity
 {
 private:
-	int positionX;
-	int positionY;
+	SDL_Point position;
 	Sprite* sprite;
 	bool moveable;
 	BoundingBox boundingBox;
 public:
-	Entity(Sprite* sprite, BoundingBox boundingBox, int spriteId, int positionX, int positionY, bool moveable);
-	void move(int x, int y);
+	Entity(Sprite* sprite, BoundingBox boundingBox, SDL_Point position, bool moveable);
+	void move(SDL_Point position);
 	bool collidesWith(Entity& other);
 	void render(SDL_Renderer* renderer);
 };

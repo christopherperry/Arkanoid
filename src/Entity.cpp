@@ -1,20 +1,18 @@
 #include "Entity.h"
 
-Entity::Entity(Sprite* sprite, BoundingBox boundingBox, int spriteId, int positionX, int positionY, bool moveable)
+Entity::Entity(Sprite* sprite, BoundingBox boundingBox, SDL_Point position, bool moveable)
 {
 	this->boundingBox = boundingBox;
 	this->sprite = sprite;
-	this->positionX = positionX;
-	this->positionY = positionY;
+	this->position = position;
 	this->moveable = moveable;
 }
 
-void Entity::move(int x, int y)
+void Entity::move(SDL_Point position)
 {
 	if (!moveable) return;
-	this->positionX = x;
-	this->positionY = y;
-	this->boundingBox.moveTo(x, y);
+	this->position = position;
+	this->boundingBox.moveTo(position);
 }
 
 bool Entity::collidesWith(Entity& other)
@@ -25,8 +23,8 @@ bool Entity::collidesWith(Entity& other)
 void Entity::render(SDL_Renderer* renderer)
 {
 	SDL_Rect location;
-	location.x = positionX;
-	location.y = positionY;
+	location.x = position.x;
+	location.y = position.y;
 	location.w = sprite->rect.w;
 	location.h = sprite->rect.h;
 

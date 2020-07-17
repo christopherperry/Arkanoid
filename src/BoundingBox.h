@@ -14,7 +14,7 @@ private:
 public:
 	BoundingBox();
 	BoundingBox(SDL_Rect bounds);
-	void moveTo(int x, int y);
+	void moveTo(SDL_Point position);
 	bool collidesWith(BoundingBox& other);
 	void render(SDL_Renderer* renderer);
 };
