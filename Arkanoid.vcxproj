@@ -151,20 +151,19 @@ copy $(ProjectDir)lib\*  $(OutDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\BoundingBox.cpp" />
-    <ClCompile Include="src\sprites\SpriteRenderer.cpp" />
     <ClCompile Include="src\logger.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\TextureLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Entity.h" />
     <ClInclude Include="src\BoundingBox.h" />
-    <ClInclude Include="src\sprites\SpriteRenderer.h" />
     <ClInclude Include="src\cleanup.h" />
     <ClInclude Include="src\logger.h" />
     <ClInclude Include="src\resources.h" />
     <ClInclude Include="src\sprites\sprite.h" />
-    <ClInclude Include="src\sprites\spritesheet.h" />
     <ClInclude Include="src\TextureLoader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

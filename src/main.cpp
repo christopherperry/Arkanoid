@@ -4,10 +4,8 @@
 #include "resources.h"
 #include "cleanup.h"
 #include "logger.h"
-#include "sprites/spritesheet.h"
 #include "sprites/sprite.h"
 #include "TextureLoader.h"
-#include "sprites/SpriteRenderer.h"
 
 
 // The tiles are square 31x31
@@ -75,43 +73,54 @@ SpriteId& operator--(SpriteId& s, int)
 	}
 }
 
-std::map<int, Sprite> defineSprites()
+std::map<int, Sprite> defineSprites(SDL_Texture* texture)
 {
 	std::map<int, Sprite> sprites = {
 		// Bricks
-		{BRICK_YELLOW, Sprite({225, 193, 31, 16})},
-		{BRICK_GREEN, Sprite({225, 225, 31, 16})},
-		{BRICK_RED, Sprite({225, 257, 31, 16})},
-		{BRICK_BROWN, Sprite({225, 289, 31, 16})},
-		{BRICK_LAVENDER, Sprite({257, 193, 31, 16})},
-		{BRICK_ORANGE, Sprite({257, 225, 31, 16})},
-		{BRICK_BLUE, Sprite({257, 257, 31, 16})},
-		{BRICK_PURPLE, Sprite({257, 289, 31, 16})},
-		{BRICK_GREY_IDLE, Sprite({161, 1, 31, 16})},
-		{BRICK_GREY_ANIM_1, Sprite({129, 1, 31, 16})},
-		{BRICK_GRAY_ANIM_2, Sprite({161, 1, 31, 16})},
+		{BRICK_YELLOW, Sprite{texture, {225, 193, 31, 16}} },
+		{BRICK_GREEN, Sprite{texture, {225, 225, 31, 16}} },
+		{BRICK_RED, Sprite{texture, {225, 257, 31, 16}} },
+		{BRICK_BROWN, Sprite{texture, {225, 289, 31, 16}} },
+		{BRICK_LAVENDER, Sprite{texture, {257, 193, 31, 16}} },
+		{BRICK_ORANGE, Sprite{texture, {257, 225, 31, 16}} },
+		{BRICK_BLUE, Sprite{texture, {257, 257, 31, 16}} },
+		{BRICK_PURPLE, Sprite{texture, {257, 289, 31, 16}} },
+		{BRICK_GREY_IDLE, Sprite{texture, {161, 1, 31, 16}} },
+		{BRICK_GREY_ANIM_1, Sprite{texture, {129, 1, 31, 16}} },
+		{BRICK_GRAY_ANIM_2, Sprite{texture, {161, 1, 31, 16}} },
 
 		// Walls
-		{WALL_CORNER_TOP_LEFT, Sprite({129, 193, 31, 31})},
-		{WALL_CORNER_TOP_RIGHT, Sprite({193, 193, 31, 31})},
-		{WALL_LEFT_STRAIGHT, Sprite({129, 257, 31, 31})},
-		{WALL_LEFT_RIVETED, Sprite({129, 225, 31, 31})},
-		{WALL_RIGHT_STRAIGHT, Sprite({193, 257, 31, 31})},
-		{WALL_RIGHT_RIVETED, Sprite({193, 225, 31, 31})},
-		{WALL_TOP_PLAIN, Sprite({193, 289, 31, 31})},
-		{WALL_TOP_RIVETED, Sprite({129, 289, 31, 31})},
+		{WALL_CORNER_TOP_LEFT, Sprite{texture, {129, 193, 31, 31}} },
+		{WALL_CORNER_TOP_RIGHT, Sprite{texture, {193, 193, 31, 31}} },
+		{WALL_LEFT_STRAIGHT, Sprite{texture, {129, 257, 31, 31}} },
+		{WALL_LEFT_RIVETED, Sprite{texture, {129, 225, 31, 31}} },
+		{WALL_RIGHT_STRAIGHT, Sprite{texture, {193, 257, 31, 31}} },
+		{WALL_RIGHT_RIVETED, Sprite{texture, {193, 225, 31, 31}} },
+		{WALL_TOP_PLAIN, Sprite{texture, {193, 289, 31, 31}} },
+		{WALL_TOP_RIVETED, Sprite{texture, {129, 289, 31, 31}} },
 
 		// Wall top emiter 
-		{WALL_TOP_EMITER_IDLE, Sprite({161, 289, 31, 31})},
-		{WALL_TOP_EMITER_ANIM_1, Sprite({161, 257, 31, 31})},
-		{WALL_TOP_EMITER_ANIM_2, Sprite({161, 225, 31, 31})},
-		{WALL_TOP_EMITER_OPEN, Sprite({161, 193, 31, 31})},
+		{WALL_TOP_EMITER_IDLE, Sprite{texture, {161, 289, 31, 31}} },
+		{WALL_TOP_EMITER_ANIM_1, Sprite{texture, {161, 257, 31, 31}} },
+		{WALL_TOP_EMITER_ANIM_2, Sprite{texture, {161, 225, 31, 31}} },
+		{WALL_TOP_EMITER_OPEN, Sprite{texture, {161, 193, 31, 31}} },
 
 		// Background
-		{BACKGROUND_DARK_PURPLE, Sprite({161, 321, 31, 31})},
+		{BACKGROUND_DARK_PURPLE, Sprite{texture, {161, 321, 31, 31}} },
 	};
 
 	return sprites;
+}
+
+void renderSprite(SDL_Renderer* renderer, Sprite* sprite, int positionX, int positionY)
+{
+	SDL_Rect location;
+	location.x = positionX;
+	location.y = positionY;
+	location.w = sprite->rect.w;
+	location.h = sprite->rect.h;
+
+	SDL_RenderCopy(renderer, sprite->texture, &sprite->rect, &location);
 }
 
 // This particular signature of main is required by SDL.
@@ -144,8 +153,7 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	Spritesheet spritesheet{texture, defineSprites() };
-	SpriteRenderer spriteRenderer{renderer};
+	std::map<int, Sprite> sprites = defineSprites(texture);
 
 	SpriteId spriteId = SpriteId::BRICK_YELLOW;
 
@@ -177,7 +185,7 @@ int main(int argc, char *argv[])
 		//Render the scene
 		SDL_RenderClear(renderer);
 
-		spriteRenderer.render(spritesheet, spriteId, WINDOW_WIDTH / 2.0, WINDOW_HEIGHT / 2.0);
+		renderSprite(renderer, &sprites[spriteId], WINDOW_WIDTH / 2.0, WINDOW_HEIGHT / 2.0);
 
 		SDL_RenderPresent(renderer);
 	}

@@ -4,9 +4,13 @@
 
 struct Sprite
 {
+	/*
+	 * The texture containing the sprite.
+	 */
+	SDL_Texture* texture;
+
 	/**
-	 * Position and size in a Spritesheet.
-	 * Used to properly render a sprite.
+	 * Position and size in the texture for rendering this sprite.
 	 */
 	SDL_Rect rect;
 };

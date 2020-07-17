@@ -2,9 +2,20 @@
 
 #include <SDL.h>
 
+BoundingBox::BoundingBox()
+{
+	this->bounds = SDL_Rect();
+}
+
 BoundingBox::BoundingBox(SDL_Rect bounds)
 {
 	this->bounds = bounds;
+}
+
+void BoundingBox::moveTo(int x, int y)
+{
+	bounds.x = x;
+	bounds.y = y;
 }
 
 bool BoundingBox::collidesWith(BoundingBox& other)

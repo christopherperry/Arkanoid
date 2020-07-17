@@ -4,14 +4,17 @@
 
 class BoundingBox
 {
-public:
+private:
 	/*
 	 * Position and bounding area of the box.
 	 * Position is top left of the box.
 	 */
 	SDL_Rect bounds;
 
+public:
+	BoundingBox();
 	BoundingBox(SDL_Rect bounds);
+	void moveTo(int x, int y);
 	bool collidesWith(BoundingBox& other);
 	void render(SDL_Renderer* renderer);
 };
