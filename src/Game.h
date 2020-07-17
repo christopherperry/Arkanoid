@@ -1,0 +1,48 @@
+#pragma once
+
+#include <map>
+#include "sprites/sprite.h"
+
+enum SpriteId
+{
+	// Bricks
+	BRICK_YELLOW,
+	BRICK_GREEN,
+	BRICK_RED,
+	BRICK_BROWN,
+	BRICK_LAVENDER,
+	BRICK_ORANGE,
+	BRICK_BLUE,
+	BRICK_PURPLE,
+	BRICK_GREY_IDLE,
+	BRICK_GREY_ANIM_1,
+	BRICK_GRAY_ANIM_2,
+
+	// Walls
+	WALL_CORNER_TOP_LEFT,
+	WALL_CORNER_TOP_RIGHT,
+	WALL_LEFT_STRAIGHT,
+	WALL_LEFT_RIVETED,
+	WALL_RIGHT_STRAIGHT,
+	WALL_RIGHT_RIVETED,
+	WALL_TOP_PLAIN,
+	WALL_TOP_RIVETED,
+	WALL_TOP_EMITER_IDLE,
+	WALL_TOP_EMITER_ANIM_1,
+	WALL_TOP_EMITER_ANIM_2,
+	WALL_TOP_EMITER_OPEN,
+
+	// Backgrounds
+	BACKGROUND_DARK_PURPLE
+};
+
+
+class Game
+{
+private:
+	std::map<int, Sprite> sprites;
+public:
+	Game(SDL_Texture* texture);
+	Sprite getSprite(SpriteId id);
+};
+

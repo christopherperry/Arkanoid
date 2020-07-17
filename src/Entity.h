@@ -17,4 +17,3 @@ public:
 	bool collidesWith(Entity& other);
 	void render(SDL_Renderer* renderer);
 };
-
