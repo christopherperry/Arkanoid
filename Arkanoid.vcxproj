@@ -151,12 +151,14 @@ copy $(ProjectDir)lib\*  $(OutDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\BoundingBox.cpp" />
     <ClCompile Include="src\sprites\SpriteRenderer.cpp" />
     <ClCompile Include="src\logger.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\TextureLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\BoundingBox.h" />
     <ClInclude Include="src\sprites\SpriteRenderer.h" />
     <ClInclude Include="src\cleanup.h" />
     <ClInclude Include="src\logger.h" />

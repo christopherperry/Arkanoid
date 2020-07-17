@@ -10,11 +10,10 @@ void SpriteRenderer::render(const Spritesheet& spritesheet, int spriteId, int lo
 {
 	Sprite sprite = spritesheet.sprites.at(spriteId);
 	SDL_Rect location;
-	location.x = locationX;
-	location.y = locationY;
+	location.x = (locationX - (sprite.rect.w / 2.0));
+	location.y = (locationY - (sprite.rect.h / 2.0));
 	location.w = sprite.rect.w;
 	location.h = sprite.rect.h;
 
-	//SDL_RenderCopy(renderer, spritesheet, NULL, NULL);
 	SDL_RenderCopy(renderer, spritesheet.texture, &sprite.rect, &location);
 }

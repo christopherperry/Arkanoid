@@ -48,6 +48,9 @@ enum SpriteId
 	WALL_TOP_EMITER_ANIM_1,
 	WALL_TOP_EMITER_ANIM_2,
 	WALL_TOP_EMITER_OPEN,
+
+	// Backgrounds
+	BACKGROUND_DARK_PURPLE
 };
 
 SpriteId& operator++(SpriteId& s, int)
@@ -103,6 +106,9 @@ std::map<int, Sprite> defineSprites()
 		{WALL_TOP_EMITER_ANIM_1, Sprite({161, 257, 31, 31})},
 		{WALL_TOP_EMITER_ANIM_2, Sprite({161, 225, 31, 31})},
 		{WALL_TOP_EMITER_OPEN, Sprite({161, 193, 31, 31})},
+
+		// Background
+		{BACKGROUND_DARK_PURPLE, Sprite({161, 321, 31, 31})},
 	};
 
 	return sprites;
@@ -138,8 +144,7 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	std::map<int, Sprite> bricks = defineSprites();
-	Spritesheet spritesheet{texture, bricks};
+	Spritesheet spritesheet{texture, defineSprites() };
 	SpriteRenderer spriteRenderer{renderer};
 
 	SpriteId spriteId = SpriteId::BRICK_YELLOW;
