@@ -40,7 +40,7 @@ Game::Game(SDL_Texture* texture)
 		{BACKGROUND_BLUE, Sprite{texture, {129, 385, 31, 31}} }
 	};
 
-	int wallsAndBackground[16][13] =
+	int wallsAndBricks[16][13] =
 	{
 		{11, 17, 18, 17, 18, 17, 18, 17, 18, 17, 18, 17, 12},
 		{13, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15},
@@ -86,11 +86,34 @@ Game::Game(SDL_Texture* texture)
 		{
 			locationX = j * TILE_SIZE;
 			SDL_Point position{ locationX, locationY };
-			BoundingBox boundingBox{};
-			Sprite* sprite = getSprite(wallsAndBackground[i][j]);
+
+			int spriteId = wallsAndBricks[i][j];
+			Sprite* sprite = getSprite(spriteId);
+
+			SDL_Rect box;
+
+			// Bricks
+			if (spriteId >= 0 && spriteId <= 10)
+			{
+				box.w = TILE_SIZE;
+				box.h = BRICK_HEIGHT;
+				box.x = locationX;
+				box.y = locationY;
+			}
+			else
+			{
+				box.w = TILE_SIZE;
+				box.h = TILE_SIZE;
+				box.x = locationX;
+				box.y = locationY;
+			}
+
+			BoundingBox boundingBox{ box };
+
+			
 
 			if (sprite != nullptr)
-				entities.push_back(Entity{ getSprite(wallsAndBackground[i][j]), boundingBox, position });
+				entities.push_back(Entity{ getSprite(wallsAndBricks[i][j]), boundingBox, position });
 		}
 	}
 }

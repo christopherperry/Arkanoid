@@ -20,5 +20,7 @@ void Entity::render(SDL_Renderer* renderer)
 	location.w = sprite->rect.w;
 	location.h = sprite->rect.h;
 
+	boundingBox.render(renderer);
+
 	SDL_RenderCopy(renderer, sprite->texture, &sprite->rect, &location);
 }

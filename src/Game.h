@@ -48,6 +48,7 @@ class Game
 private:
 	// The tiles are square 31x31
 	static const int TILE_SIZE = 31;
+	static const int BRICK_HEIGHT = 16;
 
 	// Let's do 11 bricks and a wall on each side for now
 	static const int NUM_TILES_WIDE = 13;
