@@ -49,6 +49,7 @@ private:
 	// The tiles are square 31x31
 	static const int TILE_SIZE = 31;
 	static const int BRICK_HEIGHT = 16;
+	static const int WALL_TOP_THICKNESS = 13;
 
 	// Let's do 11 bricks and a wall on each side for now
 	static const int NUM_TILES_WIDE = 13;
@@ -61,4 +62,3 @@ public:
 	Sprite* getSprite(int id);
 	void render(SDL_Renderer* renderer);
 };
-

@@ -88,7 +88,7 @@ Game::Game(SDL_Texture* texture)
 			SDL_Point position{ locationX, locationY };
 
 			int spriteId = wallsAndBricks[i][j];
-			Sprite* sprite = getSprite(spriteId);
+			if (spriteId == SpriteId::NONE) continue;
 
 			SDL_Rect box;
 
@@ -97,6 +97,13 @@ Game::Game(SDL_Texture* texture)
 			{
 				box.w = TILE_SIZE;
 				box.h = BRICK_HEIGHT;
+				box.x = locationX;
+				box.y = locationY;
+			}
+			else if (spriteId >= 17 && spriteId <= 22)
+			{
+				box.w = TILE_SIZE;
+				box.h = WALL_TOP_THICKNESS;
 				box.x = locationX;
 				box.y = locationY;
 			}
@@ -109,11 +116,7 @@ Game::Game(SDL_Texture* texture)
 			}
 
 			BoundingBox boundingBox{ box };
-
-			
-
-			if (sprite != nullptr)
-				entities.push_back(Entity{ getSprite(wallsAndBricks[i][j]), boundingBox, position });
+			entities.push_back(Entity{ getSprite(spriteId), boundingBox, position });
 		}
 	}
 }
