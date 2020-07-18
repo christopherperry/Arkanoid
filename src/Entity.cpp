@@ -1,18 +1,10 @@
 #include "Entity.h"
 
-Entity::Entity(Sprite* sprite, BoundingBox boundingBox, SDL_Point position, bool moveable)
+Entity::Entity(Sprite* sprite, BoundingBox boundingBox, SDL_Point position)
 {
 	this->boundingBox = boundingBox;
 	this->sprite = sprite;
 	this->position = position;
-	this->moveable = moveable;
-}
-
-void Entity::move(SDL_Point position)
-{
-	if (!moveable) return;
-	this->position = position;
-	this->boundingBox.moveTo(position);
 }
 
 bool Entity::collidesWith(Entity& other)

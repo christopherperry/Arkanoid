@@ -151,8 +151,8 @@ copy $(ProjectDir)lib\*  $(OutDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Brick.cpp" />
     <ClCompile Include="src\Game.cpp" />
-    <ClCompile Include="src\Level.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\BoundingBox.cpp" />
     <ClCompile Include="src\logger.cpp" />
@@ -160,8 +160,8 @@ copy $(ProjectDir)lib\*  $(OutDir)</Command>
     <ClCompile Include="src\TextureLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Brick.h" />
     <ClInclude Include="src\Game.h" />
-    <ClInclude Include="src\Level.h" />
     <ClInclude Include="src\Entity.h" />
     <ClInclude Include="src\BoundingBox.h" />
     <ClInclude Include="src\cleanup.h" />

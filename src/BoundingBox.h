@@ -18,4 +18,3 @@ public:
 	bool collidesWith(BoundingBox& other);
 	void render(SDL_Renderer* renderer);
 };
-

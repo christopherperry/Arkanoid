@@ -1,4 +1,8 @@
+#include <map>
+#include <vector>
 #include "Game.h"
+#include "Entity.h"
+#include "sprites/sprite.h"
 
 Game::Game(SDL_Texture* texture)
 {
@@ -33,11 +37,72 @@ Game::Game(SDL_Texture* texture)
 		{WALL_TOP_EMITER_OPEN, Sprite{texture, {161, 193, 31, 31}} },
 
 		// Background
-		{BACKGROUND_DARK_PURPLE, Sprite{texture, {161, 321, 31, 31}} },
+		{BACKGROUND_BLUE, Sprite{texture, {129, 385, 31, 31}} }
 	};
+
+	int wallsAndBackground[16][13] =
+	{
+		{11, 17, 18, 17, 18, 17, 18, 17, 18, 17, 18, 17, 12},
+		{13, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15},
+		{13,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8, 15},
+		{13,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2, 15},
+		{13,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 15},
+		{13,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6, 15},
+		{13,  4,  4,  4,  4,  4,  4,  4,  4,  4,  4,  4, 15},
+		{13,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1, 15},
+		{13, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15},
+		{13, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15},
+		{13, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15},
+		{13, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15},
+		{13, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15},
+		{13, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15},
+		{13, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15},
+		{13, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15}
+	};
+
+	int locationX, locationY;
+	int i, j;
+
+	// The Background Tiles
+	for (i = 0; i < NUM_TILES_HIGH; i++)
+	{
+		locationY = i * TILE_SIZE;
+
+		for (j = 0; j < NUM_TILES_WIDE; j++)
+		{
+			locationX = j * TILE_SIZE;
+			SDL_Point position{ locationX, locationY };
+			BoundingBox boundingBox{};
+			entities.push_back(Entity{ getSprite(SpriteId::BACKGROUND_BLUE), boundingBox, position });
+		}
+	}
+
+	// The Walls and Bricks
+	for (i = 0; i < NUM_TILES_HIGH; i++)
+	{
+		locationY = i * TILE_SIZE;
+
+		for (j = 0; j < NUM_TILES_WIDE; j++)
+		{
+			locationX = j * TILE_SIZE;
+			SDL_Point position{ locationX, locationY };
+			BoundingBox boundingBox{};
+			Sprite* sprite = getSprite(wallsAndBackground[i][j]);
+
+			if (sprite != nullptr)
+				entities.push_back(Entity{ getSprite(wallsAndBackground[i][j]), boundingBox, position });
+		}
+	}
 }
 
-Sprite Game::getSprite(SpriteId id)
+Sprite* Game::getSprite(int id)
 {
-	return sprites[id];
+	if (id == SpriteId::NONE) return nullptr;
+	return &sprites[id];
+}
+
+void Game::render(SDL_Renderer* renderer)
+{
+	for (Entity entity : entities)
+		entity.render(renderer);
 }

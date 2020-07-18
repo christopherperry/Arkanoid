@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
 		//Render the scene
 		SDL_RenderClear(renderer);
 
-		renderSprite(renderer, &(game.getSprite(spriteId)), WINDOW_WIDTH / 2.0, WINDOW_HEIGHT / 2.0);
+		game.render(renderer);
 
 		SDL_RenderPresent(renderer);
 	}

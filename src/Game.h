@@ -1,8 +1,12 @@
 #pragma once
 
 #include <map>
+#include <vector>
 #include "sprites/sprite.h"
+#include "Entity.h"
 
+// WARNING: only add at the end 
+// because we hardcoded numbers to define the level
 enum SpriteId
 {
 	// Bricks
@@ -33,16 +37,27 @@ enum SpriteId
 	WALL_TOP_EMITER_OPEN,
 
 	// Backgrounds
-	BACKGROUND_DARK_PURPLE
+	BACKGROUND_BLUE, 
+
+	NONE = -1
 };
 
 
 class Game
 {
 private:
+	// The tiles are square 31x31
+	static const int TILE_SIZE = 31;
+
+	// Let's do 11 bricks and a wall on each side for now
+	static const int NUM_TILES_WIDE = 13;
+	static const int NUM_TILES_HIGH = 16;
+
 	std::map<int, Sprite> sprites;
+	std::vector<Entity> entities;
 public:
 	Game(SDL_Texture* texture);
-	Sprite getSprite(SpriteId id);
+	Sprite* getSprite(int id);
+	void render(SDL_Renderer* renderer);
 };
 
