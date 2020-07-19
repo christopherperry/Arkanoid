@@ -61,6 +61,9 @@ enum SpriteId
 	// Player - Small
 	PLAYER_SMALL,
 
+	// Ball
+	BALL,
+
 	NONE = -1
 };
 

@@ -153,6 +153,7 @@ copy $(ProjectDir)lib\*  $(OutDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Ball.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\Brick.cpp" />
     <ClCompile Include="src\Game.cpp" />
@@ -164,6 +165,7 @@ copy $(ProjectDir)lib\*  $(OutDir)</Command>
     <ClCompile Include="src\Vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Ball.h" />
     <ClInclude Include="src\Player.h" />
     <ClInclude Include="src\Brick.h" />
     <ClInclude Include="src\Game.h" />

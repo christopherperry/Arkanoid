@@ -13,7 +13,7 @@ protected:
 	BoundingBox boundingBox;
 public:
 	Entity() = delete;
-	Entity(Sprite* sprite, BoundingBox boundingBox, Vector2 position);
+	Entity(Sprite* sprite, BoundingBox boundingBox, Vector2 position) : sprite(sprite), boundingBox(boundingBox), position(position) {};
 	bool collidesWith(Entity& other);
 	virtual void render(SDL_Renderer* renderer);
 };

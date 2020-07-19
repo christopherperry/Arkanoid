@@ -43,7 +43,10 @@ Game::Game(SDL_Texture* texture)
 
 		// Player medium
 		{PLAYER_LEFT_MEDIUM, Sprite{texture, {225, 161, 31, 31}} },
-		{PLAYER_RIGHT_MEDIUM, Sprite{texture, {257, 161, 31, 31}} }
+		{PLAYER_RIGHT_MEDIUM, Sprite{texture, {257, 161, 31, 31}} },
+
+		// The ball
+		{BALL, Sprite{texture, {463, 142, 6, 6}} }
 	};
 
 	int wallsAndBricks[16][13] =
@@ -140,7 +143,7 @@ Player* Game::createPlayer()
 {
 	int positionX = ((NUM_TILES_WIDE * TILE_SIZE) / 2.0) - TILE_SIZE;
 	int positionY = (NUM_TILES_HIGH - 2) * TILE_SIZE;
-	Vector2 position{ positionX, positionY };
+	Vector2 position = Vector2(positionX, positionY);
 
 	// relative to player position, which is offset by position in the sprite
 	BoundingBox box{ SDL_Rect{positionX + 10, positionY + 14, 42, 11} };
