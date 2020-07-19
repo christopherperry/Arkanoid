@@ -68,16 +68,22 @@ int main(int argc, char *argv[])
 	//Our event structure
 	SDL_Event e;
 	bool quit = false;
+	bool moveLeft = false;
+	bool moveRight = false;
+
 	while (!quit) {
+
 		while (SDL_PollEvent(&e)) {
 			if (e.type == SDL_QUIT)
 				quit = true;
-			//Use number input to select which clip should be drawn
+			
 			if (e.type == SDL_KEYDOWN) {
 				switch (e.key.keysym.sym) {
 				case SDLK_LEFT:
+					moveLeft = true;
 					break;
 				case SDLK_RIGHT:
+					moveRight = true;
 					break;
 				case SDLK_ESCAPE:
 					quit = true;
@@ -86,18 +92,43 @@ int main(int argc, char *argv[])
 					break;
 				}
 			}
+
+			if (e.type == SDL_KEYUP) {
+				switch (e.key.keysym.sym) {
+				case SDLK_LEFT:
+					moveLeft = false;
+					break;
+				case SDLK_RIGHT:
+					moveRight = false;
+					break;
+				default:
+					break;
+				}
+			}
 		}
 
-		//Render the scene
+		// Clear the scene
 		SDL_RenderClear(renderer);
 
-		game.render(renderer);
+		// Process Events
+		if (moveLeft)
+		{
+			player->moveBy(-1, 0);
+		}
+		else if (moveRight)
+		{
+			player->moveBy(1, 0);
+		}
 
+		// Render
+		game.render(renderer);
 		player->render(renderer);
 
+		// Render the scene
 		SDL_RenderPresent(renderer);
 	}
 
+	delete player;
 	cleanup(texture, renderer, window);
 	SDL_Quit();
 

@@ -27,5 +27,5 @@ void Player::render(SDL_Renderer* renderer)
 
 	SDL_RenderCopy(renderer, rightHalf->texture, &rightHalf->rect, &rightHalfLocation);
 
-	boundingBox.render(renderer);
+	//boundingBox.render(renderer);
 }
