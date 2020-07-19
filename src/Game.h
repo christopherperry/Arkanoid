@@ -4,6 +4,7 @@
 #include <vector>
 #include "sprites/sprite.h"
 #include "Entity.h"
+#include "Player.h"
 
 // WARNING: only add at the end 
 // because we hardcoded numbers to define the level
@@ -39,6 +40,27 @@ enum SpriteId
 	// Backgrounds
 	BACKGROUND_BLUE, 
 
+	// Player - Medium
+	PLAYER_LEFT_MEDIUM,
+	PLAYER_RIGHT_MEDIUM,
+	PLAYER_LEFT_MEDIUM_DISSOLVE_1,
+	PLAYER_RIGHT_MEDIUM_DISSOLVE_1,
+	PLAYER_LEFT_MEDIUM_DISSOLVE_2,
+	PLAYER_RIGHT_MEDIUM_DISSOLVE_2,
+	PLAYER_LEFT_MEDIUM_DISSOLVE_3,
+	PLAYER_RIGHT_MEDIUM_DISSOLVE_3,
+
+	// Player - Medium Gunner
+	PLAYER_LEFT_MEDIUM_GUNNER,
+	PLAYER_RIGHT_MEDIUM_GUNNER,
+
+	// Player - Large
+	PLAYER_LEFT_LARGE,
+	PLAYER_RIGHT_LARGE,
+
+	// Player - Small
+	PLAYER_SMALL,
+
 	NONE = -1
 };
 
@@ -56,9 +78,10 @@ private:
 	static const int NUM_TILES_HIGH = 16;
 
 	std::map<int, Sprite> sprites;
-	std::vector<Entity> entities;
+	std::vector<Entity*> entities;
 public:
 	Game(SDL_Texture* texture);
 	Sprite* getSprite(int id);
+	Player* createPlayer();
 	void render(SDL_Renderer* renderer);
 };

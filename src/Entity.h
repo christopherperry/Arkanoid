@@ -6,12 +6,13 @@
 
 class Entity
 {
-private:
+protected:
 	SDL_Point position;
 	Sprite* sprite;
 	BoundingBox boundingBox;
 public:
+	Entity() = delete;
 	Entity(Sprite* sprite, BoundingBox boundingBox, SDL_Point position);
 	bool collidesWith(Entity& other);
-	void render(SDL_Renderer* renderer);
+	virtual void render(SDL_Renderer* renderer);
 };

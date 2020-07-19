@@ -7,6 +7,7 @@
 #include "sprites/sprite.h"
 #include "TextureLoader.h"
 #include "Game.h"
+#include "Player.h"
 
 // The tiles are square 31x31
 const int TILE_SIZE = 31;
@@ -61,6 +62,7 @@ int main(int argc, char *argv[])
 	}
 
 	Game game{ texture };
+	Player* player = game.createPlayer();
 	SpriteId spriteId = SpriteId::BRICK_YELLOW;
 
 	//Our event structure
@@ -90,6 +92,8 @@ int main(int argc, char *argv[])
 		SDL_RenderClear(renderer);
 
 		game.render(renderer);
+
+		player->render(renderer);
 
 		SDL_RenderPresent(renderer);
 	}

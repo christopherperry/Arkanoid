@@ -2,7 +2,9 @@
 #include <vector>
 #include "Game.h"
 #include "Entity.h"
+#include "Brick.h"
 #include "sprites/sprite.h"
+#include "Player.h"
 
 Game::Game(SDL_Texture* texture)
 {
@@ -37,7 +39,11 @@ Game::Game(SDL_Texture* texture)
 		{WALL_TOP_EMITER_OPEN, Sprite{texture, {161, 193, 31, 31}} },
 
 		// Background
-		{BACKGROUND_BLUE, Sprite{texture, {129, 385, 31, 31}} }
+		{BACKGROUND_BLUE, Sprite{texture, {129, 385, 31, 31}} },
+
+		// Player medium
+		{PLAYER_LEFT_MEDIUM, Sprite{texture, {225, 161, 31, 31}} },
+		{PLAYER_RIGHT_MEDIUM, Sprite{texture, {257, 161, 31, 31}} }
 	};
 
 	int wallsAndBricks[16][13] =
@@ -73,7 +79,7 @@ Game::Game(SDL_Texture* texture)
 			locationX = j * TILE_SIZE;
 			SDL_Point position{ locationX, locationY };
 			BoundingBox boundingBox{};
-			entities.push_back(Entity{ getSprite(SpriteId::BACKGROUND_BLUE), boundingBox, position });
+			entities.push_back(new Entity{ getSprite(SpriteId::BACKGROUND_BLUE), boundingBox, position });
 		}
 	}
 
@@ -99,6 +105,8 @@ Game::Game(SDL_Texture* texture)
 				box.h = BRICK_HEIGHT;
 				box.x = locationX;
 				box.y = locationY;
+
+				entities.push_back(new Brick{ getSprite(spriteId), BoundingBox{ box }, position });
 			}
 			else if (spriteId >= 17 && spriteId <= 22)
 			{
@@ -106,6 +114,8 @@ Game::Game(SDL_Texture* texture)
 				box.h = WALL_TOP_THICKNESS;
 				box.x = locationX;
 				box.y = locationY;
+
+				entities.push_back(new Entity{ getSprite(spriteId), BoundingBox{ box }, position });
 			}
 			else
 			{
@@ -113,10 +123,9 @@ Game::Game(SDL_Texture* texture)
 				box.h = TILE_SIZE;
 				box.x = locationX;
 				box.y = locationY;
-			}
 
-			BoundingBox boundingBox{ box };
-			entities.push_back(Entity{ getSprite(spriteId), boundingBox, position });
+				entities.push_back(new Entity{ getSprite(spriteId), BoundingBox{ box }, position });
+			}
 		}
 	}
 }
@@ -127,8 +136,25 @@ Sprite* Game::getSprite(int id)
 	return &sprites[id];
 }
 
+Player* Game::createPlayer()
+{
+	int positionX = ((NUM_TILES_WIDE * TILE_SIZE) / 2.0) - TILE_SIZE;
+	int positionY = (NUM_TILES_HIGH - 2) * TILE_SIZE;
+	SDL_Point position{ positionX, positionY };
+
+	// relative to player position, which is offset by position in the sprite
+	BoundingBox box{ SDL_Rect{positionX + 10, positionY + 14, 42, 11} };
+
+	return new Player(
+		getSprite(SpriteId::PLAYER_LEFT_MEDIUM),
+		getSprite(SpriteId::PLAYER_RIGHT_MEDIUM),
+		box,
+		position
+	);
+}
+
 void Game::render(SDL_Renderer* renderer)
 {
-	for (Entity entity : entities)
-		entity.render(renderer);
+	for (Entity* entity : entities)
+		entity->render(renderer);
 }
