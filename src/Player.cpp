@@ -1,5 +1,32 @@
 #include "Player.h"
 
+void Player::onEvent(SDL_Event event)
+{
+	switch (event.key.keysym.sym) {
+	case SDLK_LEFT:
+		movingLeft = event.type == SDL_KEYDOWN;
+		break;
+	case SDLK_RIGHT:
+		movingRight = event.type == SDL_KEYDOWN;
+		break;
+	default:
+		break;
+	}
+}
+
+void Player::update()
+{
+	// Process Events
+	if (movingLeft)
+	{
+		moveBy(-1, 0);
+	}
+	else if (movingRight)
+	{
+		moveBy(1, 0);
+	}
+}
+
 // TODO: collision detection and resolution
 void Player::moveBy(int distanceX, int distanceY)
 {

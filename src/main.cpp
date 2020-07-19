@@ -79,12 +79,6 @@ int main(int argc, char *argv[])
 			
 			if (e.type == SDL_KEYDOWN) {
 				switch (e.key.keysym.sym) {
-				case SDLK_LEFT:
-					moveLeft = true;
-					break;
-				case SDLK_RIGHT:
-					moveRight = true;
-					break;
 				case SDLK_ESCAPE:
 					quit = true;
 					break;
@@ -93,32 +87,13 @@ int main(int argc, char *argv[])
 				}
 			}
 
-			if (e.type == SDL_KEYUP) {
-				switch (e.key.keysym.sym) {
-				case SDLK_LEFT:
-					moveLeft = false;
-					break;
-				case SDLK_RIGHT:
-					moveRight = false;
-					break;
-				default:
-					break;
-				}
-			}
+			player->onEvent(e);
 		}
+
+		player->update();
 
 		// Clear the scene
 		SDL_RenderClear(renderer);
-
-		// Process Events
-		if (moveLeft)
-		{
-			player->moveBy(-1, 0);
-		}
-		else if (moveRight)
-		{
-			player->moveBy(1, 0);
-		}
 
 		// Render
 		game.render(renderer);
