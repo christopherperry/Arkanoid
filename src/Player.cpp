@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "logger.h"
 
 void Player::onEvent(SDL_Event event)
 {
@@ -14,26 +15,27 @@ void Player::onEvent(SDL_Event event)
 	}
 }
 
-void Player::update()
+void Player::update(float deltaTime)
 {
-	// Process Events
+	Logger::log("Delta time: " + std::to_string(deltaTime)); 
+
+	float directionX = 0;
 	if (movingLeft)
 	{
-		moveBy(-1, 0);
+		Logger::log("Moving LEFT");
+		directionX = -1;
 	}
 	else if (movingRight)
 	{
-		moveBy(1, 0);
+		Logger::log("Moving RIGHT");
+		directionX = 1;
 	}
-}
 
-// TODO: collision detection and resolution
-void Player::moveBy(int distanceX, int distanceY)
-{
+	float distanceX = directionX * velocity * deltaTime;
+	Logger::log("Distance: " + std::to_string(distanceX));
 	position.x += distanceX;
-	position.y += distanceY;
 
-	boundingBox.moveBy(distanceX, distanceY);
+	boundingBox.moveBy(distanceX, 0);
 }
 
 void Player::render(SDL_Renderer* renderer)

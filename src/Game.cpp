@@ -66,7 +66,7 @@ Game::Game(SDL_Texture* texture)
 		{13, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15}
 	};
 
-	int locationX, locationY;
+	float locationX, locationY;
 	int i, j;
 
 	// The Background Tiles
@@ -77,7 +77,7 @@ Game::Game(SDL_Texture* texture)
 		for (j = 0; j < NUM_TILES_WIDE; j++)
 		{
 			locationX = j * TILE_SIZE;
-			SDL_Point position{ locationX, locationY };
+			Vector2 position{ locationX, locationY };
 			BoundingBox boundingBox{};
 			entities.push_back(new Entity{ getSprite(SpriteId::BACKGROUND_BLUE), boundingBox, position });
 		}
@@ -91,7 +91,7 @@ Game::Game(SDL_Texture* texture)
 		for (j = 0; j < NUM_TILES_WIDE; j++)
 		{
 			locationX = j * TILE_SIZE;
-			SDL_Point position{ locationX, locationY };
+			Vector2 position{ locationX, locationY };
 
 			int spriteId = wallsAndBricks[i][j];
 			if (spriteId == SpriteId::NONE) continue;
@@ -140,7 +140,7 @@ Player* Game::createPlayer()
 {
 	int positionX = ((NUM_TILES_WIDE * TILE_SIZE) / 2.0) - TILE_SIZE;
 	int positionY = (NUM_TILES_HIGH - 2) * TILE_SIZE;
-	SDL_Point position{ positionX, positionY };
+	Vector2 position{ positionX, positionY };
 
 	// relative to player position, which is offset by position in the sprite
 	BoundingBox box{ SDL_Rect{positionX + 10, positionY + 14, 42, 11} };

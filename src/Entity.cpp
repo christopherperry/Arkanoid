@@ -1,6 +1,6 @@
 #include "Entity.h"
 
-Entity::Entity(Sprite* sprite, BoundingBox boundingBox, SDL_Point position)
+Entity::Entity(Sprite* sprite, BoundingBox boundingBox, Vector2 position)
 {
 	this->boundingBox = boundingBox;
 	this->sprite = sprite;

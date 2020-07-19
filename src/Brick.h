@@ -5,7 +5,6 @@
 class Brick : public Entity
 {
 public:
-	Brick(Sprite* sprite, BoundingBox boundingBox, SDL_Point position) : Entity(sprite, boundingBox, position) {};
+	Brick(Sprite* sprite, BoundingBox boundingBox, Vector2 position) : Entity(sprite, boundingBox, position) {};
 	void render(SDL_Renderer* renderer) override;
 };
-

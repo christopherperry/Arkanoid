@@ -71,6 +71,10 @@ int main(int argc, char *argv[])
 	bool moveLeft = false;
 	bool moveRight = false;
 
+	// Time
+	float deltaTime = 0;
+	float lastFrameTime = SDL_GetTicks();
+
 	while (!quit) {
 
 		while (SDL_PollEvent(&e)) {
@@ -90,7 +94,7 @@ int main(int argc, char *argv[])
 			player->onEvent(e);
 		}
 
-		player->update();
+		player->update(deltaTime);
 
 		// Clear the scene
 		SDL_RenderClear(renderer);
@@ -101,6 +105,11 @@ int main(int argc, char *argv[])
 
 		// Render the scene
 		SDL_RenderPresent(renderer);
+
+		// Update time
+		float currentTime = SDL_GetTicks();
+		deltaTime = currentTime - lastFrameTime;
+		lastFrameTime = currentTime;
 	}
 
 	delete player;

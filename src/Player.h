@@ -10,16 +10,16 @@ private:
 	Sprite* rightHalf;
 	bool movingLeft = false;
 	bool movingRight = false;
+	float velocity = 200 / 1000.0f; // pixels per second, time is in milliseconds
 public:
 	Player() = delete;
-	Player(Sprite* leftHalf, Sprite* rightHalf, BoundingBox boundingBox, SDL_Point position) : Entity(nullptr, boundingBox, position)
+	Player(Sprite* leftHalf, Sprite* rightHalf, BoundingBox boundingBox, Vector2 position) : Entity(nullptr, boundingBox, position)
 	{
 		this->leftHalf = leftHalf;
 		this->rightHalf = rightHalf;
 	}
-	void update();
+	void update(float deltaTime);
 	void onEvent(SDL_Event event);
-	void moveBy(int distanceX, int distanceY);
 	void render(SDL_Renderer* renderer) override;
 };
 
