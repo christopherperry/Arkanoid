@@ -63,6 +63,7 @@ int main(int argc, char *argv[])
 
 	Game game{ texture };
 	Player* player = game.createPlayer();
+	Ball* ball = game.createBall(player);
 	SpriteId spriteId = SpriteId::BRICK_YELLOW;
 
 	//Our event structure
@@ -102,6 +103,7 @@ int main(int argc, char *argv[])
 		// Render
 		game.render(renderer);
 		player->render(renderer);
+		ball->render(renderer);
 
 		// Render the scene
 		SDL_RenderPresent(renderer);

@@ -1,14 +1,14 @@
 #pragma once
 
+#include <utility>
+
 class Vector2
 {
 public:
-	float x{0.0};
-	float y{0.0};
+	float x;
+	float y;
 
-	Vector2(float x, float y) : x(x), y(y) {};
-	Vector2(const Vector2& other) = default;
-	Vector2& operator=(const Vector2& other);
+	Vector2(float x = 0.0, float y = 0.0) : x{ x }, y{ y } {};
 
 	const static Vector2 up;
 	const static Vector2 down;

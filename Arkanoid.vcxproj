@@ -153,24 +153,30 @@ copy $(ProjectDir)lib\*  $(OutDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\BackgroundTile.cpp" />
+    <ClCompile Include="src\Collider.cpp" />
+    <ClCompile Include="src\Hit.cpp" />
     <ClCompile Include="src\Ball.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\Brick.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Entity.cpp" />
-    <ClCompile Include="src\BoundingBox.cpp" />
+    <ClCompile Include="src\AABB.cpp" />
     <ClCompile Include="src\logger.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\TextureLoader.cpp" />
     <ClCompile Include="src\Vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\BackgroundTile.h" />
+    <ClInclude Include="src\Collider.h" />
+    <ClInclude Include="src\Hit.h" />
     <ClInclude Include="src\Ball.h" />
     <ClInclude Include="src\Player.h" />
     <ClInclude Include="src\Brick.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\Entity.h" />
-    <ClInclude Include="src\BoundingBox.h" />
+    <ClInclude Include="src\AABB.h" />
     <ClInclude Include="src\cleanup.h" />
     <ClInclude Include="src\logger.h" />
     <ClInclude Include="src\resources.h" />

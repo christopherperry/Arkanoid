@@ -5,6 +5,8 @@
 #include "Brick.h"
 #include "sprites/sprite.h"
 #include "Player.h"
+#include "Ball.h"
+#include "BackgroundTile.h"
 
 Game::Game(SDL_Texture* texture)
 {
@@ -81,8 +83,8 @@ Game::Game(SDL_Texture* texture)
 		{
 			locationX = j * TILE_SIZE;
 			Vector2 position{ locationX, locationY };
-			BoundingBox boundingBox{};
-			entities.push_back(new Entity{ getSprite(SpriteId::BACKGROUND_BLUE), boundingBox, position });
+			AABB boundingBox{ position, {TILE_SIZE * 0.5f, TILE_SIZE * 0.5f} };
+			entities.push_back(new BackgroundTile{ getSprite(SpriteId::BACKGROUND_BLUE), boundingBox, position });
 		}
 	}
 
@@ -93,41 +95,27 @@ Game::Game(SDL_Texture* texture)
 
 		for (j = 0; j < NUM_TILES_WIDE; j++)
 		{
-			locationX = j * TILE_SIZE;
-			Vector2 position{ locationX, locationY };
-
 			int spriteId = wallsAndBricks[i][j];
 			if (spriteId == SpriteId::NONE) continue;
 
-			SDL_Rect box;
+			locationX = j * TILE_SIZE;
+			Vector2 position{ locationX, locationY };
 
 			// Bricks
 			if (spriteId >= 0 && spriteId <= 10)
 			{
-				box.w = TILE_SIZE;
-				box.h = BRICK_HEIGHT;
-				box.x = locationX;
-				box.y = locationY;
-
-				entities.push_back(new Brick{ getSprite(spriteId), BoundingBox{ box }, position });
+				Vector2 extents{ TILE_SIZE * 0.5f, BRICK_HEIGHT * 0.5f };
+				entities.push_back(new Brick{ getSprite(spriteId), AABB{ position, extents }, position });
 			}
-			else if (spriteId >= 17 && spriteId <= 22)
+			else if (spriteId >= 17 && spriteId <= 22) // Top Wall
 			{
-				box.w = TILE_SIZE;
-				box.h = WALL_TOP_THICKNESS;
-				box.x = locationX;
-				box.y = locationY;
-
-				entities.push_back(new Entity{ getSprite(spriteId), BoundingBox{ box }, position });
+				Vector2 extents{ TILE_SIZE * 0.5f, WALL_TOP_THICKNESS * 0.5f };
+				entities.push_back(new Entity{ getSprite(spriteId), AABB{ position, extents }, position });
 			}
 			else
 			{
-				box.w = TILE_SIZE;
-				box.h = TILE_SIZE;
-				box.x = locationX;
-				box.y = locationY;
-
-				entities.push_back(new Entity{ getSprite(spriteId), BoundingBox{ box }, position });
+				Vector2 extents{ TILE_SIZE * 0.5f, TILE_SIZE * 0.5f };
+				entities.push_back(new Entity{ getSprite(spriteId), AABB{ position, extents }, position });
 			}
 		}
 	}
@@ -146,7 +134,8 @@ Player* Game::createPlayer()
 	Vector2 position = Vector2(positionX, positionY);
 
 	// relative to player position, which is offset by position in the sprite
-	BoundingBox box{ SDL_Rect{positionX + 10, positionY + 14, 42, 11} };
+	Vector2 extents{ 42, 11 };
+	AABB box{ position, extents };
 
 	return new Player(
 		getSprite(SpriteId::PLAYER_LEFT_MEDIUM),
@@ -156,8 +145,25 @@ Player* Game::createPlayer()
 	);
 }
 
+Ball* Game::createBall(Player* player)
+{
+	float ballSize = 6;
+	Vector2 centerOfPaddle = player->getPaddleTopCenterPosition();
+	Vector2 ballPosition{ centerOfPaddle.x - (ballSize * 0.5f), centerOfPaddle.y - ballSize };
+	Vector2 ballExtents{ ballSize  * 0.5f, ballSize  * 0.5f };
+
+	return new Ball(
+		getSprite(SpriteId::BALL),
+		AABB{ ballPosition, ballExtents },
+		ballPosition
+	);
+}
+
 void Game::render(SDL_Renderer* renderer)
 {
 	for (Entity* entity : entities)
+	{
 		entity->render(renderer);
+		entity->renderColliders(renderer);
+	}
 }

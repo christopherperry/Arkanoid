@@ -5,6 +5,7 @@
 #include "sprites/sprite.h"
 #include "Entity.h"
 #include "Player.h"
+#include "Ball.h"
 
 // WARNING: only add at the end 
 // because we hardcoded numbers to define the level
@@ -86,5 +87,6 @@ public:
 	Game(SDL_Texture* texture);
 	Sprite* getSprite(int id);
 	Player* createPlayer();
+	Ball* createBall(Player* player);
 	void render(SDL_Renderer* renderer);
 };

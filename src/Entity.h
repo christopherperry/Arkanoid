@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SDL.h>
-#include "BoundingBox.h"
+#include "AABB.h"
 #include "sprites/sprite.h"
 #include "Vector2.h"
 
@@ -10,10 +10,11 @@ class Entity
 protected:
 	Vector2 position;
 	Sprite* sprite;
-	BoundingBox boundingBox;
+	AABB boundingBox;
 public:
 	Entity() = delete;
-	Entity(Sprite* sprite, BoundingBox boundingBox, Vector2 position) : sprite(sprite), boundingBox(boundingBox), position(position) {};
-	bool collidesWith(Entity& other);
+	Entity(Sprite* sprite, AABB boundingBox, Vector2 position) : sprite(sprite), boundingBox(boundingBox), position(position) {};
+	virtual bool collidesWith(Entity& other);
 	virtual void render(SDL_Renderer* renderer);
+	virtual void renderColliders(SDL_Renderer* renderer);
 };

@@ -15,6 +15,11 @@ void Player::onEvent(SDL_Event event)
 	}
 }
 
+Vector2 Player::getPaddleTopCenterPosition()
+{
+	return Vector2(boundingBox.position.x, boundingBox.position.y - boundingBox.extents.y);
+}
+
 void Player::update(float deltaTime)
 {
 	Logger::log("Delta time: " + std::to_string(deltaTime)); 
@@ -55,6 +60,4 @@ void Player::render(SDL_Renderer* renderer)
 	rightHalfLocation.h = rightHalf->rect.h;
 
 	SDL_RenderCopy(renderer, rightHalf->texture, &rightHalf->rect, &rightHalfLocation);
-
-	//boundingBox.render(renderer);
 }
