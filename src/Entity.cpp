@@ -20,3 +20,8 @@ void Entity::renderColliders(SDL_Renderer* renderer)
 {
 	boundingBox.render(renderer);
 }
+
+void Entity::renderCollidersHit(SDL_Renderer* renderer)
+{
+	boundingBox.renderHit(renderer);
+}

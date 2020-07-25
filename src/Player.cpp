@@ -36,7 +36,7 @@ void Player::update(float deltaTime)
 		directionX = 1;
 	}
 
-	float distanceX = directionX * velocity * deltaTime;
+	float distanceX = directionX * moveSpeed * deltaTime;
 	//Logger::log("Distance: " + std::to_string(distanceX));
 	position.x += distanceX;
 

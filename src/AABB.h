@@ -7,6 +7,7 @@
 class AABB
 {
 private:
+	void render(SDL_Renderer* renderer, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
 	
 	Vector2 normalLeft = Vector2::left;
 	Vector2 normalRight = Vector2::right;
@@ -18,7 +19,7 @@ public:
 	Vector2 extents;
 
 	AABB(Vector2 position, Vector2 extents);
-	void moveBy(int distanceX, int distanceY);
+	void moveBy(float distanceX, float distanceY);
 
 	/*
 	 * Checks a collision between this box and another
@@ -26,4 +27,6 @@ public:
 	bool checkCollision(const AABB& other);
 
 	void render(SDL_Renderer* renderer);
+
+	void renderHit(SDL_Renderer* renderer);
 };

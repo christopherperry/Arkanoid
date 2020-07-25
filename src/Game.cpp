@@ -163,6 +163,6 @@ void Game::render(SDL_Renderer* renderer)
 	for (Entity* entity : entities)
 	{
 		entity->render(renderer);
-		entity->renderColliders(renderer);
+		//entity->renderColliders(renderer);
 	}
 }

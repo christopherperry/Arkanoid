@@ -17,4 +17,5 @@ public:
 	virtual bool collidesWith(Entity& other);
 	virtual void render(SDL_Renderer* renderer);
 	virtual void renderColliders(SDL_Renderer* renderer);
+	virtual void renderCollidersHit(SDL_Renderer* renderer);
 };

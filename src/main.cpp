@@ -61,9 +61,12 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
+	float ballSpeed = 100.0f / 1000.0f; // pixels per second, time is in milliseconds
+
 	Game game{ texture };
 	Player* player = game.createPlayer();
 	Ball* ball = game.createBall(player);
+	ball->setVelocity(Vector2{ ballSpeed, -ballSpeed });
 	SpriteId spriteId = SpriteId::BRICK_YELLOW;
 
 	//Our event structure
@@ -96,6 +99,11 @@ int main(int argc, char *argv[])
 		}
 
 		player->update(deltaTime);
+		ball->update(deltaTime);
+
+		///////////////////
+		// RENDERING BEGIN
+		//////////////////
 
 		// Clear the scene
 		SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
@@ -104,12 +112,16 @@ int main(int argc, char *argv[])
 		// Render
 		game.render(renderer);
 		player->render(renderer);
-		player->renderColliders(renderer);
+		//player->renderColliders(renderer);
 		ball->render(renderer);
 		ball->renderColliders(renderer);
 
 		// Render the scene
 		SDL_RenderPresent(renderer);
+
+		///////////////////
+		// RENDERING END
+		//////////////////
 
 		// Update time
 		float currentTime = SDL_GetTicks();
