@@ -15,6 +15,7 @@ public:
 	Entity() = delete;
 	Entity(Sprite* sprite, AABB boundingBox, Vector2 position) : sprite(sprite), boundingBox(boundingBox), position(position) {};
 	virtual bool collidesWith(Entity& other);
+	virtual Hit* checkCollision(Entity& other);
 	virtual void render(SDL_Renderer* renderer);
 	virtual void renderColliders(SDL_Renderer* renderer);
 	virtual void renderCollidersHit(SDL_Renderer* renderer);

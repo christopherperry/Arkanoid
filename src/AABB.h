@@ -26,6 +26,8 @@ public:
 	 */
 	bool checkCollision(const AABB& other);
 
+	Hit* checkIntersection(const AABB& other);
+
 	void render(SDL_Renderer* renderer);
 
 	void renderHit(SDL_Renderer* renderer);

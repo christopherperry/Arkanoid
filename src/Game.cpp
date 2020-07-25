@@ -167,14 +167,15 @@ void Game::render(SDL_Renderer* renderer)
 	}
 }
 
-std::vector<Entity*> Game::checkCollisions(Ball* const ball)
+std::vector<std::pair<Entity*, Hit*>> Game::checkCollisions(Ball* const ball)
 {
-	std::vector<Entity*> collisions;
+	std::vector<std::pair<Entity*, Hit*>> collisions;
 	for (Entity* entity : entities)
 	{
-		if (ball->collidesWith(*entity))
+		Hit* hit = ball->checkCollision(*entity);
+		if (hit != nullptr)
 		{
-			collisions.push_back(entity);
+			collisions.push_back(std::pair(entity, hit));
 		}
 	}
 

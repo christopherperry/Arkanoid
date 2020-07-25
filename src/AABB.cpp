@@ -3,6 +3,11 @@
 #include "AABB.h"
 #include "Vector2.h"
 
+int sign(float a)
+{
+	return a < 0 ? -1 : 1;
+}
+
 AABB::AABB(Vector2 position, Vector2 extents) : 
 	position{ position }, extents{ extents } {}
 
@@ -26,6 +31,45 @@ bool AABB::checkCollision(const AABB& other)
 
 	return (thisMinX <= otherMaxX && thisMaxX >= otherMinX) &&
 		(thisMinY <= otherMaxY && thisMaxY >= otherMinY);
+}
+
+Hit* AABB::checkIntersection(const AABB& other)
+{
+	const float dx = other.position.x - position.x;
+	const float px = other.extents.x + extents.x - abs(dx);
+	if (px <= 0.0f)
+	{
+		return nullptr;
+	}
+
+	const float dy = other.position.y - position.y;
+	const float py = other.extents.y + extents.y - abs(dy);
+	if (py <= 0.0f)
+	{
+		return nullptr;
+	}
+
+	Hit* hit = new Hit();
+
+	if (px < py)
+	{
+		// if dx is positive that means the other box was to our right, else it was to our left
+		const int sx = sign(dx);
+		hit->delta.x = px * sx; // the amount to correct the collision, you'd subtract this from your position if you owned this AABB
+		hit->normal.x = sx; // the normal on the surface of this AABB where the collision occurred
+		hit->contactPoint.x = position.x + (sx * extents.x);
+		hit->contactPoint.y = other.position.y; // center y on the other box
+	}
+	else
+	{
+		const int sy = sign(dy);
+		hit->delta.y = py * sy;
+		hit->normal.y = sy;
+		hit->contactPoint.x = other.position.x;
+		hit->contactPoint.y = position.y + (sy * extents.y);
+	}
+
+	return hit;
 }
 
 void AABB::render(SDL_Renderer* renderer)

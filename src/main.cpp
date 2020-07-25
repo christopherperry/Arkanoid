@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
 	Game game{ texture };
 	Player* player = game.createPlayer();
 	Ball* ball = game.createBall(player);
-	ball->setVelocity(Vector2{ ballSpeed, -ballSpeed });
+	ball->setVelocity(Vector2{ 0, -ballSpeed });
 	SpriteId spriteId = SpriteId::BRICK_YELLOW;
 
 	//Our event structure
@@ -103,7 +103,13 @@ int main(int argc, char *argv[])
 		ball->update(deltaTime);
 
 		// Check for collisions
-		std::vector<Entity*> collisions = game.checkCollisions(ball);
+		std::vector<std::pair<Entity*, Hit*>> collisions = game.checkCollisions(ball);
+
+		// Handle collisions
+		for (std::pair<Entity*, Hit*>& collision : collisions)
+		{
+			ball->onCollision(collision.second);
+		}
 
 		///////////////////
 		// RENDERING BEGIN
@@ -121,9 +127,9 @@ int main(int argc, char *argv[])
 		ball->renderColliders(renderer);
 
 		// Render collisions for debugging
-		for (Entity* entity : collisions)
+		for (std::pair<Entity*, Hit*>& collision : collisions)
 		{
-			entity->renderCollidersHit(renderer);
+			collision.first->renderCollidersHit(renderer);
 		}
 
 		// Render the scene

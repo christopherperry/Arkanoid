@@ -6,6 +6,12 @@ bool Entity::collidesWith(Entity& other)
 	return this->boundingBox.checkCollision(other.boundingBox);
 }
 
+Hit* Entity::checkCollision(Entity& other)
+{
+	if (!other.isCollidable()) return nullptr;
+	return this->boundingBox.checkIntersection(other.boundingBox);
+}
+
 void Entity::render(SDL_Renderer* renderer)
 {
 	SDL_Rect location;

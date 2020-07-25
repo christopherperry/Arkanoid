@@ -5,17 +5,27 @@ const Vector2 Vector2::down = Vector2(0, -1);
 const Vector2 Vector2::left = Vector2(-1, 0);
 const Vector2 Vector2::right = Vector2(1, 0);
 
-
-inline Vector2& operator*(Vector2& v, float scalar)
+Vector2 Vector2::operator-() const
 {
-	v.x *= scalar;
-	v.y *= scalar;
-	return v;
+	return Vector2(-x, -y);
 }
 
-inline Vector2& operator*(float scalar, Vector2& v)
+float Vector2::dot(const Vector2& other)
 {
-	v.x *= scalar;
-	v.y *= scalar;
-	return v;
+	return (x * other.x) + (y * other.y);
+}
+
+Vector2 Vector2::operator-(const Vector2& other)
+{
+	return Vector2(x - other.x, y - other.y);
+}
+
+Vector2 Vector2::operator+(const Vector2 & other)
+{
+	return  Vector2(x + other.x, y + other.y);
+}
+
+Vector2 Vector2::operator*(float scalar)
+{
+	return Vector2(scalar * x, scalar * y);
 }

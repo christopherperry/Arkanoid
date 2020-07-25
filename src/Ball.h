@@ -12,4 +12,5 @@ public:
 	Ball(Sprite* sprite, AABB boundingBox, Vector2 position) : Entity(sprite, boundingBox, position) {};
 	void setVelocity(Vector2 velocity);
 	void update(float deltaTime);
+	void onCollision(Hit* hit);
 };
