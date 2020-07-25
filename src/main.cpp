@@ -61,13 +61,22 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	float ballSpeed = 100.0f / 1000.0f; // pixels per second, time is in milliseconds
+	float ballSpeed = 200.0f / 1000.0f; // pixels per second, time is in milliseconds
 
 	Game game{ texture };
+
 	Player* player = game.createPlayer();
+
 	Ball* ball = game.createBall(player);
-	ball->setVelocity(Vector2{ 0, -ballSpeed });
-	SpriteId spriteId = SpriteId::BRICK_YELLOW;
+
+	// Pick a random start velocity between 25 and 80 degrees
+	float pi = 2 * std::acos(0);
+	int randomAngle = 25 + (std::rand() % (80 - 25 + 1));
+	int randomAngleRadians = randomAngle * (pi / 180.0f);
+	Vector2 startVelocity = Vector2(std::cos(randomAngleRadians), -std::sin(randomAngleRadians)) * ballSpeed;
+	ball->setVelocity(startVelocity);
+	
+	
 
 	//Our event structure
 	SDL_Event e;
@@ -107,13 +116,15 @@ int main(int argc, char *argv[])
 		Hit* hitPlayer = ball->checkCollision(*player);
 		if (hitPlayer != nullptr)
 		{
-			ball->onCollision(hitPlayer);
+			ball->onCollision(hitPlayer, deltaTime);
 		}
-
-		// Handle collisions
-		for (std::pair<Entity*, Hit*>& collision : collisions)
+		else
 		{
-			ball->onCollision(collision.second);
+			// Handle collisions
+			for (std::pair<Entity*, Hit*>& collision : collisions)
+			{
+				ball->onCollision(collision.second, deltaTime);
+			}
 		}
 
 		///////////////////
