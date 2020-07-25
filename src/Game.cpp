@@ -9,6 +9,7 @@
 #include "BackgroundTile.h"
 #include "WallCollider.h"
 #include "Wall.h"
+#include "logger.h"
 
 Game::Game(SDL_Texture* texture)
 {
@@ -107,7 +108,8 @@ Game::Game(SDL_Texture* texture)
 			if (spriteId >= 0 && spriteId <= 10)
 			{
 				Vector2 extents{ TILE_SIZE * 0.5f, BRICK_HEIGHT * 0.5f };
-				entities.push_back(new Brick{ getSprite(spriteId), AABB{ position, extents }, position });
+				int numHitsToDestroy = spriteId == 8 ? 2 : 1;
+				entities.push_back(new Brick{ getSprite(spriteId), AABB{ position, extents }, position, numHitsToDestroy });
 			}
 			else // Wall
 			{
@@ -180,6 +182,28 @@ void Game::render(SDL_Renderer* renderer)
 	}
 }
 
+// TODO: do this in a faster way, i.e. don't copy just remove in place
+void Game::update()
+{
+	// Remove dead entities
+	std::vector<Entity*> aliveEntities;
+	for (Entity* entity : entities)
+	{
+		if (entity->isAlive())
+		{
+			aliveEntities.push_back(entity);
+		}
+		else
+		{
+			Logger::log("DELETE DEAD ENTITY!");
+			delete entity;
+		}
+	}
+
+	entities.clear();
+	entities = aliveEntities;
+}
+
 std::vector<std::pair<Entity*, Hit*>> Game::checkCollisions(Entity* const entity)
 {
 	std::vector<std::pair<Entity*, Hit*>> collisions;
@@ -188,7 +212,7 @@ std::vector<std::pair<Entity*, Hit*>> Game::checkCollisions(Entity* const entity
 		Hit* hit = entity->checkCollision(*e);
 		if (hit != nullptr)
 		{
-			collisions.push_back(std::pair(entity, hit));
+			collisions.push_back(std::pair(e, hit));
 		}
 	}
 

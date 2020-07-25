@@ -20,4 +20,6 @@ public:
 	virtual void renderColliders(SDL_Renderer* renderer);
 	virtual void renderCollidersHit(SDL_Renderer* renderer);
 	virtual bool isCollidable() { return true; };
+	virtual void onCollision(Hit* hit) {}; // do nothing by default
+	virtual bool isAlive() { return true; }
 };

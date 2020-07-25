@@ -106,6 +106,7 @@ int main(int argc, char *argv[])
 		}
 
 		// Update
+		game.update();
 		player->update(deltaTime);
 		ball->update(deltaTime);
 
@@ -128,6 +129,8 @@ int main(int argc, char *argv[])
 			// Handle collisions
 			for (std::pair<Entity*, Hit*>& collision : ballCollisions)
 			{
+				Entity* theThingWeHit = collision.first;
+				theThingWeHit->onCollision(collision.second); // Passing this may be interpreted wrong if we decide to interpret it
 				ball->onCollision(collision.second);
 			}
 		}

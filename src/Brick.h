@@ -4,6 +4,11 @@
 
 class Brick : public Entity
 {
+private:
+	int numHitsToDestroy;
+	int totalHits{ 0 };
 public:
-	Brick(Sprite* sprite, AABB boundingBox, Vector2 position) : Entity(sprite, boundingBox, position) {};
+	Brick(Sprite* sprite, AABB boundingBox, Vector2 position, int numHitsToDestroy) : Entity(sprite, boundingBox, position), numHitsToDestroy{numHitsToDestroy} {};
+	void onCollision(Hit* hit) override;
+	bool isAlive() override;
 };
