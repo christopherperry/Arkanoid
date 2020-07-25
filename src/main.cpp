@@ -109,19 +109,26 @@ int main(int argc, char *argv[])
 		player->update(deltaTime);
 		ball->update(deltaTime);
 
-		// Check for collisions
-		std::vector<std::pair<Entity*, Hit*>> collisions = game.checkCollisions(ball);
+		// Check for player collisions
+		std::vector<std::pair<Entity*, Hit*>> playerCollisions = game.checkCollisions(player);
+		if (playerCollisions.size() > 0)
+		{
+			player->onCollision(playerCollisions.at(0).second);
+		}
+
+		// Check for ball collisions
+		std::vector<std::pair<Entity*, Hit*>> ballCollisions = game.checkCollisions(ball);
 		Hit* hitPlayer = ball->checkCollision(*player);
 		if (hitPlayer != nullptr)
 		{
-			ball->onCollision(hitPlayer, deltaTime);
+			ball->onCollision(hitPlayer);
 		}
 		else
 		{
 			// Handle collisions
-			for (std::pair<Entity*, Hit*>& collision : collisions)
+			for (std::pair<Entity*, Hit*>& collision : ballCollisions)
 			{
-				ball->onCollision(collision.second, deltaTime);
+				ball->onCollision(collision.second);
 			}
 		}
 
@@ -141,7 +148,7 @@ int main(int argc, char *argv[])
 		ball->renderColliders(renderer);
 
 		// Render collisions for debugging
-		for (std::pair<Entity*, Hit*>& collision : collisions)
+		for (std::pair<Entity*, Hit*>& collision : ballCollisions)
 		{
 			collision.first->renderCollidersHit(renderer);
 		}

@@ -18,7 +18,7 @@ void Ball::update(float deltaTime)
 	boundingBox.moveBy(distanceX, distanceY);
 }
 
-void Ball::onCollision(Hit* hit, float deltaTime)
+void Ball::onCollision(Hit* hit)
 {
 	std::cout << "HIT! = (" << hit->normal.x << ", " << hit->normal.y << ")" << std::endl;
 

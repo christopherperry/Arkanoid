@@ -20,6 +20,7 @@ public:
 	}
 	Vector2 getPaddleTopCenterPosition();
 	void update(float deltaTime);
+	void onCollision(Hit* hit);
 	void onEvent(SDL_Event event);
 	void render(SDL_Renderer* renderer) override;
 };

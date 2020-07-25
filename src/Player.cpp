@@ -22,25 +22,27 @@ Vector2 Player::getPaddleTopCenterPosition()
 
 void Player::update(float deltaTime)
 {
-	//Logger::log("Delta time: " + std::to_string(deltaTime)); 
-
 	float directionX = 0;
 	if (movingLeft)
 	{
-		//Logger::log("Moving LEFT");
 		directionX = -1;
 	}
 	else if (movingRight)
 	{
-		//Logger::log("Moving RIGHT");
 		directionX = 1;
 	}
 
 	float distanceX = directionX * moveSpeed * deltaTime;
-	//Logger::log("Distance: " + std::to_string(distanceX));
 	position.x += distanceX;
 
 	boundingBox.moveBy(distanceX, 0);
+}
+
+void Player::onCollision(Hit* hit)
+{
+	// Move position out of collision
+	position = position - hit->delta;
+	boundingBox.moveBy(-hit->delta.x, -hit->delta.y);
 }
 
 void Player::render(SDL_Renderer* renderer)
