@@ -1,5 +1,6 @@
 #include <iostream>
 #include <SDL.h>
+#include <SDL_mixer.h>
 #include <map>
 #include "resources.h"
 #include "cleanup.h"
@@ -8,6 +9,8 @@
 #include "TextureLoader.h"
 #include "Game.h"
 #include "Player.h"
+
+const float BALL_SPEED = 300.0f / 1000.0f; // pixels per second, time is in milliseconds
 
 // The tiles are square 31x31
 const int TILE_SIZE = 31;
@@ -34,7 +37,7 @@ void renderSprite(SDL_Renderer* renderer, Sprite* sprite, int positionX, int pos
 // This particular signature of main is required by SDL.
 int main(int argc, char *argv[])
 {
-	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
 		Logger::logSDLError("SDL_Init");
 		return 1;
 	}
@@ -61,19 +64,26 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	float ballSpeed = 200.0f / 1000.0f; // pixels per second, time is in milliseconds
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+	{
+		printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
+	}
+
+	Mix_Chunk* paddleHit = Mix_LoadWAV("res/paddle-hit.wav");
+	Mix_Chunk* brickHit = Mix_LoadWAV("res/brick-hit.wav");
+	
 
 	Game game{ texture };
 
 	Player* player = game.createPlayer();
 
-	Ball* ball = game.createBall(player);
+	Ball* ball = game.createBall(player, brickHit, paddleHit);
 
 	// Pick a random start velocity between 25 and 155 degrees
 	float pi = 2 * std::acos(0);
 	int randomAngle = 25 + (std::rand() % (155 - 25 + 1));
 	int randomAngleRadians = randomAngle * (pi / 180.0f);
-	Vector2 startVelocity = Vector2(std::cos(randomAngleRadians), -std::sin(randomAngleRadians)) * ballSpeed;
+	Vector2 startVelocity = Vector2(std::cos(randomAngleRadians), -std::sin(randomAngleRadians)) * BALL_SPEED;
 	ball->setVelocity(startVelocity);
 
 	//Our event structure
@@ -148,7 +158,7 @@ int main(int argc, char *argv[])
 		player->render(renderer);
 		//player->renderColliders(renderer);
 		ball->render(renderer);
-		ball->renderColliders(renderer);
+		//ball->renderColliders(renderer);
 
 		// Render collisions for debugging
 		for (std::pair<Entity*, Hit*>& collision : ballCollisions)
@@ -171,6 +181,10 @@ int main(int argc, char *argv[])
 
 	delete player;
 	cleanup(texture, renderer, window);
+
+	Mix_FreeChunk(paddleHit);
+	Mix_FreeChunk(brickHit);
+	Mix_Quit();
 	SDL_Quit();
 
 	return 0;

@@ -9,7 +9,9 @@ bool Entity::collidesWith(Entity& other)
 Hit* Entity::checkCollision(Entity& other)
 {
 	if (!other.isCollidable()) return nullptr;
-	return this->boundingBox.checkIntersection(other.boundingBox);
+	Hit* hit = this->boundingBox.checkIntersection(other.boundingBox);
+	if (hit != nullptr) hit->tag = other.tag();
+	return hit;
 }
 
 void Entity::render(SDL_Renderer* renderer)

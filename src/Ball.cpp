@@ -21,6 +21,15 @@ void Ball::update(float deltaTime)
 void Ball::onCollision(Hit* hit)
 {
 	std::cout << "HIT! = (" << hit->normal.x << ", " << hit->normal.y << ")" << std::endl;
+	std::string tag = hit->tag;
+	if (tag == "player")
+	{
+		Mix_PlayChannel(-1, hitPaddleSound, 0);
+	}
+	else if (tag == "brick")
+	{
+		Mix_PlayChannel(-1, hitBrickSound, 0);
+	}
 
 	// We need to first move the ball to not be in a colliding state
 	position = position - hit->delta;

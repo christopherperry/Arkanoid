@@ -1,9 +1,13 @@
 #pragma once
 
+#include <string>
 #include "Vector2.h"
 
 struct Hit
 {
+	// Tag of the Entity that was hit.
+	std::string tag{"none"};
+
 	// The point of contact between the two objects during a collision.
 	Vector2 contactPoint{ 0.0, 0.0 };
 

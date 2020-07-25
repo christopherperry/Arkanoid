@@ -88,7 +88,7 @@ public:
 	Game(SDL_Texture* texture);
 	Sprite* getSprite(int id);
 	Player* createPlayer();
-	Ball* createBall(Player* player);
+	Ball* createBall(Player* player, Mix_Chunk* brickHit, Mix_Chunk* paddleHit);
 	void render(SDL_Renderer* renderer);
 	void update();
 	std::vector<std::pair<Entity*, Hit*>> checkCollisions(Entity* const entity);

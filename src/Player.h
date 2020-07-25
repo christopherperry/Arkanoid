@@ -10,7 +10,7 @@ private:
 	Sprite* rightHalf;
 	bool movingLeft = false;
 	bool movingRight = false;
-	float moveSpeed = 300 / 1000.0f; // pixels per second, time is in milliseconds
+	float moveSpeed = 400 / 1000.0f; // pixels per second, time is in milliseconds
 public:
 	Player() = delete;
 	Player(Sprite* leftHalf, Sprite* rightHalf, AABB boundingBox, Vector2 position) : Entity(nullptr, boundingBox, position)
@@ -23,5 +23,6 @@ public:
 	void onCollision(Hit* hit) override;
 	void onEvent(SDL_Event event);
 	void render(SDL_Renderer* renderer) override;
+	std::string tag() override { return "player"; }
 };
 

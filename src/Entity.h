@@ -22,4 +22,5 @@ public:
 	virtual bool isCollidable() { return true; };
 	virtual void onCollision(Hit* hit) {}; // do nothing by default
 	virtual bool isAlive() { return true; }
+	virtual std::string tag() { return "none"; }
 };

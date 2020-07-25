@@ -159,7 +159,7 @@ Player* Game::createPlayer()
 	);
 }
 
-Ball* Game::createBall(Player* player)
+Ball* Game::createBall(Player* player, Mix_Chunk* brickHit, Mix_Chunk* paddleHit)
 {
 	float ballSize = 6;
 	Vector2 centerOfPaddle = player->getPaddleTopCenterPosition();
@@ -169,7 +169,9 @@ Ball* Game::createBall(Player* player)
 	return new Ball(
 		getSprite(SpriteId::BALL),
 		AABB{ ballPosition, ballExtents },
-		ballPosition
+		ballPosition,
+		brickHit,
+		paddleHit
 	);
 }
 
@@ -178,7 +180,7 @@ void Game::render(SDL_Renderer* renderer)
 	for (Entity* entity : entities)
 	{
 		entity->render(renderer);
-		entity->renderColliders(renderer);
+		//entity->renderColliders(renderer);
 	}
 }
 

@@ -3,7 +3,6 @@
 
 void Brick::onCollision(Hit* hit)
 {
-	std::cout << "HIT BRICK!!!" << std::endl;
 	totalHits++;
 }
 
