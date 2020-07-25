@@ -23,20 +23,8 @@ void Ball::onCollision(Hit* hit, float deltaTime)
 	std::cout << "HIT! = (" << hit->normal.x << ", " << hit->normal.y << ")" << std::endl;
 
 	// We need to first move the ball to not be in a colliding state
-
-	// This way of doing it causes some teleportation sometimes
 	position = position - hit->delta;
 	boundingBox.moveBy(-hit->delta.x, -hit->delta.y);
-
-	// let's instead try undoing our last move
-	// which could be weird for fast moving objects
-	//float distanceX = -velocity.x * deltaTime;
-	//float distanceY = -velocity.y * deltaTime;
-
-	//position.x += distanceX;
-	//position.y += distanceY;
-
-	//boundingBox.moveBy(distanceX, distanceY);
 
 	// Next we change the velocity of the ball to mirror the current velocity
 	// ReflectedVelocity = CurrentVelocity - 2 (CurrentVelocity dot hitnormal) hitnormal

@@ -7,6 +7,8 @@
 #include "Player.h"
 #include "Ball.h"
 #include "BackgroundTile.h"
+#include "WallCollider.h"
+#include "Wall.h"
 
 Game::Game(SDL_Texture* texture)
 {
@@ -107,18 +109,29 @@ Game::Game(SDL_Texture* texture)
 				Vector2 extents{ TILE_SIZE * 0.5f, BRICK_HEIGHT * 0.5f };
 				entities.push_back(new Brick{ getSprite(spriteId), AABB{ position, extents }, position });
 			}
-			else if (spriteId >= 17 && spriteId <= 22) // Top Wall
+			else // Wall
 			{
-				Vector2 extents{ TILE_SIZE * 0.5f, WALL_TOP_THICKNESS * 0.5f };
-				entities.push_back(new Entity{ getSprite(spriteId), AABB{ position, extents }, position });
-			}
-			else
-			{
-				Vector2 extents{ TILE_SIZE * 0.5f, TILE_SIZE * 0.5f };
-				entities.push_back(new Entity{ getSprite(spriteId), AABB{ position, extents }, position });
+				entities.push_back(new Wall{ getSprite(spriteId), position });
 			}
 		}
 	}
+
+	// Create separate Entities for the walls because having boxes for each tile causes collision issues
+	Vector2 leftPosition(TILE_SIZE * 0.5f, NUM_TILES_HIGH * TILE_SIZE * 0.5f);
+	Vector2 leftExtents(TILE_SIZE * 0.5f, NUM_TILES_HIGH * TILE_SIZE * 0.5f);
+	WallCollider* leftWall = new WallCollider(AABB{ leftPosition, leftExtents }, leftPosition);
+
+	Vector2 rightPosition(NUM_TILES_WIDE * TILE_SIZE - TILE_SIZE * 0.5f, NUM_TILES_HIGH * TILE_SIZE * 0.5f);
+	Vector2 rightExtents(TILE_SIZE * 0.5f, NUM_TILES_HIGH * TILE_SIZE * 0.5f);
+	WallCollider* rightWall = new WallCollider(AABB{ rightPosition, rightExtents }, rightPosition);
+
+	Vector2 topPosition(NUM_TILES_WIDE * TILE_SIZE * 0.5f + OFFSET, 0.0f);
+	Vector2 topExtents(NUM_TILES_WIDE * TILE_SIZE * 0.5f, TILE_SIZE * 0.5f);
+	WallCollider* topWall = new WallCollider(AABB{ topPosition, topExtents }, topPosition);
+
+	entities.push_back(leftWall);
+	entities.push_back(rightWall);
+	entities.push_back(topWall);
 }
 
 Sprite* Game::getSprite(int id)
@@ -163,7 +176,7 @@ void Game::render(SDL_Renderer* renderer)
 	for (Entity* entity : entities)
 	{
 		entity->render(renderer);
-		//entity->renderColliders(renderer);
+		entity->renderColliders(renderer);
 	}
 }
 

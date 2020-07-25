@@ -75,8 +75,6 @@ int main(int argc, char *argv[])
 	int randomAngleRadians = randomAngle * (pi / 180.0f);
 	Vector2 startVelocity = Vector2(std::cos(randomAngleRadians), -std::sin(randomAngleRadians)) * ballSpeed;
 	ball->setVelocity(startVelocity);
-	
-	
 
 	//Our event structure
 	SDL_Event e;

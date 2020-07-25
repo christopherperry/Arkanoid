@@ -166,6 +166,7 @@ copy $(ProjectDir)lib\*  $(OutDir)</Command>
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\TextureLoader.cpp" />
     <ClCompile Include="src\Vector2.cpp" />
+    <ClCompile Include="src\WallCollider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BackgroundTile.h" />
@@ -183,6 +184,8 @@ copy $(ProjectDir)lib\*  $(OutDir)</Command>
     <ClInclude Include="src\sprites\sprite.h" />
     <ClInclude Include="src\TextureLoader.h" />
     <ClInclude Include="src\Vector2.h" />
+    <ClInclude Include="src\WallCollider.h" />
+    <ClInclude Include="src\Wall.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
