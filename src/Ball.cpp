@@ -23,8 +23,8 @@ void Ball::onCollision(Hit* hit)
 	std::cout << "HIT! = (" << hit->normal.x << ", " << hit->normal.y << ")" << std::endl;
 
 	// We need to first move the ball to not be in a colliding state
-	position = position + hit->delta;
-	boundingBox.moveBy(hit->delta.x, hit->delta.y);
+	//position = position + hit->delta;
+	//boundingBox.moveBy(hit->delta.x, hit->delta.y);
 
 	// Next we change the velocity of the ball to mirror the current velocity
 	// ReflectedVelocity = CurrentVelocity - 2 (CurrentVelocity dot hitnormal) hitnormal

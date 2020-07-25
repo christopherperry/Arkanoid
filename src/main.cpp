@@ -104,6 +104,11 @@ int main(int argc, char *argv[])
 
 		// Check for collisions
 		std::vector<std::pair<Entity*, Hit*>> collisions = game.checkCollisions(ball);
+		Hit* hitPlayer = ball->checkCollision(*player);
+		if (hitPlayer != nullptr)
+		{
+			ball->onCollision(hitPlayer);
+		}
 
 		// Handle collisions
 		for (std::pair<Entity*, Hit*>& collision : collisions)
