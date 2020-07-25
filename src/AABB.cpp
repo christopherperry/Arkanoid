@@ -35,28 +35,34 @@ bool AABB::checkCollision(const AABB& other)
 
 Hit* AABB::checkIntersection(const AABB& other)
 {
+	// Difference in positions along the x-axis
 	const float dx = other.position.x - position.x;
+	// Penetration distance along the x-axis
 	const float px = other.extents.x + extents.x - abs(dx);
 	if (px <= 0.0f)
 	{
 		return nullptr;
 	}
 
+	// Difference in positions along the y-axis
 	const float dy = other.position.y - position.y;
+	// Penetration distance along the y-axis
 	const float py = other.extents.y + extents.y - abs(dy);
 	if (py <= 0.0f)
 	{
 		return nullptr;
 	}
 
+
+	// Penetration along both axis means there's a collision
 	Hit* hit = new Hit();
 
 	if (px < py)
 	{
-		// if dx is positive that means the other box was to our right, else it was to our left
+		// if dx is positive that means the other box was to our right, negative means it was to our left
 		const int sx = sign(dx);
 		hit->delta.x = px * sx; // the amount to correct the collision, you'd subtract this from your position if you owned this AABB
-		hit->normal.x = sx; // the normal on the surface of this AABB where the collision occurred
+		hit->normal.x = sx; // the normal of the surface of this AABB where the collision occurred
 		hit->contactPoint.x = position.x + (sx * extents.x);
 		hit->contactPoint.y = other.position.y; // center y on the other box
 	}
