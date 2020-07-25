@@ -69,9 +69,9 @@ int main(int argc, char *argv[])
 
 	Ball* ball = game.createBall(player);
 
-	// Pick a random start velocity between 25 and 80 degrees
+	// Pick a random start velocity between 25 and 155 degrees
 	float pi = 2 * std::acos(0);
-	int randomAngle = 25 + (std::rand() % (80 - 25 + 1));
+	int randomAngle = 25 + (std::rand() % (155 - 25 + 1));
 	int randomAngleRadians = randomAngle * (pi / 180.0f);
 	Vector2 startVelocity = Vector2(std::cos(randomAngleRadians), -std::sin(randomAngleRadians)) * ballSpeed;
 	ball->setVelocity(startVelocity);

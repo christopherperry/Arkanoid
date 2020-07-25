@@ -29,6 +29,7 @@ void Ball::onCollision(Hit* hit, float deltaTime)
 	//boundingBox.moveBy(hit->delta.x, hit->delta.y);
 
 	// let's instead try undoing our last move
+	// which could be weird for fast moving objects
 	float distanceX = -velocity.x * deltaTime;
 	float distanceY = -velocity.y * deltaTime;
 
