@@ -31,8 +31,8 @@ bool AABB::checkCollision(const AABB& other)
 void AABB::render(SDL_Renderer* renderer)
 {
 	SDL_Rect renderRect{};
-	renderRect.x = position.x;
-	renderRect.y = position.y;
+	renderRect.x = position.x - extents.x;
+	renderRect.y = position.y - extents.y;
 	renderRect.w = extents.x + extents.x;
 	renderRect.h = extents.y + extents.y;
 

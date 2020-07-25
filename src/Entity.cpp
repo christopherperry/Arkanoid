@@ -8,8 +8,8 @@ bool Entity::collidesWith(Entity& other)
 void Entity::render(SDL_Renderer* renderer)
 {
 	SDL_Rect location;
-	location.x = position.x;
-	location.y = position.y;
+	location.x = position.x - (sprite->rect.w * 0.5f);
+	location.y = position.y - (sprite->rect.h * 0.5f);
 	location.w = sprite->rect.w;
 	location.h = sprite->rect.h;
 

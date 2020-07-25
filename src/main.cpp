@@ -98,12 +98,15 @@ int main(int argc, char *argv[])
 		player->update(deltaTime);
 
 		// Clear the scene
+		SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
 		SDL_RenderClear(renderer);
 
 		// Render
 		game.render(renderer);
 		player->render(renderer);
+		player->renderColliders(renderer);
 		ball->render(renderer);
+		ball->renderColliders(renderer);
 
 		// Render the scene
 		SDL_RenderPresent(renderer);

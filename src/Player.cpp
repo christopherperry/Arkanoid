@@ -22,22 +22,22 @@ Vector2 Player::getPaddleTopCenterPosition()
 
 void Player::update(float deltaTime)
 {
-	Logger::log("Delta time: " + std::to_string(deltaTime)); 
+	//Logger::log("Delta time: " + std::to_string(deltaTime)); 
 
 	float directionX = 0;
 	if (movingLeft)
 	{
-		Logger::log("Moving LEFT");
+		//Logger::log("Moving LEFT");
 		directionX = -1;
 	}
 	else if (movingRight)
 	{
-		Logger::log("Moving RIGHT");
+		//Logger::log("Moving RIGHT");
 		directionX = 1;
 	}
 
 	float distanceX = directionX * velocity * deltaTime;
-	Logger::log("Distance: " + std::to_string(distanceX));
+	//Logger::log("Distance: " + std::to_string(distanceX));
 	position.x += distanceX;
 
 	boundingBox.moveBy(distanceX, 0);
@@ -46,18 +46,18 @@ void Player::update(float deltaTime)
 void Player::render(SDL_Renderer* renderer)
 {
 	SDL_Rect leftHalfLocation;
-	leftHalfLocation.x = position.x;
-	leftHalfLocation.y = position.y;
-	leftHalfLocation.w = leftHalf->rect.w;
-	leftHalfLocation.h = leftHalf->rect.h;
+	leftHalfLocation.x = boundingBox.position.x - boundingBox.extents.x;
+	leftHalfLocation.y = boundingBox.position.y - boundingBox.extents.y;
+	leftHalfLocation.w = boundingBox.extents.x;
+	leftHalfLocation.h = boundingBox.extents.y * 2;
 
 	SDL_RenderCopy(renderer, leftHalf->texture, &leftHalf->rect, &leftHalfLocation);
 
 	SDL_Rect rightHalfLocation;
-	rightHalfLocation.x = position.x + leftHalf->rect.w;
-	rightHalfLocation.y = position.y;
-	rightHalfLocation.w = rightHalf->rect.w;
-	rightHalfLocation.h = rightHalf->rect.h;
+	rightHalfLocation.x = boundingBox.position.x;
+	rightHalfLocation.y = boundingBox.position.y - boundingBox.extents.y;
+	rightHalfLocation.w = boundingBox.extents.x;
+	rightHalfLocation.h = boundingBox.extents.y * 2;
 
 	SDL_RenderCopy(renderer, rightHalf->texture, &rightHalf->rect, &rightHalfLocation);
 }

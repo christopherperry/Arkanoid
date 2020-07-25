@@ -44,8 +44,8 @@ Game::Game(SDL_Texture* texture)
 		{BACKGROUND_BLUE, Sprite{texture, {129, 385, 31, 31}} },
 
 		// Player medium
-		{PLAYER_LEFT_MEDIUM, Sprite{texture, {225, 161, 31, 31}} },
-		{PLAYER_RIGHT_MEDIUM, Sprite{texture, {257, 161, 31, 31}} },
+		{PLAYER_LEFT_MEDIUM, Sprite{texture, {235, 175, 21, 11}} },
+		{PLAYER_RIGHT_MEDIUM, Sprite{texture, {257, 175, 21, 11}} },
 
 		// The ball
 		{BALL, Sprite{texture, {463, 142, 6, 6}} }
@@ -77,11 +77,11 @@ Game::Game(SDL_Texture* texture)
 	// The Background Tiles
 	for (i = 0; i < NUM_TILES_HIGH; i++)
 	{
-		locationY = i * TILE_SIZE;
+		locationY = (i * TILE_SIZE) + OFFSET;
 
 		for (j = 0; j < NUM_TILES_WIDE; j++)
 		{
-			locationX = j * TILE_SIZE;
+			locationX = (j * TILE_SIZE) + OFFSET;
 			Vector2 position{ locationX, locationY };
 			AABB boundingBox{ position, {TILE_SIZE * 0.5f, TILE_SIZE * 0.5f} };
 			entities.push_back(new BackgroundTile{ getSprite(SpriteId::BACKGROUND_BLUE), boundingBox, position });
@@ -91,14 +91,14 @@ Game::Game(SDL_Texture* texture)
 	// The Walls and Bricks
 	for (i = 0; i < NUM_TILES_HIGH; i++)
 	{
-		locationY = i * TILE_SIZE;
+		locationY = (i * TILE_SIZE) + OFFSET;
 
 		for (j = 0; j < NUM_TILES_WIDE; j++)
 		{
 			int spriteId = wallsAndBricks[i][j];
 			if (spriteId == SpriteId::NONE) continue;
 
-			locationX = j * TILE_SIZE;
+			locationX = (j * TILE_SIZE) + OFFSET;
 			Vector2 position{ locationX, locationY };
 
 			// Bricks
@@ -129,12 +129,11 @@ Sprite* Game::getSprite(int id)
 
 Player* Game::createPlayer()
 {
-	int positionX = ((NUM_TILES_WIDE * TILE_SIZE) / 2.0) - TILE_SIZE;
+	int positionX = (NUM_TILES_WIDE * TILE_SIZE * 0.5f);
 	int positionY = (NUM_TILES_HIGH - 2) * TILE_SIZE;
 	Vector2 position = Vector2(positionX, positionY);
 
-	// relative to player position, which is offset by position in the sprite
-	Vector2 extents{ 42, 11 };
+	Vector2 extents{ 21.0f, 5.5f }; // Paddle size is 42 by 11
 	AABB box{ position, extents };
 
 	return new Player(
@@ -149,7 +148,7 @@ Ball* Game::createBall(Player* player)
 {
 	float ballSize = 6;
 	Vector2 centerOfPaddle = player->getPaddleTopCenterPosition();
-	Vector2 ballPosition{ centerOfPaddle.x - (ballSize * 0.5f), centerOfPaddle.y - ballSize };
+	Vector2 ballPosition{ centerOfPaddle.x, centerOfPaddle.y - ballSize };
 	Vector2 ballExtents{ ballSize  * 0.5f, ballSize  * 0.5f };
 
 	return new Ball(

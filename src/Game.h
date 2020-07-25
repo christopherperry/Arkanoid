@@ -74,6 +74,7 @@ class Game
 private:
 	// The tiles are square 31x31
 	static const int TILE_SIZE = 31;
+	static const int OFFSET = TILE_SIZE * 0.5;
 	static const int BRICK_HEIGHT = 16;
 	static const int WALL_TOP_THICKNESS = 13;
 

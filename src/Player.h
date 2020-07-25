@@ -10,7 +10,7 @@ private:
 	Sprite* rightHalf;
 	bool movingLeft = false;
 	bool movingRight = false;
-	float velocity = 200 / 1000.0f; // pixels per second, time is in milliseconds
+	float velocity = 400 / 1000.0f; // pixels per second, time is in milliseconds
 public:
 	Player() = delete;
 	Player(Sprite* leftHalf, Sprite* rightHalf, AABB boundingBox, Vector2 position) : Entity(nullptr, boundingBox, position)
