@@ -90,4 +90,5 @@ public:
 	Player* createPlayer();
 	Ball* createBall(Player* player);
 	void render(SDL_Renderer* renderer);
+	std::vector<Entity*> checkCollisions(Ball* const ball);
 };

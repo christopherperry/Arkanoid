@@ -98,8 +98,12 @@ int main(int argc, char *argv[])
 			player->onEvent(e);
 		}
 
+		// Update
 		player->update(deltaTime);
 		ball->update(deltaTime);
+
+		// Check for collisions
+		std::vector<Entity*> collisions = game.checkCollisions(ball);
 
 		///////////////////
 		// RENDERING BEGIN
@@ -115,6 +119,12 @@ int main(int argc, char *argv[])
 		//player->renderColliders(renderer);
 		ball->render(renderer);
 		ball->renderColliders(renderer);
+
+		// Render collisions for debugging
+		for (Entity* entity : collisions)
+		{
+			entity->renderCollidersHit(renderer);
+		}
 
 		// Render the scene
 		SDL_RenderPresent(renderer);

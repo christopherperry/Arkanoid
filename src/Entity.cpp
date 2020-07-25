@@ -2,6 +2,7 @@
 
 bool Entity::collidesWith(Entity& other)
 {
+	if (!other.isCollidable()) return false;
 	return this->boundingBox.checkCollision(other.boundingBox);
 }
 

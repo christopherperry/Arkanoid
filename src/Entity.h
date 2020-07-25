@@ -18,4 +18,5 @@ public:
 	virtual void render(SDL_Renderer* renderer);
 	virtual void renderColliders(SDL_Renderer* renderer);
 	virtual void renderCollidersHit(SDL_Renderer* renderer);
+	virtual bool isCollidable() { return true; };
 };

@@ -166,3 +166,17 @@ void Game::render(SDL_Renderer* renderer)
 		//entity->renderColliders(renderer);
 	}
 }
+
+std::vector<Entity*> Game::checkCollisions(Ball* const ball)
+{
+	std::vector<Entity*> collisions;
+	for (Entity* entity : entities)
+	{
+		if (ball->collidesWith(*entity))
+		{
+			collisions.push_back(entity);
+		}
+	}
+
+	return collisions;
+}
