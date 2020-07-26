@@ -2,13 +2,20 @@
 #include "Ball.h"
 #include "Vector2.h"
 
-void Ball::setVelocity(Vector2 velocity)
+const static float BALL_SPEED = 300.0f / 1000.0f; // pixels per second, time is in milliseconds
+
+void Ball::launch()
 {
-	this->velocity = velocity;
+	float pi = 2 * std::acos(0);
+	float angleRadians = 45.0f * (pi / 180.0f);
+	Vector2 startVelocity = Vector2(std::cos(angleRadians), -std::sin(angleRadians)) * BALL_SPEED;
+
+	this->velocity = startVelocity;
 }
 
-void Ball::movePosition(Vector2 position)
+void Ball::reset(Vector2 position)
 {
+	this->velocity = Vector2::zero;
 	this->position = position;
 	boundingBox.moveTo(position);
 }

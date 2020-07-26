@@ -53,17 +53,6 @@ Game::~Game()
 	delete ballLossArea;
 }
 
-void Game::launchBall()
-{
-	// Pick a random start velocity between 25 and 155 degrees
-	float pi = 2 * std::acos(0);
-	int randomAngle = 25 + (std::rand() % (155 - 25 + 1));
-	int randomAngleRadians = randomAngle * (pi / 180.0f);
-	Vector2 startVelocity = Vector2(std::cos(randomAngleRadians), -std::sin(randomAngleRadians)) * BALL_SPEED;
-
-	ball->setVelocity(startVelocity);
-}
-
 void Game::onEvent(SDL_Event e)
 {
 	player->onEvent(e);
@@ -71,9 +60,9 @@ void Game::onEvent(SDL_Event e)
 	switch (e.key.keysym.sym) {
 	case SDLK_SPACE:
 	{
-		if (e.type == SDL_KEYDOWN && gameState == GameState::STARTING)
+		if (e.type == SDL_KEYDOWN && gameState == GameState::PRE_BALL_LAUNCH)
 		{
-			launchBall();
+			ball->launch();
 			gameState = GameState::PLAYING;
 		}
 
@@ -154,7 +143,7 @@ void Game::onBallLoss()
 	else
 	{
 		// TODO: reset ball and paddle
-		gameState = GameState::STARTING;
+		gameState = GameState::PRE_BALL_LAUNCH;
 		Mix_PlayChannel(-1, ballLoss, 0);
 	}
 }
@@ -185,11 +174,11 @@ void Game::update(float deltaTime)
 	player->update(deltaTime);
 	
 	// Update the ball based on game state
-	if (gameState == GameState::STARTING)
+	if (gameState == GameState::PRE_BALL_LAUNCH)
 	{
 		Vector2 centerOfPaddle = player->getPaddleTopCenterPosition();
 		Vector2 ballPosition{ centerOfPaddle.x, centerOfPaddle.y - BALL_SIZE };
-		ball->movePosition(ballPosition);
+		ball->reset(ballPosition);
 	}
 	else
 	{

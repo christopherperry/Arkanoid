@@ -13,8 +13,8 @@ private:
 public:
 	Ball() = delete;
 	Ball(Sprite* sprite, AABB boundingBox, Vector2 position, Mix_Chunk* hitBrickSound, Mix_Chunk* hitPaddleSound) : Entity(sprite, boundingBox, position), hitBrickSound{ hitBrickSound }, hitPaddleSound{ hitPaddleSound } {};
-	void setVelocity(Vector2 velocity);
-	void movePosition(Vector2 position);
+	void launch();
+	void reset(Vector2 position);
 	void update(float deltaTime);
 	void onCollision(Hit* hit) override;
 	std::string tag() override { return "ball"; }

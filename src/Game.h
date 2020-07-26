@@ -13,8 +13,11 @@
 
 enum GameState
 {
+	// Start Panel Shown
+	GAME_START,
+
 	// Ball hasn't been launched yet
-	STARTING,
+	PRE_BALL_LAUNCH,
 
 	// Ball is in play
 	PLAYING,
@@ -41,14 +44,13 @@ private:
 	
 	SDL_Renderer* renderer;
 	SDL_Texture* texture; // This is the sprite sheet
-	std::map<int, Sprite> sprites;
 	
 	std::vector<Entity*> entities;
 
 	// Start with 6 lives
 	int numLives{ 6 };
 	int score{ 0 };
-	GameState gameState{ GameState::STARTING };
+	GameState gameState{ GameState::PRE_BALL_LAUNCH };
 
 	// Things we create and need to clean up
 	BallLossArea* ballLossArea = nullptr;
@@ -64,7 +66,6 @@ private:
 
 	Player* createPlayer();
 	Ball* createBall();
-	void launchBall();
 	void onBallLoss();
 	std::vector<std::pair<Entity*, Hit*>> checkCollisions(Entity* const entity);
 public:
