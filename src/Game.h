@@ -6,6 +6,7 @@
 #include "Entity.h"
 #include "Player.h"
 #include "Ball.h"
+#include "BallLossArea.h"
 
 // WARNING: only add at the end 
 // because we hardcoded numbers to define the level
@@ -68,6 +69,18 @@ enum SpriteId
 	NONE = -1
 };
 
+enum GameState
+{
+	// Ball hasn't been launched yet
+	STARTING,
+
+	// Ball is in play
+	PLAYING,
+
+	// Game is over
+	ENDED
+};
+
 
 class Game
 {
@@ -87,7 +100,12 @@ private:
 	std::map<int, Sprite> sprites;
 	std::vector<Entity*> entities;
 
+	// Start with 6 lives
+	int numLives{ 6 };
+	GameState gameState{ GameState::STARTING };
+
 	// Things we create and need to clean up
+	BallLossArea* ballLossArea = nullptr;
 	Player* player = nullptr;
 	Ball* ball = nullptr;
 	Mix_Chunk* paddleHit;
@@ -95,6 +113,9 @@ private:
 
 	Player* createPlayer();
 	Ball* createBall();
+	void launchBall();
+	void onBallLoss();
+	std::vector<std::pair<Entity*, Hit*>> checkCollisions(Entity* const entity);
 public:
 	Game(SDL_Renderer* renderer, SDL_Texture* texture);
 	~Game();
@@ -103,8 +124,6 @@ public:
 	void update(float deltaTime);
 	void checkCollisions();
 	void render();
-
-	Sprite* getSprite(int id);
 	
-	std::vector<std::pair<Entity*, Hit*>> checkCollisions(Entity* const entity);
+	Sprite* getSprite(int id);
 };

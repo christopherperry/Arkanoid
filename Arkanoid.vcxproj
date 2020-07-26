@@ -153,6 +153,7 @@ copy $(ProjectDir)lib\*  $(OutDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\BallLossArea.cpp" />
     <ClCompile Include="src\BackgroundTile.cpp" />
     <ClCompile Include="src\Collider.cpp" />
     <ClCompile Include="src\Hit.cpp" />
@@ -169,6 +170,7 @@ copy $(ProjectDir)lib\*  $(OutDir)</Command>
     <ClCompile Include="src\WallCollider.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\BallLossArea.h" />
     <ClInclude Include="src\BackgroundTile.h" />
     <ClInclude Include="src\Collider.h" />
     <ClInclude Include="src\Hit.h" />

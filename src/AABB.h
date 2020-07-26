@@ -20,6 +20,7 @@ public:
 
 	AABB(Vector2 position, Vector2 extents);
 	void moveBy(float distanceX, float distanceY);
+	void moveTo(Vector2 position);
 
 	/*
 	 * Checks a collision between this box and another

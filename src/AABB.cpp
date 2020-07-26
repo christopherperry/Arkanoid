@@ -17,6 +17,11 @@ void AABB::moveBy(float distanceX, float distanceY)
 	this->position.y += distanceY;
 }
 
+void AABB::moveTo(Vector2 position)
+{
+	this->position = position;
+}
+
 bool AABB::checkCollision(const AABB& other)
 {
 	int thisMinX = position.x - extents.x;

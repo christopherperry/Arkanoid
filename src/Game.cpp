@@ -11,8 +11,9 @@
 #include "Wall.h"
 #include "logger.h"
 
+const static bool RENDER_COLLIDERS = true;
 const static float BALL_SPEED = 300.0f / 1000.0f; // pixels per second, time is in milliseconds
-const static bool RENDER_COLLIDERS = false;
+const static float BALL_SIZE = 6.0f;
 
 Game::Game(SDL_Renderer* renderer, SDL_Texture* texture) : renderer{ renderer }, texture{ texture }
 {
@@ -96,7 +97,7 @@ void Game::loadLevel()
 		{13, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15},
 		{13, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15},
 		{13, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15},
-		{13, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 15}
+		{13, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15}
 	};
 
 	float locationX, locationY;
@@ -171,11 +172,45 @@ void Game::loadLevel()
 		delete ball;
 	}
 	ball = createBall();
+
+	if (ballLossArea != nullptr)
+	{
+		delete ballLossArea;
+	}
+	Vector2 bottomPosition(NUM_TILES_WIDE * TILE_SIZE * 0.5f + OFFSET, NUM_TILES_HIGH - OFFSET);
+	Vector2 bottomExtents(NUM_TILES_WIDE * TILE_SIZE * 0.5f, TILE_SIZE * 0.5f);
+	ballLossArea = new BallLossArea(AABB{ bottomPosition, bottomExtents }, bottomPosition);
+}
+
+void Game::launchBall()
+{
+	// Pick a random start velocity between 25 and 155 degrees
+	float pi = 2 * std::acos(0);
+	int randomAngle = 25 + (std::rand() % (155 - 25 + 1));
+	int randomAngleRadians = randomAngle * (pi / 180.0f);
+	Vector2 startVelocity = Vector2(std::cos(randomAngleRadians), -std::sin(randomAngleRadians)) * BALL_SPEED;
+
+	ball->setVelocity(startVelocity);
 }
 
 void Game::onEvent(SDL_Event e)
 {
 	player->onEvent(e);
+
+	switch (e.key.keysym.sym) {
+	case SDLK_SPACE:
+	{
+		if (e.type == SDL_KEYDOWN && gameState == GameState::STARTING)
+		{
+			launchBall();
+			gameState = GameState::PLAYING;
+		}
+
+		break;
+	}
+	default:
+		break;
+	}
 }
 
 Sprite* Game::getSprite(int id)
@@ -203,22 +238,14 @@ Player* Game::createPlayer()
 
 Ball* Game::createBall()
 {
-	float ballSize = 6;
 	Vector2 centerOfPaddle = player->getPaddleTopCenterPosition();
-	Vector2 ballPosition{ centerOfPaddle.x, centerOfPaddle.y - ballSize };
-	Vector2 ballExtents{ ballSize  * 0.5f, ballSize  * 0.5f };
-
-	// Pick a random start velocity between 25 and 155 degrees
-	float pi = 2 * std::acos(0);
-	int randomAngle = 25 + (std::rand() % (155 - 25 + 1));
-	int randomAngleRadians = randomAngle * (pi / 180.0f);
-	Vector2 startVelocity = Vector2(std::cos(randomAngleRadians), -std::sin(randomAngleRadians)) * BALL_SPEED;
+	Vector2 ballPosition{ centerOfPaddle.x, centerOfPaddle.y - BALL_SIZE };
+	Vector2 ballExtents{ BALL_SIZE  * 0.5f, BALL_SIZE  * 0.5f };
 
 	return new Ball(
 		getSprite(SpriteId::BALL),
 		AABB{ ballPosition, ballExtents },
 		ballPosition,
-		startVelocity,
 		brickHit,
 		paddleHit
 	);
@@ -246,6 +273,22 @@ void Game::render()
 	}
 }
 
+void Game::onBallLoss()
+{
+	// Check number of lives. If none left signal game over.
+	// If lives left reset player and ball.
+	numLives--;
+
+	if (numLives <= 0)
+	{
+		// TODO: game over, allow complete reset
+	}
+	else
+	{
+		// reset ball and paddle
+	}
+}
+
 // TODO: do this in a faster way, i.e. don't copy just remove in place
 void Game::update(float deltaTime)
 {
@@ -267,13 +310,30 @@ void Game::update(float deltaTime)
 	entities.clear();
 	entities = aliveEntities;
 
-	// Update our player and ball
+	// Update our player
 	player->update(deltaTime);
-	ball->update(deltaTime);
+	
+	// Update the ball based on game state
+	if (gameState == GameState::STARTING)
+	{
+		Vector2 centerOfPaddle = player->getPaddleTopCenterPosition();
+		Vector2 ballPosition{ centerOfPaddle.x, centerOfPaddle.y - BALL_SIZE };
+		ball->movePosition(ballPosition);
+	}
+	else
+	{
+		ball->update(deltaTime);
+	}
 }
 
 void Game::checkCollisions()
 {
+	if (ballLossArea->collidesWith(*ball))
+	{
+		onBallLoss();
+		return;
+	}
+
 	// Check for player collisions
 	std::vector<std::pair<Entity*, Hit*>> playerCollisions = checkCollisions(player);
 	if (playerCollisions.size() > 0)

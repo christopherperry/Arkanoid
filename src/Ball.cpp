@@ -2,6 +2,17 @@
 #include "Ball.h"
 #include "Vector2.h"
 
+void Ball::setVelocity(Vector2 velocity)
+{
+	this->velocity = velocity;
+}
+
+void Ball::movePosition(Vector2 position)
+{
+	this->position = position;
+	boundingBox.moveTo(position);
+}
+
 void Ball::update(float deltaTime)
 {
 	float distanceX = velocity.x * deltaTime;
