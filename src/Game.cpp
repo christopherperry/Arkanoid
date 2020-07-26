@@ -27,6 +27,8 @@ Game::Game(float windowWidth, float windowHeight, SDL_Renderer* renderer, SDL_Te
 	ballLoss = Mix_LoadWAV("res/ball-loss.wav");
 
 	font = TTF_OpenFont("res/font-retro.ttf", 28);
+
+	scoresPanel = new ScoresPanel(renderer, font, Vector2((NUM_TILES_WIDE * TILE_SIZE) + OFFSET, 0));
 }
 
 Game::~Game()
@@ -191,28 +193,6 @@ void Game::loadLevel()
 	ballLossArea = new BallLossArea(AABB{ bottomPosition, bottomExtents }, bottomPosition);
 }
 
-void Game::loadText()
-{
-	SDL_Color white{ 255, 255, 255, 255 };
-	SDL_Color red{ 188, 25, 0, 255 };
-
-	text = {
-		{GameText::LIVES, new Text(renderer, font, "Lives:", red) },
-		{GameText::SCORE, new Text(renderer, font, "Score:", red) },
-		{GameText::HIGH_SCORE, new Text(renderer, font, "High Score:", red) },
-		{GameText::DIGIT_0, new Text(renderer, font, "0", white) },
-		{GameText::DIGIT_1, new Text(renderer, font, "1", white) },
-		{GameText::DIGIT_2, new Text(renderer, font, "2", white) },
-		{GameText::DIGIT_3, new Text(renderer, font, "3", white) },
-		{GameText::DIGIT_4, new Text(renderer, font, "4", white) },
-		{GameText::DIGIT_5, new Text(renderer, font, "5", white) },
-		{GameText::DIGIT_6, new Text(renderer, font, "6", white) },
-		{GameText::DIGIT_7, new Text(renderer, font, "7", white) },
-		{GameText::DIGIT_8, new Text(renderer, font, "8", white) },
-		{GameText::DIGIT_9, new Text(renderer, font, "9", white) },
-	};
-}
-
 void Game::launchBall()
 {
 	// Pick a random start velocity between 25 and 155 degrees
@@ -296,62 +276,13 @@ void Game::render()
 
 	player->render(renderer);
 	ball->render(renderer);
+	scoresPanel->render(renderer, numLives, score);
 
 	if (RENDER_COLLIDERS)
 	{
 		player->renderColliders(renderer);
 		ball->renderColliders(renderer);
 		ballLossArea->renderColliders(renderer);
-	}
-}
-
-void Game::renderText()
-{
-	// Left edge to align all the text to
-	int startX = (NUM_TILES_WIDE * TILE_SIZE);
-
-	//////////////////////////////////////
-	// Score Title
-	//////////////////////////////////////
-	Text* scoreTitle = text[GameText::SCORE];
-	SDL_Rect scoreTitleLocation{ startX, TILE_SIZE, scoreTitle->getWidth(), scoreTitle->getHeight() };
-	TextRenderer::render(renderer, scoreTitle, scoreTitleLocation);
-
-	//////////////////////////////////////
-	// Score Digits
-	//////////////////////////////////////
-	int nextDigitLocationX = startX;
-	std::vector<int> scoreDigits = Util::getDigits(score);
-	for (int i = 0; i < scoreDigits.size(); i++)
-	{
-		int digit = scoreDigits[i];
-		Text* t = text[digit];
-		TextRenderer::render(renderer, t, SDL_Rect{ nextDigitLocationX, scoreTitleLocation.y + scoreTitle->getHeight(), t->getWidth(), t->getHeight() });
-
-		// Update for the next digit
-		nextDigitLocationX += t->getWidth();
-	}
-
-	//////////////////////////////////////
-	// Lives Title
-	//////////////////////////////////////
-	Text* livesTitle = text[GameText::LIVES];
-	SDL_Rect livesTitleLocation{ startX, TILE_SIZE * 5, livesTitle->getWidth(), livesTitle->getHeight() };
-	TextRenderer::render(renderer, livesTitle, livesTitleLocation);
-
-	//////////////////////////////////////
-	// Lives Digits
-	//////////////////////////////////////
-	nextDigitLocationX = startX;
-	std::vector<int> livesDigits = Util::getDigits(numLives);
-	for (int i = 0; i < scoreDigits.size(); i++)
-	{
-		int digit = livesDigits[i];
-		Text* t = text[digit];
-		TextRenderer::render(renderer, t, SDL_Rect{ nextDigitLocationX, livesTitleLocation.y + livesTitle->getHeight(), t->getWidth(), t->getHeight() });
-
-		// Update for the next digit
-		nextDigitLocationX += t->getWidth();
 	}
 }
 

@@ -8,6 +8,7 @@
 #include "Ball.h"
 #include "BallLossArea.h"
 #include "Text.h"
+#include "ScoresPanel.h"
 
 // WARNING: only add at the end 
 // because we hardcoded numbers to define the level
@@ -70,30 +71,6 @@ enum SpriteId
 	NONE = -1
 };
 
-enum GameText
-{
-	// Digits for rendering the actual score
-	DIGIT_0,
-	DIGIT_1,
-	DIGIT_2,
-	DIGIT_3,
-	DIGIT_4,
-	DIGIT_5,
-	DIGIT_6,
-	DIGIT_7,
-	DIGIT_8,
-	DIGIT_9,
-
-	// "Score: "
-	SCORE,
-
-	// "High Score: "
-	HIGH_SCORE,
-
-	// "Lives: "
-	LIVES
-};
-
 enum GameState
 {
 	// Ball hasn't been launched yet
@@ -125,7 +102,7 @@ private:
 	SDL_Renderer* renderer;
 	SDL_Texture* texture; // This is the sprite sheet
 	std::map<int, Sprite> sprites;
-	std::map<int, Text*> text;
+	
 	std::vector<Entity*> entities;
 
 	// Start with 6 lives
@@ -141,6 +118,7 @@ private:
 	Mix_Chunk* brickHit;
 	Mix_Chunk* ballLoss;
 	TTF_Font* font;
+	ScoresPanel* scoresPanel;
 
 	Player* createPlayer();
 	Ball* createBall();
@@ -151,12 +129,10 @@ public:
 	Game(float windowWidth, float windowHeight, SDL_Renderer* renderer, SDL_Texture* texture);
 	~Game();
 	void loadLevel();
-	void loadText();
 	void onEvent(SDL_Event e);
 	void update(float deltaTime);
 	void checkCollisions();
 	void render();
-	void renderText();
 	
 	Sprite* getSprite(int id);
 };
