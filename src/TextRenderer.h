@@ -2,7 +2,7 @@
 
 #include <SDL.h>
 #include "Text.h"
-#include "Vector2.h"
+#include "math/Vector2.h"
 
 class TextRenderer
 {

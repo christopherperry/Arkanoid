@@ -1,13 +1,12 @@
 #include <vector>
 #include "LevelLoader.h"
-#include "AABB.h"
-#include "Entity.h"
-#include "Vector2.h"
-#include "BackgroundTile.h"
-#include "Brick.h"
-#include "Wall.h"
-#include "WallCollider.h"
-#include "BallLossArea.h"
+#include "collisions/AABB.h"
+#include "entities/Entity.h"
+#include "math/Vector2.h"
+#include "entities/BackgroundTile.h"
+#include "entities/Brick.h"
+#include "entities/Wall.h"
+#include "entities/WallCollider.h"
 
 // The tiles are square 31x31
 static const int TILE_SIZE = 31;

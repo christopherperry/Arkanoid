@@ -2,7 +2,7 @@
 
 #include <SDL.h>
 #include "Collider.h"
-#include "Vector2.h"
+#include "../math/Vector2.h"
 
 class AABB
 {

@@ -2,7 +2,7 @@
 #include "ScoresPanel.h"
 #include "Text.h"
 #include "TextRenderer.h"
-#include "Util.h"
+#include "utils/Util.h"
 
 enum PanelText
 {

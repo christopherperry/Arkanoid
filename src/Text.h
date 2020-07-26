@@ -4,7 +4,7 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include "Text.h"
-#include "Vector2.h"
+#include "math/Vector2.h"
 
 class Text
 {

@@ -1,9 +1,9 @@
 #pragma once
 
 #include <SDL.h>
-#include "AABB.h"
-#include "sprites/sprite.h"
-#include "Vector2.h"
+#include "../collisions/AABB.h"
+#include "../sprites/sprite.h"
+#include "../math/Vector2.h"
 
 class Entity
 {

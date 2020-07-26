@@ -4,7 +4,7 @@
 #include <vector>
 #include <SDL.h>
 #include "sprites/sprite.h"
-#include "Entity.h"
+#include "entities/Entity.h"
 
 class LevelLoader
 {

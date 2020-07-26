@@ -4,8 +4,8 @@
 #include <SDL_ttf.h>
 #include <map>
 #include "resources.h"
-#include "cleanup.h"
-#include "logger.h"
+#include "utils/cleanup.h"
+#include "utils/logger.h"
 #include "TextureLoader.h"
 #include "Game.h"
 #include "Text.h"

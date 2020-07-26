@@ -3,7 +3,7 @@
 #include <map>
 #include <SDL.h>
 #include <SDL_ttf.h>
-#include "Vector2.h"
+#include "math/Vector2.h"
 #include "Text.h"
 
 class ScoresPanel
@@ -15,4 +15,3 @@ public:
 	ScoresPanel(SDL_Renderer* renderer, TTF_Font* font, Vector2 position);
 	void render(SDL_Renderer* renderer, int totalLives, int currentScore);
 };
-

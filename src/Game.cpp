@@ -2,18 +2,12 @@
 #include <vector>
 #include <SDL_ttf.h>
 #include "Game.h"
-#include "Entity.h"
-#include "Brick.h"
 #include "sprites/sprite.h"
-#include "Player.h"
-#include "Ball.h"
-#include "BackgroundTile.h"
-#include "WallCollider.h"
-#include "Wall.h"
-#include "logger.h"
+#include "entities/Entity.h"
+#include "entities/Player.h"
+#include "entities/Ball.h"
 #include "Text.h"
 #include "TextRenderer.h"
-#include "Util.h"
 
 const static bool RENDER_COLLIDERS = false;
 const static float BALL_SPEED = 300.0f / 1000.0f; // pixels per second, time is in milliseconds
@@ -161,7 +155,6 @@ void Game::update(float deltaTime)
 		}
 		else
 		{
-			Logger::log("DELETE DEAD ENTITY!");
 			score += entity->getScoreValue();
 			delete entity;
 		}

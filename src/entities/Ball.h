@@ -2,7 +2,7 @@
 
 #include <SDL_mixer.h>
 #include "Entity.h"
-#include "AABB.h"
+#include "../collisions/AABB.h"
 
 class Ball : public Entity
 {

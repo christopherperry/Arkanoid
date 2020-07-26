@@ -1,6 +1,6 @@
 #include <iostream>
 #include "Ball.h"
-#include "Vector2.h"
+#include "../math/Vector2.h"
 
 const static float BALL_SPEED = 300.0f / 1000.0f; // pixels per second, time is in milliseconds
 

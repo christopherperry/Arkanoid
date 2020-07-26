@@ -1,5 +1,5 @@
 #include "Player.h"
-#include "logger.h"
+#include "../utils/logger.h"
 
 void Player::onEvent(SDL_Event event)
 {

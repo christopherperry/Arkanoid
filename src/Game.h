@@ -3,10 +3,10 @@
 #include <map>
 #include <vector>
 #include "sprites/sprite.h"
-#include "Entity.h"
-#include "Player.h"
-#include "Ball.h"
-#include "BallLossArea.h"
+#include "entities/Entity.h"
+#include "entities/Player.h"
+#include "entities/Ball.h"
+#include "entities/BallLossArea.h"
 #include "Text.h"
 #include "ScoresPanel.h"
 #include "LevelLoader.h"

@@ -1,7 +1,7 @@
+#include "AABB.h"
 #include <SDL.h>
 #include <algorithm>
-#include "AABB.h"
-#include "Vector2.h"
+#include "../math/Vector2.h"
 
 int sign(float a)
 {
