@@ -1,12 +1,15 @@
 #include <iostream>
 #include <SDL.h>
 #include <SDL_mixer.h>
+#include <SDL_ttf.h>
 #include <map>
 #include "resources.h"
 #include "cleanup.h"
 #include "logger.h"
 #include "TextureLoader.h"
 #include "Game.h"
+#include "Text.h"
+#include "TextRenderer.h"
 
 // The tiles are square 31x31
 const int TILE_SIZE = 31;
@@ -53,9 +56,16 @@ int main(int argc, char *argv[])
 		printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
 	}
 
-	// Create the game and load the level
-	Game game{ renderer, texture };
+	//Initialize SDL_ttf
+	if (TTF_Init() == -1)
+	{
+		printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
+	}
+
+	// Create the game and load the level and text
+	Game game{ (float) WINDOW_WIDTH, (float) WINDOW_HEIGHT, renderer, texture };
 	game.loadLevel();
+	game.loadText();
 
 	//Our event structure
 	SDL_Event e;
@@ -100,8 +110,9 @@ int main(int argc, char *argv[])
 		SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
 		SDL_RenderClear(renderer);
 
-		// Render
+		// Render Game
 		game.render();
+		game.renderText();
 
 		// Present all the render calls
 		SDL_RenderPresent(renderer);

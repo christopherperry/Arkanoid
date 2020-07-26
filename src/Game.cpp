@@ -1,5 +1,6 @@
 #include <map>
 #include <vector>
+#include <SDL_ttf.h>
 #include "Game.h"
 #include "Entity.h"
 #include "Brick.h"
@@ -10,16 +11,22 @@
 #include "WallCollider.h"
 #include "Wall.h"
 #include "logger.h"
+#include "Text.h"
+#include "TextRenderer.h"
+#include "Util.h"
 
 const static bool RENDER_COLLIDERS = false;
 const static float BALL_SPEED = 300.0f / 1000.0f; // pixels per second, time is in milliseconds
 const static float BALL_SIZE = 6.0f;
 
-Game::Game(SDL_Renderer* renderer, SDL_Texture* texture) : renderer{ renderer }, texture{ texture }
+Game::Game(float windowWidth, float windowHeight, SDL_Renderer* renderer, SDL_Texture* texture) : 
+	windowWidth{ windowWidth }, windowHeight{ windowHeight }, renderer{ renderer }, texture{ texture }
 {
 	paddleHit = Mix_LoadWAV("res/paddle-hit.wav");
 	brickHit = Mix_LoadWAV("res/brick-hit.wav");
 	ballLoss = Mix_LoadWAV("res/ball-loss.wav");
+
+	font = TTF_OpenFont("res/font-retro.ttf", 28);
 }
 
 Game::~Game()
@@ -136,7 +143,8 @@ void Game::loadLevel()
 			{
 				Vector2 extents{ TILE_SIZE * 0.5f, BRICK_HEIGHT * 0.5f };
 				int numHitsToDestroy = spriteId == 8 ? 2 : 1;
-				entities.push_back(new Brick{ getSprite(spriteId), AABB{ position, extents }, position, numHitsToDestroy });
+				int scoreValue = numHitsToDestroy == 2 ? 100 : 50;
+				entities.push_back(new Brick{ getSprite(spriteId), AABB{ position, extents }, position, numHitsToDestroy, scoreValue });
 			}
 			else // Wall
 			{
@@ -181,6 +189,28 @@ void Game::loadLevel()
 	Vector2 bottomPosition(NUM_TILES_WIDE * TILE_SIZE * 0.5f + OFFSET, NUM_TILES_HIGH * TILE_SIZE - 2 * OFFSET);
 	Vector2 bottomExtents(NUM_TILES_WIDE * TILE_SIZE * 0.5f, TILE_SIZE * 0.5f);
 	ballLossArea = new BallLossArea(AABB{ bottomPosition, bottomExtents }, bottomPosition);
+}
+
+void Game::loadText()
+{
+	SDL_Color white{ 255, 255, 255, 255 };
+	SDL_Color red{ 188, 25, 0, 255 };
+
+	text = {
+		{GameText::LIVES, new Text(renderer, font, "Lives:", red) },
+		{GameText::SCORE, new Text(renderer, font, "Score:", red) },
+		{GameText::HIGH_SCORE, new Text(renderer, font, "High Score:", red) },
+		{GameText::DIGIT_0, new Text(renderer, font, "0", white) },
+		{GameText::DIGIT_1, new Text(renderer, font, "1", white) },
+		{GameText::DIGIT_2, new Text(renderer, font, "2", white) },
+		{GameText::DIGIT_3, new Text(renderer, font, "3", white) },
+		{GameText::DIGIT_4, new Text(renderer, font, "4", white) },
+		{GameText::DIGIT_5, new Text(renderer, font, "5", white) },
+		{GameText::DIGIT_6, new Text(renderer, font, "6", white) },
+		{GameText::DIGIT_7, new Text(renderer, font, "7", white) },
+		{GameText::DIGIT_8, new Text(renderer, font, "8", white) },
+		{GameText::DIGIT_9, new Text(renderer, font, "9", white) },
+	};
 }
 
 void Game::launchBall()
@@ -275,6 +305,56 @@ void Game::render()
 	}
 }
 
+void Game::renderText()
+{
+	// Left edge to align all the text to
+	int startX = (NUM_TILES_WIDE * TILE_SIZE);
+
+	//////////////////////////////////////
+	// Score Title
+	//////////////////////////////////////
+	Text* scoreTitle = text[GameText::SCORE];
+	SDL_Rect scoreTitleLocation{ startX, TILE_SIZE, scoreTitle->getWidth(), scoreTitle->getHeight() };
+	TextRenderer::render(renderer, scoreTitle, scoreTitleLocation);
+
+	//////////////////////////////////////
+	// Score Digits
+	//////////////////////////////////////
+	int nextDigitLocationX = startX;
+	std::vector<int> scoreDigits = Util::getDigits(score);
+	for (int i = 0; i < scoreDigits.size(); i++)
+	{
+		int digit = scoreDigits[i];
+		Text* t = text[digit];
+		TextRenderer::render(renderer, t, SDL_Rect{ nextDigitLocationX, scoreTitleLocation.y + scoreTitle->getHeight(), t->getWidth(), t->getHeight() });
+
+		// Update for the next digit
+		nextDigitLocationX += t->getWidth();
+	}
+
+	//////////////////////////////////////
+	// Lives Title
+	//////////////////////////////////////
+	Text* livesTitle = text[GameText::LIVES];
+	SDL_Rect livesTitleLocation{ startX, TILE_SIZE * 5, livesTitle->getWidth(), livesTitle->getHeight() };
+	TextRenderer::render(renderer, livesTitle, livesTitleLocation);
+
+	//////////////////////////////////////
+	// Lives Digits
+	//////////////////////////////////////
+	nextDigitLocationX = startX;
+	std::vector<int> livesDigits = Util::getDigits(numLives);
+	for (int i = 0; i < scoreDigits.size(); i++)
+	{
+		int digit = livesDigits[i];
+		Text* t = text[digit];
+		TextRenderer::render(renderer, t, SDL_Rect{ nextDigitLocationX, livesTitleLocation.y + livesTitle->getHeight(), t->getWidth(), t->getHeight() });
+
+		// Update for the next digit
+		nextDigitLocationX += t->getWidth();
+	}
+}
+
 void Game::onBallLoss()
 {
 	// Check number of lives. If none left signal game over.
@@ -284,10 +364,12 @@ void Game::onBallLoss()
 	if (numLives <= 0)
 	{
 		// TODO: game over, allow complete reset
+		gameState = GameState::GAME_OVER;
 	}
 	else
 	{
-		// reset ball and paddle
+		// TODO: reset ball and paddle
+		gameState = GameState::STARTING;
 		Mix_PlayChannel(-1, ballLoss, 0);
 	}
 }
@@ -306,6 +388,7 @@ void Game::update(float deltaTime)
 		else
 		{
 			Logger::log("DELETE DEAD ENTITY!");
+			score += entity->getScoreValue();
 			delete entity;
 		}
 	}

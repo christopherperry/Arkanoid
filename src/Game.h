@@ -7,6 +7,7 @@
 #include "Player.h"
 #include "Ball.h"
 #include "BallLossArea.h"
+#include "Text.h"
 
 // WARNING: only add at the end 
 // because we hardcoded numbers to define the level
@@ -69,6 +70,30 @@ enum SpriteId
 	NONE = -1
 };
 
+enum GameText
+{
+	// Digits for rendering the actual score
+	DIGIT_0,
+	DIGIT_1,
+	DIGIT_2,
+	DIGIT_3,
+	DIGIT_4,
+	DIGIT_5,
+	DIGIT_6,
+	DIGIT_7,
+	DIGIT_8,
+	DIGIT_9,
+
+	// "Score: "
+	SCORE,
+
+	// "High Score: "
+	HIGH_SCORE,
+
+	// "Lives: "
+	LIVES
+};
+
 enum GameState
 {
 	// Ball hasn't been launched yet
@@ -78,9 +103,8 @@ enum GameState
 	PLAYING,
 
 	// Game is over
-	ENDED
+	GAME_OVER
 };
-
 
 class Game
 {
@@ -94,14 +118,19 @@ private:
 	// Let's do 11 bricks and a wall on each side for now
 	static const int NUM_TILES_WIDE = 13;
 	static const int NUM_TILES_HIGH = 16;
+
+	float windowWidth;
+	float windowHeight;
 	
 	SDL_Renderer* renderer;
-	SDL_Texture* texture;
+	SDL_Texture* texture; // This is the sprite sheet
 	std::map<int, Sprite> sprites;
+	std::map<int, Text*> text;
 	std::vector<Entity*> entities;
 
 	// Start with 6 lives
 	int numLives{ 6 };
+	int score{ 0 };
 	GameState gameState{ GameState::STARTING };
 
 	// Things we create and need to clean up
@@ -111,6 +140,7 @@ private:
 	Mix_Chunk* paddleHit;
 	Mix_Chunk* brickHit;
 	Mix_Chunk* ballLoss;
+	TTF_Font* font;
 
 	Player* createPlayer();
 	Ball* createBall();
@@ -118,13 +148,15 @@ private:
 	void onBallLoss();
 	std::vector<std::pair<Entity*, Hit*>> checkCollisions(Entity* const entity);
 public:
-	Game(SDL_Renderer* renderer, SDL_Texture* texture);
+	Game(float windowWidth, float windowHeight, SDL_Renderer* renderer, SDL_Texture* texture);
 	~Game();
 	void loadLevel();
+	void loadText();
 	void onEvent(SDL_Event e);
 	void update(float deltaTime);
 	void checkCollisions();
 	void render();
+	void renderText();
 	
 	Sprite* getSprite(int id);
 };
