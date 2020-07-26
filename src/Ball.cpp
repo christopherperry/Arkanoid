@@ -2,11 +2,6 @@
 #include "Ball.h"
 #include "Vector2.h"
 
-void Ball::setVelocity(Vector2 velocity)
-{
-	this->velocity = velocity;
-}
-
 void Ball::update(float deltaTime)
 {
 	float distanceX = velocity.x * deltaTime;

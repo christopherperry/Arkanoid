@@ -81,19 +81,30 @@ private:
 	// Let's do 11 bricks and a wall on each side for now
 	static const int NUM_TILES_WIDE = 13;
 	static const int NUM_TILES_HIGH = 16;
-
-	Player* player;
-	Ball* ball;
+	
+	SDL_Renderer* renderer;
 	SDL_Texture* texture;
 	std::map<int, Sprite> sprites;
 	std::vector<Entity*> entities;
-public:
-	Game(SDL_Texture* texture) : texture{ texture } {};
-	void loadLevel();
-	Sprite* getSprite(int id);
+
+	// Things we create and need to clean up
+	Player* player = nullptr;
+	Ball* ball = nullptr;
+	Mix_Chunk* paddleHit;
+	Mix_Chunk* brickHit;
+
 	Player* createPlayer();
-	Ball* createBall(Player* player, Mix_Chunk* brickHit, Mix_Chunk* paddleHit);
-	void render(SDL_Renderer* renderer);
-	void update();
+	Ball* createBall();
+public:
+	Game(SDL_Renderer* renderer, SDL_Texture* texture);
+	~Game();
+	void loadLevel();
+	void onEvent(SDL_Event e);
+	void update(float deltaTime);
+	void checkCollisions();
+	void render();
+
+	Sprite* getSprite(int id);
+	
 	std::vector<std::pair<Entity*, Hit*>> checkCollisions(Entity* const entity);
 };

@@ -5,12 +5,8 @@
 #include "resources.h"
 #include "cleanup.h"
 #include "logger.h"
-#include "sprites/sprite.h"
 #include "TextureLoader.h"
 #include "Game.h"
-#include "Player.h"
-
-const float BALL_SPEED = 300.0f / 1000.0f; // pixels per second, time is in milliseconds
 
 // The tiles are square 31x31
 const int TILE_SIZE = 31;
@@ -57,23 +53,9 @@ int main(int argc, char *argv[])
 		printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
 	}
 
-	Mix_Chunk* paddleHit = Mix_LoadWAV("res/paddle-hit.wav");
-	Mix_Chunk* brickHit = Mix_LoadWAV("res/brick-hit.wav");
-	
-
-	Game game{ texture };
+	// Create the game and load the level
+	Game game{ renderer, texture };
 	game.loadLevel();
-
-	Player* player = game.createPlayer();
-
-	Ball* ball = game.createBall(player, brickHit, paddleHit);
-
-	// Pick a random start velocity between 25 and 155 degrees
-	float pi = 2 * std::acos(0);
-	int randomAngle = 25 + (std::rand() % (155 - 25 + 1));
-	int randomAngleRadians = randomAngle * (pi / 180.0f);
-	Vector2 startVelocity = Vector2(std::cos(randomAngleRadians), -std::sin(randomAngleRadians)) * BALL_SPEED;
-	ball->setVelocity(startVelocity);
 
 	//Our event structure
 	SDL_Event e;
@@ -101,38 +83,14 @@ int main(int argc, char *argv[])
 				}
 			}
 
-			player->onEvent(e);
+			game.onEvent(e);
 		}
 
 		// Update
-		game.update();
-		player->update(deltaTime);
-		ball->update(deltaTime);
+		game.update(deltaTime);
 
-		// Check for player collisions
-		std::vector<std::pair<Entity*, Hit*>> playerCollisions = game.checkCollisions(player);
-		if (playerCollisions.size() > 0)
-		{
-			player->onCollision(playerCollisions.at(0).second);
-		}
-
-		// Check for ball collisions
-		std::vector<std::pair<Entity*, Hit*>> ballCollisions = game.checkCollisions(ball);
-		Hit* hitPlayer = ball->checkCollision(*player);
-		if (hitPlayer != nullptr)
-		{
-			ball->onCollision(hitPlayer);
-		}
-		else
-		{
-			// Handle collisions
-			for (std::pair<Entity*, Hit*>& collision : ballCollisions)
-			{
-				Entity* theThingWeHit = collision.first;
-				theThingWeHit->onCollision(collision.second); // Passing this may be interpreted wrong if we decide to interpret it
-				ball->onCollision(collision.second);
-			}
-		}
+		// Collisions
+		game.checkCollisions();
 
 		///////////////////
 		// RENDERING BEGIN
@@ -143,19 +101,9 @@ int main(int argc, char *argv[])
 		SDL_RenderClear(renderer);
 
 		// Render
-		game.render(renderer);
-		player->render(renderer);
-		//player->renderColliders(renderer);
-		ball->render(renderer);
-		//ball->renderColliders(renderer);
+		game.render();
 
-		// Render collisions for debugging
-		for (std::pair<Entity*, Hit*>& collision : ballCollisions)
-		{
-			collision.first->renderCollidersHit(renderer);
-		}
-
-		// Render the scene
+		// Present all the render calls
 		SDL_RenderPresent(renderer);
 
 		///////////////////
@@ -168,11 +116,8 @@ int main(int argc, char *argv[])
 		lastFrameTime = currentTime;
 	}
 
-	delete player;
 	cleanup(texture, renderer, window);
 
-	Mix_FreeChunk(paddleHit);
-	Mix_FreeChunk(brickHit);
 	Mix_Quit();
 	SDL_Quit();
 

@@ -11,8 +11,33 @@
 #include "Wall.h"
 #include "logger.h"
 
+const static float BALL_SPEED = 300.0f / 1000.0f; // pixels per second, time is in milliseconds
+const static bool RENDER_COLLIDERS = false;
+
+Game::Game(SDL_Renderer* renderer, SDL_Texture* texture) : renderer{ renderer }, texture{ texture }
+{
+	paddleHit = Mix_LoadWAV("res/paddle-hit.wav");
+	brickHit = Mix_LoadWAV("res/brick-hit.wav");
+}
+
+Game::~Game()
+{
+	Mix_FreeChunk(paddleHit);
+	Mix_FreeChunk(brickHit);
+
+	delete player;
+	delete ball;
+}
+
 void Game::loadLevel()
 {
+	// Clean out any previously created Entities
+	for (Entity* e : entities)
+	{
+		delete e;
+	}
+	entities.clear();
+
 	sprites = {
 		// Bricks
 		{BRICK_YELLOW, Sprite{texture, {225, 193, 31, 16}} },
@@ -134,6 +159,23 @@ void Game::loadLevel()
 	entities.push_back(leftWall);
 	entities.push_back(rightWall);
 	entities.push_back(topWall);
+
+	if (player != nullptr)
+	{
+		delete player;
+	}
+	player = createPlayer();
+
+	if (ball != nullptr)
+	{
+		delete ball;
+	}
+	ball = createBall();
+}
+
+void Game::onEvent(SDL_Event e)
+{
+	player->onEvent(e);
 }
 
 Sprite* Game::getSprite(int id)
@@ -159,33 +201,53 @@ Player* Game::createPlayer()
 	);
 }
 
-Ball* Game::createBall(Player* player, Mix_Chunk* brickHit, Mix_Chunk* paddleHit)
+Ball* Game::createBall()
 {
 	float ballSize = 6;
 	Vector2 centerOfPaddle = player->getPaddleTopCenterPosition();
 	Vector2 ballPosition{ centerOfPaddle.x, centerOfPaddle.y - ballSize };
 	Vector2 ballExtents{ ballSize  * 0.5f, ballSize  * 0.5f };
 
+	// Pick a random start velocity between 25 and 155 degrees
+	float pi = 2 * std::acos(0);
+	int randomAngle = 25 + (std::rand() % (155 - 25 + 1));
+	int randomAngleRadians = randomAngle * (pi / 180.0f);
+	Vector2 startVelocity = Vector2(std::cos(randomAngleRadians), -std::sin(randomAngleRadians)) * BALL_SPEED;
+
 	return new Ball(
 		getSprite(SpriteId::BALL),
 		AABB{ ballPosition, ballExtents },
 		ballPosition,
+		startVelocity,
 		brickHit,
 		paddleHit
 	);
 }
 
-void Game::render(SDL_Renderer* renderer)
+void Game::render()
 {
 	for (Entity* entity : entities)
 	{
 		entity->render(renderer);
-		//entity->renderColliders(renderer);
+
+		if (RENDER_COLLIDERS)
+		{
+			entity->renderColliders(renderer);
+		}
+	}
+
+	player->render(renderer);
+	ball->render(renderer);
+
+	if (RENDER_COLLIDERS)
+	{
+		player->renderColliders(renderer);
+		ball->renderColliders(renderer);
 	}
 }
 
 // TODO: do this in a faster way, i.e. don't copy just remove in place
-void Game::update()
+void Game::update(float deltaTime)
 {
 	// Remove dead entities
 	std::vector<Entity*> aliveEntities;
@@ -204,6 +266,43 @@ void Game::update()
 
 	entities.clear();
 	entities = aliveEntities;
+
+	// Update our player and ball
+	player->update(deltaTime);
+	ball->update(deltaTime);
+}
+
+void Game::checkCollisions()
+{
+	// Check for player collisions
+	std::vector<std::pair<Entity*, Hit*>> playerCollisions = checkCollisions(player);
+	if (playerCollisions.size() > 0)
+	{
+		player->onCollision(playerCollisions.at(0).second);
+	}
+
+	// Check for ball collisions
+	std::vector<std::pair<Entity*, Hit*>> ballCollisions = checkCollisions(ball);
+	Hit* hitPlayer = ball->checkCollision(*player);
+	if (hitPlayer != nullptr)
+	{
+		ball->onCollision(hitPlayer);
+	}
+	else
+	{
+		// Handle collisions
+		for (std::pair<Entity*, Hit*>& collision : ballCollisions)
+		{
+			Entity* theThingWeHit = collision.first;
+			theThingWeHit->onCollision(collision.second); // Passing this may be interpreted wrong if we decide to interpret it
+			ball->onCollision(collision.second);
+
+			if (RENDER_COLLIDERS)
+			{
+				theThingWeHit->renderCollidersHit(renderer);
+			}
+		}
+	}
 }
 
 std::vector<std::pair<Entity*, Hit*>> Game::checkCollisions(Entity* const entity)
