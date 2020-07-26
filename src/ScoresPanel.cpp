@@ -91,7 +91,7 @@ void ScoresPanel::render(SDL_Renderer* renderer, int totalLives, int currentScor
 	//////////////////////////////////////
 	nextDigitLocationX = startX;
 	std::vector<int> livesDigits = Util::getDigits(totalLives);
-	for (int i = 0; i < scoreDigits.size(); i++)
+	for (int i = 0; i < livesDigits.size(); i++)
 	{
 		int digit = livesDigits[i];
 		Text* t = text[digit];

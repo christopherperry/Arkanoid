@@ -64,7 +64,6 @@ int main(int argc, char *argv[])
 
 	// Create the game and load the level and text
 	Game game{ (float) WINDOW_WIDTH, (float) WINDOW_HEIGHT, renderer, texture };
-	game.loadLevel();
 
 	//Our event structure
 	SDL_Event e;

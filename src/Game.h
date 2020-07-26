@@ -9,67 +9,7 @@
 #include "BallLossArea.h"
 #include "Text.h"
 #include "ScoresPanel.h"
-
-// WARNING: only add at the end 
-// because we hardcoded numbers to define the level
-enum SpriteId
-{
-	// Bricks
-	BRICK_YELLOW,
-	BRICK_GREEN,
-	BRICK_RED,
-	BRICK_BROWN,
-	BRICK_LAVENDER,
-	BRICK_ORANGE,
-	BRICK_BLUE,
-	BRICK_PURPLE,
-	BRICK_GREY_IDLE,
-	BRICK_GREY_ANIM_1,
-	BRICK_GRAY_ANIM_2,
-
-	// Walls
-	WALL_CORNER_TOP_LEFT,
-	WALL_CORNER_TOP_RIGHT,
-	WALL_LEFT_STRAIGHT,
-	WALL_LEFT_RIVETED,
-	WALL_RIGHT_STRAIGHT,
-	WALL_RIGHT_RIVETED,
-	WALL_TOP_PLAIN,
-	WALL_TOP_RIVETED,
-	WALL_TOP_EMITER_IDLE,
-	WALL_TOP_EMITER_ANIM_1,
-	WALL_TOP_EMITER_ANIM_2,
-	WALL_TOP_EMITER_OPEN,
-
-	// Backgrounds
-	BACKGROUND_BLUE, 
-
-	// Player - Medium
-	PLAYER_LEFT_MEDIUM,
-	PLAYER_RIGHT_MEDIUM,
-	PLAYER_LEFT_MEDIUM_DISSOLVE_1,
-	PLAYER_RIGHT_MEDIUM_DISSOLVE_1,
-	PLAYER_LEFT_MEDIUM_DISSOLVE_2,
-	PLAYER_RIGHT_MEDIUM_DISSOLVE_2,
-	PLAYER_LEFT_MEDIUM_DISSOLVE_3,
-	PLAYER_RIGHT_MEDIUM_DISSOLVE_3,
-
-	// Player - Medium Gunner
-	PLAYER_LEFT_MEDIUM_GUNNER,
-	PLAYER_RIGHT_MEDIUM_GUNNER,
-
-	// Player - Large
-	PLAYER_LEFT_LARGE,
-	PLAYER_RIGHT_LARGE,
-
-	// Player - Small
-	PLAYER_SMALL,
-
-	// Ball
-	BALL,
-
-	NONE = -1
-};
+#include "LevelLoader.h"
 
 enum GameState
 {
@@ -118,6 +58,8 @@ private:
 	Mix_Chunk* brickHit;
 	Mix_Chunk* ballLoss;
 	TTF_Font* font;
+
+	LevelLoader* levelLoader;
 	ScoresPanel* scoresPanel;
 
 	Player* createPlayer();
@@ -128,11 +70,8 @@ private:
 public:
 	Game(float windowWidth, float windowHeight, SDL_Renderer* renderer, SDL_Texture* texture);
 	~Game();
-	void loadLevel();
 	void onEvent(SDL_Event e);
 	void update(float deltaTime);
 	void checkCollisions();
 	void render();
-	
-	Sprite* getSprite(int id);
 };
