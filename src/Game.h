@@ -110,6 +110,7 @@ private:
 	Ball* ball = nullptr;
 	Mix_Chunk* paddleHit;
 	Mix_Chunk* brickHit;
+	Mix_Chunk* ballLoss;
 
 	Player* createPlayer();
 	Ball* createBall();

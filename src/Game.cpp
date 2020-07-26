@@ -11,7 +11,7 @@
 #include "Wall.h"
 #include "logger.h"
 
-const static bool RENDER_COLLIDERS = true;
+const static bool RENDER_COLLIDERS = false;
 const static float BALL_SPEED = 300.0f / 1000.0f; // pixels per second, time is in milliseconds
 const static float BALL_SIZE = 6.0f;
 
@@ -19,6 +19,7 @@ Game::Game(SDL_Renderer* renderer, SDL_Texture* texture) : renderer{ renderer },
 {
 	paddleHit = Mix_LoadWAV("res/paddle-hit.wav");
 	brickHit = Mix_LoadWAV("res/brick-hit.wav");
+	ballLoss = Mix_LoadWAV("res/ball-loss.wav");
 }
 
 Game::~Game()
@@ -108,7 +109,7 @@ void Game::loadLevel()
 	{
 		locationY = (i * TILE_SIZE) + OFFSET;
 
-		for (j = 0; j < NUM_TILES_WIDE; j++)
+		for (j = 1; j < NUM_TILES_WIDE - 1; j++)
 		{
 			locationX = (j * TILE_SIZE) + OFFSET;
 			Vector2 position{ locationX, locationY };
@@ -177,7 +178,7 @@ void Game::loadLevel()
 	{
 		delete ballLossArea;
 	}
-	Vector2 bottomPosition(NUM_TILES_WIDE * TILE_SIZE * 0.5f + OFFSET, NUM_TILES_HIGH - OFFSET);
+	Vector2 bottomPosition(NUM_TILES_WIDE * TILE_SIZE * 0.5f + OFFSET, NUM_TILES_HIGH * TILE_SIZE - 2 * OFFSET);
 	Vector2 bottomExtents(NUM_TILES_WIDE * TILE_SIZE * 0.5f, TILE_SIZE * 0.5f);
 	ballLossArea = new BallLossArea(AABB{ bottomPosition, bottomExtents }, bottomPosition);
 }
@@ -270,6 +271,7 @@ void Game::render()
 	{
 		player->renderColliders(renderer);
 		ball->renderColliders(renderer);
+		ballLossArea->renderColliders(renderer);
 	}
 }
 
@@ -286,6 +288,7 @@ void Game::onBallLoss()
 	else
 	{
 		// reset ball and paddle
+		Mix_PlayChannel(-1, ballLoss, 0);
 	}
 }
 

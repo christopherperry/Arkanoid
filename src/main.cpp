@@ -15,7 +15,7 @@ const int TILE_SIZE = 31;
 const int NUM_TILES_WIDE = 13;
 const int NUM_TILES_HIGH = 16;
 
-constexpr int WINDOW_WIDTH = TILE_SIZE * NUM_TILES_WIDE;
+constexpr int WINDOW_WIDTH = TILE_SIZE * (NUM_TILES_WIDE + 4);
 constexpr int WINDOW_HEIGHT = TILE_SIZE * NUM_TILES_HIGH;
 
 // This particular signature of main is required by SDL.

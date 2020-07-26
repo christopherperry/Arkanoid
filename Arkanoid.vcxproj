@@ -189,6 +189,9 @@ copy $(ProjectDir)lib\*  $(OutDir)</Command>
     <ClInclude Include="src\WallCollider.h" />
     <ClInclude Include="src\Wall.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="..\..\..\..\Desktop\NES - Arkanoid - Sound Effects\ball-loss.wav" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
