@@ -82,10 +82,14 @@ private:
 	static const int NUM_TILES_WIDE = 13;
 	static const int NUM_TILES_HIGH = 16;
 
+	Player* player;
+	Ball* ball;
+	SDL_Texture* texture;
 	std::map<int, Sprite> sprites;
 	std::vector<Entity*> entities;
 public:
-	Game(SDL_Texture* texture);
+	Game(SDL_Texture* texture) : texture{ texture } {};
+	void loadLevel();
 	Sprite* getSprite(int id);
 	Player* createPlayer();
 	Ball* createBall(Player* player, Mix_Chunk* brickHit, Mix_Chunk* paddleHit);

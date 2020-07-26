@@ -22,18 +22,6 @@ const int NUM_TILES_HIGH = 16;
 constexpr int WINDOW_WIDTH = TILE_SIZE * NUM_TILES_WIDE;
 constexpr int WINDOW_HEIGHT = TILE_SIZE * NUM_TILES_HIGH;
 
-
-void renderSprite(SDL_Renderer* renderer, Sprite* sprite, int positionX, int positionY)
-{
-	SDL_Rect location;
-	location.x = positionX;
-	location.y = positionY;
-	location.w = sprite->rect.w;
-	location.h = sprite->rect.h;
-
-	SDL_RenderCopy(renderer, sprite->texture, &sprite->rect, &location);
-}
-
 // This particular signature of main is required by SDL.
 int main(int argc, char *argv[])
 {
@@ -74,6 +62,7 @@ int main(int argc, char *argv[])
 	
 
 	Game game{ texture };
+	game.loadLevel();
 
 	Player* player = game.createPlayer();
 

@@ -11,7 +11,7 @@
 #include "Wall.h"
 #include "logger.h"
 
-Game::Game(SDL_Texture* texture)
+void Game::loadLevel()
 {
 	sprites = {
 		// Bricks
