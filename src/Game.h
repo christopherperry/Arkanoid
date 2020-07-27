@@ -79,6 +79,7 @@ private:
 
 	void onGameStart();
 	void onGameEnd();
+	void reloadLevel();
 
 	void playSound(Mix_Chunk* sound);
 	void playMusic(Mix_Music* music);

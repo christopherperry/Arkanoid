@@ -76,6 +76,17 @@ void Game::onGameEnd()
 	playMusic(gameEnd);
 }
 
+void Game::reloadLevel()
+{
+	for (Entity* e : entities)
+	{
+		delete e;
+	}
+	entities.clear();
+
+	entities = levelLoader->loadLevel(1);
+}
+
 void Game::onEvent(SDL_Event e)
 {
 	player->onEvent(e);
@@ -102,6 +113,12 @@ void Game::onEvent(SDL_Event e)
 			{
 				ball->launch();
 				gameState = GameState::PLAYING;
+			}
+
+			if (gameState == GameState::GAME_OVER)
+			{
+				gameState = GameState::PRE_BALL_LAUNCH;
+				reloadLevel();
 			}
 
 			break;
