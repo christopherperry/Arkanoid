@@ -153,6 +153,8 @@ copy $(ProjectDir)lib\*  $(OutDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\PlayerSpriteRenderer.cpp" />
+    <ClCompile Include="src\AnimationFrames.cpp" />
     <ClCompile Include="src\GameOverPanel.cpp" />
     <ClCompile Include="src\GameStartPanel.cpp" />
     <ClCompile Include="src\LevelLoader.cpp" />
@@ -173,6 +175,8 @@ copy $(ProjectDir)lib\*  $(OutDir)</Command>
     <ClCompile Include="src\utils\Util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\PlayerSpriteRenderer.h" />
+    <ClInclude Include="src\AnimationFrames.h" />
     <ClInclude Include="src\GameOverPanel.h" />
     <ClInclude Include="src\GameStartPanel.h" />
     <ClInclude Include="src\LevelLoader.h" />
