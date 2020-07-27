@@ -13,5 +13,5 @@ private:
 	Vector2 position;
 public:
 	ScoresPanel(SDL_Renderer* renderer, TTF_Font* font, Vector2 position);
-	void render(SDL_Renderer* renderer, int totalLives, int currentScore);
+	void render(SDL_Renderer* renderer, int totalLives, int currentScore, int currentLevel);
 };

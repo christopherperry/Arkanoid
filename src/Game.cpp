@@ -89,7 +89,10 @@ void Game::reloadLevel()
 
 void Game::onEvent(SDL_Event e)
 {
-	player->onEvent(e);
+	if ( (gameState == GameState::PLAYING) || (gameState == GameState::PRE_BALL_LAUNCH) )
+	{
+		player->onEvent(e);
+	}
 
 	switch (e.type) {
 	case SDL_KEYDOWN:
@@ -134,15 +137,7 @@ Player* Game::createPlayer()
 	int positionY = (NUM_TILES_HIGH - 2) * TILE_SIZE;
 	Vector2 position = Vector2(positionX, positionY);
 
-	Vector2 extents{ 21.0f, 5.5f }; // Paddle size is 42 by 11
-	AABB box{ position, extents };
-
-	return new Player(
-		new Sprite{ texture, {235, 175, 21, 11} },
-		new Sprite{ texture, {257, 175, 21, 11} },
-		box,
-		position
-	);
+	return new Player(texture, position);
 }
 
 Ball* Game::createBall()
@@ -187,7 +182,7 @@ void Game::renderGameStart()
 		}
 	}
 
-	scoresPanel->render(renderer, numLives, score);
+	scoresPanel->render(renderer, numLives, score, level);
 	startPanel->render(renderer);
 }
 
@@ -202,7 +197,7 @@ void Game::renderGameOver()
 		}
 	}
 
-	scoresPanel->render(renderer, numLives, score);
+	scoresPanel->render(renderer, numLives, score, level);
 	gameOverPanel->render(renderer);
 }
 
@@ -220,7 +215,7 @@ void Game::renderGameplay()
 
 	player->render(renderer);
 	ball->render(renderer);
-	scoresPanel->render(renderer, numLives, score);
+	scoresPanel->render(renderer, numLives, score, level);
 
 	if (RENDER_COLLIDERS)
 	{
@@ -290,7 +285,7 @@ void Game::update(float deltaTime)
 
 void Game::checkCollisions()
 {
-	if (gameState != GameState::PLAYING)
+	if (gameState != GameState::PLAYING && gameState != GameState::PRE_BALL_LAUNCH)
 	{
 		return;
 	}

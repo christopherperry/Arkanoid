@@ -25,7 +25,10 @@ enum ScoresPanelText
 	HIGH_SCORE,
 
 	// "Lives: "
-	LIVES
+	LIVES,
+
+	// "Level:"
+	LEVEL
 };
 
 ScoresPanel::ScoresPanel(SDL_Renderer* renderer, TTF_Font* font, Vector2 position)
@@ -36,6 +39,7 @@ ScoresPanel::ScoresPanel(SDL_Renderer* renderer, TTF_Font* font, Vector2 positio
 	SDL_Color red{ 188, 25, 0, 255 };
 
 	text = {
+		{ScoresPanelText::LEVEL, new Text(renderer, font, "Level:", red) },
 		{ScoresPanelText::LIVES, new Text(renderer, font, "Lives:", red) },
 		{ScoresPanelText::SCORE, new Text(renderer, font, "Score:", red) },
 		{ScoresPanelText::HIGH_SCORE, new Text(renderer, font, "High Score:", red) },
@@ -52,7 +56,7 @@ ScoresPanel::ScoresPanel(SDL_Renderer* renderer, TTF_Font* font, Vector2 positio
 	};
 }
 
-void ScoresPanel::render(SDL_Renderer* renderer, int totalLives, int currentScore)
+void ScoresPanel::render(SDL_Renderer* renderer, int totalLives, int currentScore, int currentLevel)
 {
 	// Left edge to align all the text to
 	int startX = position.x;
@@ -96,6 +100,28 @@ void ScoresPanel::render(SDL_Renderer* renderer, int totalLives, int currentScor
 		int digit = livesDigits[i];
 		Text* t = text[digit];
 		TextRenderer::render(renderer, t, SDL_Rect{ nextDigitLocationX, livesTitleLocation.y + livesTitle->getHeight(), t->getWidth(), t->getHeight() });
+
+		// Update for the next digit
+		nextDigitLocationX += t->getWidth();
+	}
+
+	//////////////////////////////////////
+	// Level Title
+	//////////////////////////////////////
+	Text* levelTitle = text[ScoresPanelText::LEVEL];
+	SDL_Rect levelTitleLocation{ startX, 300, levelTitle->getWidth(), levelTitle->getHeight() };
+	TextRenderer::render(renderer, levelTitle, levelTitleLocation);
+
+	//////////////////////////////////////
+	// Level Digits
+	//////////////////////////////////////
+	nextDigitLocationX = startX;
+	std::vector<int> levelDigits = Util::getDigits(currentLevel);
+	for (int i = 0; i < levelDigits.size(); i++)
+	{
+		int digit = levelDigits[i];
+		Text* t = text[digit];
+		TextRenderer::render(renderer, t, SDL_Rect{ nextDigitLocationX, levelTitleLocation.y + levelTitle->getHeight(), t->getWidth(), t->getHeight() });
 
 		// Update for the next digit
 		nextDigitLocationX += t->getWidth();

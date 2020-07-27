@@ -51,7 +51,7 @@ private:
 	
 	std::vector<Entity*> entities;
 
-	// Start with 6 lives
+	int level{ 1 };
 	int numLives{ START_LIVES };
 	int score{ 0 };
 	GameState gameState{ GameState::GAME_START };
