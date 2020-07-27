@@ -5,10 +5,10 @@
 #include <SDL_ttf.h>
 #include "Text.h"
 
-class GameStartPanel
+class GameOverPanel
 {
 public:
-	GameStartPanel(SDL_Renderer* renderer, TTF_Font* font, SDL_Rect panelRect);
+	GameOverPanel(SDL_Renderer* renderer, TTF_Font* font, SDL_Rect panelRect);
 	void render(SDL_Renderer* renderer);
 private:
 	std::map<int, Text*> text;

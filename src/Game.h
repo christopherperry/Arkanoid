@@ -11,6 +11,7 @@
 #include "ScoresPanel.h"
 #include "LevelLoader.h"
 #include "GameStartPanel.h"
+#include "GameOverPanel.h"
 
 enum GameState
 {
@@ -49,7 +50,7 @@ private:
 	std::vector<Entity*> entities;
 
 	// Start with 6 lives
-	int numLives{ 6 };
+	int numLives{ 1 };
 	int score{ 0 };
 	GameState gameState{ GameState::GAME_START };
 
@@ -60,14 +61,25 @@ private:
 	Mix_Chunk* paddleHit;
 	Mix_Chunk* brickHit;
 	Mix_Chunk* ballLoss;
+	Mix_Music* gameStart;
+	Mix_Music* gameEnd;
+
 	TTF_Font* font;
 
 	LevelLoader* levelLoader;
 	ScoresPanel* scoresPanel;
 	GameStartPanel* startPanel;
+	GameOverPanel* gameOverPanel;
 
 	void renderGameStart();
 	void renderGameplay();
+	void renderGameOver();
+
+	void onGameStart();
+	void onGameEnd();
+
+	void playSound(Mix_Chunk* sound);
+	void playMusic(Mix_Music* music);
 
 	Player* createPlayer();
 	Ball* createBall();

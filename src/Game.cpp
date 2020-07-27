@@ -19,10 +19,13 @@ Game::Game(float windowWidth, float windowHeight, SDL_Renderer* renderer, SDL_Te
 	paddleHit = Mix_LoadWAV("res/paddle-hit.wav");
 	brickHit = Mix_LoadWAV("res/brick-hit.wav");
 	ballLoss = Mix_LoadWAV("res/ball-loss.wav");
+	gameStart = Mix_LoadMUS("res/game-start.wav");
+	gameEnd = Mix_LoadMUS("res/game-end.wav");
 
 	font = TTF_OpenFont("res/font-retro.ttf", 28);
 
 	startPanel = new GameStartPanel(renderer, font, SDL_Rect{ 0, 0, NUM_TILES_WIDE * TILE_SIZE, NUM_TILES_HIGH * TILE_SIZE });
+	gameOverPanel = new GameOverPanel(renderer, font, SDL_Rect{ 0, 0, NUM_TILES_WIDE * TILE_SIZE, NUM_TILES_HIGH * TILE_SIZE });
 	scoresPanel = new ScoresPanel(renderer, font, Vector2((NUM_TILES_WIDE * TILE_SIZE) + OFFSET, 0));
 	levelLoader = new LevelLoader(texture);
 
@@ -41,11 +44,35 @@ Game::~Game()
 	Mix_FreeChunk(paddleHit);
 	Mix_FreeChunk(brickHit);
 	Mix_FreeChunk(ballLoss);
+	Mix_FreeMusic(gameStart);
+	Mix_FreeMusic(gameEnd);
 
 	delete player;
 	delete ball;
 	delete scoresPanel;
 	delete ballLossArea;
+}
+
+void Game::playSound(Mix_Chunk* sound)
+{
+	Mix_PlayChannel(-1, sound, 0);
+}
+
+void Game::playMusic(Mix_Music* music)
+{
+	Mix_PlayMusic(music, 0);
+}
+
+void Game::onGameStart()
+{
+	playMusic(gameStart);
+}
+
+void Game::onGameEnd()
+{
+	numLives = 1;
+	score = 0;
+	playMusic(gameEnd);
 }
 
 void Game::onEvent(SDL_Event e)
@@ -63,6 +90,7 @@ void Game::onEvent(SDL_Event e)
 			if (gameState == GameState::GAME_START)
 			{
 				gameState = GameState::PRE_BALL_LAUNCH;
+				onGameStart();
 			}
 
 			break;
@@ -80,7 +108,6 @@ void Game::onEvent(SDL_Event e)
 		}
 	}
 	}
-
 }
 
 Player* Game::createPlayer()
@@ -121,13 +148,13 @@ void Game::render()
 	{
 		renderGameStart();
 	}
-	else if (gameState == GameState::PRE_BALL_LAUNCH)
+	else if (gameState == GameState::PRE_BALL_LAUNCH || gameState == GameState::PLAYING)
 	{
 		renderGameplay();
 	}
-	else if (gameState == GameState::PLAYING)
+	else if (gameState == GameState::GAME_OVER)
 	{
-		renderGameplay();
+		renderGameOver();
 	}
 }
 
@@ -143,6 +170,20 @@ void Game::renderGameStart()
 
 	scoresPanel->render(renderer, numLives, score);
 	startPanel->render(renderer);
+}
+
+void Game::renderGameOver()
+{
+	for (Entity* entity : entities)
+	{
+		if (entity->tag() != "brick")
+		{
+			entity->render(renderer);
+		}
+	}
+
+	scoresPanel->render(renderer, numLives, score);
+	gameOverPanel->render(renderer);
 }
 
 void Game::renderGameplay()
@@ -178,13 +219,15 @@ void Game::onBallLoss()
 	if (numLives <= 0)
 	{
 		// TODO: game over, allow complete reset
+		numLives = 0;
 		gameState = GameState::GAME_OVER;
+		onGameEnd();
 	}
 	else
 	{
 		// TODO: reset ball and paddle
 		gameState = GameState::PRE_BALL_LAUNCH;
-		Mix_PlayChannel(-1, ballLoss, 0);
+		playSound(ballLoss);
 	}
 }
 
