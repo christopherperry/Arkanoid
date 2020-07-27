@@ -80,5 +80,12 @@ bool Player::isReadyToLaunch()
 void Player::reset()
 {
 	position = startPosition;
+	boundingBox.moveTo(position);
 	spriteRenderer->resetAnimations();
+}
+
+void Player::stopMovement()
+{
+	movingLeft = false;
+	movingRight = false;
 }

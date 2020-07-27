@@ -153,11 +153,14 @@ copy $(ProjectDir)lib\*  $(OutDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\powerups\PowerUpSpawner.cpp" />
+    <ClCompile Include="src\powerups\ExpandCapsule.cpp" />
     <ClCompile Include="src\PlayerSpriteRenderer.cpp" />
     <ClCompile Include="src\AnimationFrames.cpp" />
     <ClCompile Include="src\GameOverPanel.cpp" />
     <ClCompile Include="src\GameStartPanel.cpp" />
     <ClCompile Include="src\LevelLoader.cpp" />
+    <ClCompile Include="src\powerups\PowerUpCapsule.cpp" />
     <ClCompile Include="src\ScoresPanel.cpp" />
     <ClCompile Include="src\collisions\Hit.cpp" />
     <ClCompile Include="src\entities\Ball.cpp" />
@@ -175,6 +178,10 @@ copy $(ProjectDir)lib\*  $(OutDir)</Command>
     <ClCompile Include="src\utils\Util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\powerups\PowerUpSpawner.h" />
+    <ClInclude Include="src\powerups\ExpandCapsule.h" />
+    <ClInclude Include="src\powerups\PowerUpCapsule.h" />
+    <ClInclude Include="src\powerups\PowerUp.h" />
     <ClInclude Include="src\PlayerSpriteRenderer.h" />
     <ClInclude Include="src\AnimationFrames.h" />
     <ClInclude Include="src\GameOverPanel.h" />

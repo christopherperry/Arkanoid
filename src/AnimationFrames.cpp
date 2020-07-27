@@ -18,8 +18,8 @@ bool AnimationFrames::isFinished()
 	{
 		return false;
 	}
-
-	return currentFrame >= totalFrames;
+	
+	return (currentFrame >= totalFrames) || !isAnimating;
 }
 
 void AnimationFrames::update(float deltaTimeMillis)

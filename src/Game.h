@@ -12,6 +12,7 @@
 #include "LevelLoader.h"
 #include "GameStartPanel.h"
 #include "GameOverPanel.h"
+#include "powerups/PowerUpSpawner.h"
 
 enum GameState
 {
@@ -53,6 +54,7 @@ private:
 	SDL_Texture* texture; // This is the sprite sheet
 	
 	std::vector<Entity*> entities;
+	std::vector<PowerUpCapsule*> powerUpCapsules;
 
 	int level{ 1 };
 	int numLives{ START_LIVES };
@@ -75,6 +77,7 @@ private:
 	ScoresPanel* scoresPanel;
 	GameStartPanel* startPanel;
 	GameOverPanel* gameOverPanel;
+	PowerUpSpawner* powerUpSpawner;
 
 	void renderGameStart();
 	void renderGameplay();

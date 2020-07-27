@@ -213,6 +213,12 @@ void Game::renderGameplay()
 		}
 	}
 
+	// Power Ups
+	for (PowerUpCapsule* capsule : powerUpCapsules)
+	{
+		capsule->render(renderer);
+	}
+
 	player->render(renderer);
 	ball->render(renderer);
 	scoresPanel->render(renderer, numLives, score, level);
@@ -232,6 +238,7 @@ void Game::onBallLoss()
 	numLives--;
 
 	gameState = GameState::BALL_LOSS;
+	player->stopMovement();
 	player->dissolve();
 
 	if (numLives <= 0)
@@ -259,14 +266,26 @@ void Game::update(float deltaTime)
 		{
 			aliveEntities.push_back(entity);
 		}
-		else
+		else // Brick Break!
 		{
+			PowerUpCapsule* puc = powerUpSpawner->spawn(texture, entity->getPosition());
+			if (puc != nullptr)
+			{
+				powerUpCapsules.push_back(puc);
+			}
+
 			score += entity->getScoreValue();
 			delete entity;
 		}
 	}
 	entities.clear();
 	entities = aliveEntities;
+
+	// Power Ups
+	for (PowerUpCapsule* capsule : powerUpCapsules)
+	{
+		capsule->update(deltaTime);
+	}
 
 	/////////////////////////////
 	// PLAYER
@@ -277,7 +296,8 @@ void Game::update(float deltaTime)
 	{
 		if (player->isReadyToLaunch())
 		{
-			gameState == GameState::BALL_LAUNCH;
+			player->reset();
+			gameState = GameState::BALL_LAUNCH;
 		}
 	}
 

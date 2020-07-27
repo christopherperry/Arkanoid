@@ -14,6 +14,7 @@ protected:
 public:
 	Entity() = delete;
 	Entity(Sprite* sprite, AABB boundingBox, Vector2 position) : sprite(sprite), boundingBox(boundingBox), position(position) {};
+	Vector2 getPosition() { return position; }
 	virtual bool collidesWith(Entity& other);
 	virtual Hit* checkCollision(Entity& other);
 	virtual void render(SDL_Renderer* renderer);

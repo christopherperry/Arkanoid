@@ -37,6 +37,7 @@ public:
 	void dissolve();
 	bool isReadyToLaunch();
 	void reset();
+	void stopMovement();
 	std::string tag() override { return "player"; }
 };
 
