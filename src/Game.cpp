@@ -8,6 +8,7 @@
 #include "entities/Ball.h"
 #include "Text.h"
 #include "TextRenderer.h"
+#include "utils/logger.h"
 
 const static bool RENDER_COLLIDERS = false;
 const static float BALL_SPEED = 300.0f / 1000.0f; // pixels per second, time is in milliseconds
@@ -70,7 +71,7 @@ void Game::onGameStart()
 
 void Game::onGameEnd()
 {
-	numLives = 1;
+	numLives = START_LIVES;
 	score = 0;
 	playMusic(gameEnd);
 }
@@ -148,7 +149,7 @@ void Game::render()
 	{
 		renderGameStart();
 	}
-	else if (gameState == GameState::PRE_BALL_LAUNCH || gameState == GameState::PLAYING)
+	else if ((gameState == GameState::PRE_BALL_LAUNCH) || (gameState == GameState::PLAYING))
 	{
 		renderGameplay();
 	}
@@ -160,6 +161,7 @@ void Game::render()
 
 void Game::renderGameStart()
 {
+	Logger::log("Render Game Start");
 	for (Entity* entity : entities)
 	{
 		if (entity->tag() != "brick")
@@ -174,6 +176,7 @@ void Game::renderGameStart()
 
 void Game::renderGameOver()
 {
+	Logger::log("Render Game Over");
 	for (Entity* entity : entities)
 	{
 		if (entity->tag() != "brick")
@@ -270,6 +273,11 @@ void Game::update(float deltaTime)
 
 void Game::checkCollisions()
 {
+	if (gameState != GameState::PLAYING)
+	{
+		return;
+	}
+
 	if (ballLossArea->collidesWith(*ball))
 	{
 		onBallLoss();

@@ -41,6 +41,8 @@ private:
 	static const int NUM_TILES_WIDE = 13;
 	static const int NUM_TILES_HIGH = 16;
 
+	static const int START_LIVES = 6;
+
 	float windowWidth;
 	float windowHeight;
 	
@@ -50,7 +52,7 @@ private:
 	std::vector<Entity*> entities;
 
 	// Start with 6 lives
-	int numLives{ 1 };
+	int numLives{ START_LIVES };
 	int score{ 0 };
 	GameState gameState{ GameState::GAME_START };
 
