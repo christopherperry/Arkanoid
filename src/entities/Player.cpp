@@ -7,7 +7,7 @@ AABB boxForState(PlayerState state, Vector2 position)
 	return AABB{ position, Vector2{ 21.0f, 5.5f } };
 }
 
-Player::Player(SDL_Texture* texture, Vector2 position) : Entity(nullptr, AABB{ position, Vector2{ 21.0f, 5.5f } }, position)
+Player::Player(SDL_Texture* texture, Vector2 position) : Entity(nullptr, AABB{ position, Vector2{ 21.0f, 5.5f } }, position), startPosition{position}
 {
 	Vector2 extents{ 21.0f, 5.5f }; // Paddle size is 42 by 11
 	AABB box{ position, extents };
@@ -37,32 +37,22 @@ Vector2 Player::getPaddleTopCenterPosition()
 
 void Player::update(float deltaTime)
 {
-	if (isDissolving) // track render frames
-	{
-		if (totalAnimTimeMillis >= animationSpeed)
-		{
-			currentAnimFrame++;
-			totalAnimTimeMillis = 0;
-		}
-		totalAnimTimeMillis += deltaTime;
-	}
-	else // allow movement
-	{
-		float directionX = 0;
-		if (movingLeft)
-		{
-			directionX = -1;
-		}
-		else if (movingRight)
-		{
-			directionX = 1;
-		}
+	spriteRenderer->update(deltaTime);
 
-		float distanceX = directionX * moveSpeed * deltaTime;
-		position.x += distanceX;
-
-		boundingBox.moveBy(distanceX, 0);
+	float directionX = 0;
+	if (movingLeft)
+	{
+		directionX = -1;
 	}
+	else if (movingRight)
+	{
+		directionX = 1;
+	}
+
+	float distanceX = directionX * moveSpeed * deltaTime;
+	position.x += distanceX;
+
+	boundingBox.moveBy(distanceX, 0);
 }
 
 void Player::onCollision(Hit* hit)
@@ -79,5 +69,16 @@ void Player::render(SDL_Renderer* renderer)
 
 void Player::dissolve()
 {
-	isDissolving = true;
+	spriteRenderer->startAnimation();
+}
+
+bool Player::isReadyToLaunch()
+{
+	return !spriteRenderer->isAnimating();
+}
+
+void Player::reset()
+{
+	position = startPosition;
+	spriteRenderer->resetAnimations();
 }

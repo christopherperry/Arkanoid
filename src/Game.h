@@ -19,10 +19,13 @@ enum GameState
 	GAME_START,
 
 	// Ball hasn't been launched yet
-	PRE_BALL_LAUNCH,
+	BALL_LAUNCH,
 
 	// Ball is in play
 	PLAYING,
+
+	// Lost a ball, player dissolves
+	BALL_LOSS,
 
 	// Game is over
 	GAME_OVER

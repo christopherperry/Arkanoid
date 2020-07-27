@@ -5,6 +5,23 @@ void AnimationFrames::startAnimation()
 	isAnimating = true;
 }
 
+void AnimationFrames::reset()
+{
+	isAnimating = false;
+	currentFrame = 0;
+	frameTimerMillis = 0;
+}
+
+bool AnimationFrames::isFinished()
+{
+	if (isLooping)
+	{
+		return false;
+	}
+
+	return currentFrame >= totalFrames;
+}
+
 void AnimationFrames::update(float deltaTimeMillis)
 {
 	if (isAnimating)

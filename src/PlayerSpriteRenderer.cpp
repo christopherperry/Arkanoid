@@ -43,9 +43,49 @@ PlayerSpriteRenderer::PlayerSpriteRenderer(SDL_Texture* texture)
 		{REG_LEFT_DISSOLVE_3, new Sprite{texture, SDL_Rect{427, 175, 21, 11}}},
 		{REG_RIGHT_DISSOLVE_3, new Sprite{texture, SDL_Rect{449, 175, 21, 11}}},
 	};
+
+	frames = new AnimationFrames(4, 150, false);
+}
+
+void PlayerSpriteRenderer::update(float deltaTimeMillis)
+{
+	frames->update(deltaTimeMillis);
 }
 
 void PlayerSpriteRenderer::render(SDL_Renderer* renderer, Vector2 position)
 {
-	renderTwoSprite(renderer, sprites[REG_LEFT], sprites[REG_RIGHT], position);
+	int currentFrame = frames->getCurrentFrame();
+	switch (currentFrame)
+	{
+	case 0:
+		renderTwoSprite(renderer, sprites[REG_LEFT], sprites[REG_RIGHT], position);
+		break;
+	case 1:
+		renderTwoSprite(renderer, sprites[REG_LEFT_DISSOLVE_1], sprites[REG_RIGHT_DISSOLVE_1], position);
+		break;
+	case 2:
+		renderTwoSprite(renderer, sprites[REG_LEFT_DISSOLVE_2], sprites[REG_RIGHT_DISSOLVE_2], position);
+		break;
+	case 3:
+		renderTwoSprite(renderer, sprites[REG_LEFT_DISSOLVE_3], sprites[REG_RIGHT_DISSOLVE_3], position);
+		break;
+	default:
+		// don't render anything. 
+		break;
+	}
+}
+
+void PlayerSpriteRenderer::startAnimation()
+{
+	frames->startAnimation();
+}
+
+bool PlayerSpriteRenderer::isAnimating()
+{
+	return !frames->isFinished();
+}
+
+void PlayerSpriteRenderer::resetAnimations()
+{
+	frames->reset();
 }

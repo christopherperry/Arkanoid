@@ -23,13 +23,9 @@ private:
 	bool movingLeft = false;
 	bool movingRight = false;
 	float moveSpeed = 400 / 1000.0f; // pixels per second, time is in milliseconds
-	float animationSpeed = 250 / 1000.0f; // 4 frames, finish over one second time
-	float totalAnimTimeMillis = 0.0f;
-	int currentAnimFrame = 0;
-	bool isDissolving = false;
-	bool isDissolved = false;
 	PlayerSpriteRenderer* spriteRenderer;
 	PlayerState state{ REGULAR };
+	Vector2 startPosition;
 public:
 	Player() = delete;
 	Player(SDL_Texture* texture, Vector2 position);
@@ -39,6 +35,8 @@ public:
 	void onEvent(SDL_Event event);
 	void render(SDL_Renderer* renderer) override;
 	void dissolve();
+	bool isReadyToLaunch();
+	void reset();
 	std::string tag() override { return "player"; }
 };
 

@@ -89,7 +89,7 @@ void Game::reloadLevel()
 
 void Game::onEvent(SDL_Event e)
 {
-	if ( (gameState == GameState::PLAYING) || (gameState == GameState::PRE_BALL_LAUNCH) )
+	if ( (gameState == GameState::PLAYING) || (gameState == GameState::BALL_LAUNCH) )
 	{
 		player->onEvent(e);
 	}
@@ -104,7 +104,7 @@ void Game::onEvent(SDL_Event e)
 		{
 			if (gameState == GameState::GAME_START)
 			{
-				gameState = GameState::PRE_BALL_LAUNCH;
+				gameState = GameState::BALL_LAUNCH;
 				onGameStart();
 			}
 
@@ -112,7 +112,7 @@ void Game::onEvent(SDL_Event e)
 		}
 		case SDLK_SPACE:
 		{
-			if (gameState == GameState::PRE_BALL_LAUNCH)
+			if (gameState == GameState::BALL_LAUNCH)
 			{
 				ball->launch();
 				gameState = GameState::PLAYING;
@@ -120,7 +120,7 @@ void Game::onEvent(SDL_Event e)
 
 			if (gameState == GameState::GAME_OVER)
 			{
-				gameState = GameState::PRE_BALL_LAUNCH;
+				gameState = GameState::BALL_LAUNCH;
 				reloadLevel();
 			}
 
@@ -161,7 +161,7 @@ void Game::render()
 	{
 		renderGameStart();
 	}
-	else if ((gameState == GameState::PRE_BALL_LAUNCH) || (gameState == GameState::PLAYING))
+	else if ((gameState == GameState::BALL_LAUNCH) || (gameState == GameState::PLAYING) || (gameState == GameState::BALL_LOSS))
 	{
 		renderGameplay();
 	}
@@ -231,17 +231,17 @@ void Game::onBallLoss()
 	// If lives left reset player and ball.
 	numLives--;
 
+	gameState = GameState::BALL_LOSS;
+	player->dissolve();
+
 	if (numLives <= 0)
 	{
-		// TODO: game over, allow complete reset
 		numLives = 0;
 		gameState = GameState::GAME_OVER;
 		onGameEnd();
 	}
 	else
 	{
-		// TODO: reset ball and paddle
-		gameState = GameState::PRE_BALL_LAUNCH;
 		playSound(ballLoss);
 	}
 }
@@ -249,7 +249,9 @@ void Game::onBallLoss()
 // TODO: do this in a faster way, i.e. don't copy just remove in place
 void Game::update(float deltaTime)
 {
-	// Remove dead entities
+	/////////////////////////////
+	// WORLD
+	/////////////////////////////
 	std::vector<Entity*> aliveEntities;
 	for (Entity* entity : entities)
 	{
@@ -263,15 +265,27 @@ void Game::update(float deltaTime)
 			delete entity;
 		}
 	}
-
 	entities.clear();
 	entities = aliveEntities;
 
-	// Update our player
+	/////////////////////////////
+	// PLAYER
+	/////////////////////////////
 	player->update(deltaTime);
 
-	// Update the ball based on game state
-	if (gameState == GameState::PRE_BALL_LAUNCH)
+	if (gameState == GameState::BALL_LOSS)
+	{
+		if (player->isReadyToLaunch())
+		{
+			gameState == GameState::BALL_LAUNCH;
+		}
+	}
+
+	/////////////////////////////
+	// BALL
+	/////////////////////////////
+	// Make the ball "stick" to the paddle on pre-launch
+	if (gameState == GameState::BALL_LAUNCH)
 	{
 		Vector2 centerOfPaddle = player->getPaddleTopCenterPosition();
 		Vector2 ballPosition{ centerOfPaddle.x, centerOfPaddle.y - BALL_SIZE };
@@ -285,7 +299,7 @@ void Game::update(float deltaTime)
 
 void Game::checkCollisions()
 {
-	if (gameState != GameState::PLAYING && gameState != GameState::PRE_BALL_LAUNCH)
+	if (gameState != GameState::PLAYING && gameState != GameState::BALL_LAUNCH)
 	{
 		return;
 	}
