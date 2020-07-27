@@ -13,7 +13,7 @@ const static bool RENDER_COLLIDERS = false;
 const static float BALL_SPEED = 300.0f / 1000.0f; // pixels per second, time is in milliseconds
 const static float BALL_SIZE = 6.0f;
 
-Game::Game(float windowWidth, float windowHeight, SDL_Renderer* renderer, SDL_Texture* texture) : 
+Game::Game(float windowWidth, float windowHeight, SDL_Renderer* renderer, SDL_Texture* texture) :
 	windowWidth{ windowWidth }, windowHeight{ windowHeight }, renderer{ renderer }, texture{ texture }
 {
 	paddleHit = Mix_LoadWAV("res/paddle-hit.wav");
@@ -22,6 +22,7 @@ Game::Game(float windowWidth, float windowHeight, SDL_Renderer* renderer, SDL_Te
 
 	font = TTF_OpenFont("res/font-retro.ttf", 28);
 
+	startPanel = new GameStartPanel(renderer, font, SDL_Rect{ 0, 0, NUM_TILES_WIDE * TILE_SIZE, NUM_TILES_HIGH * TILE_SIZE });
 	scoresPanel = new ScoresPanel(renderer, font, Vector2((NUM_TILES_WIDE * TILE_SIZE) + OFFSET, 0));
 	levelLoader = new LevelLoader(texture);
 
@@ -51,20 +52,35 @@ void Game::onEvent(SDL_Event e)
 {
 	player->onEvent(e);
 
-	switch (e.key.keysym.sym) {
-	case SDLK_SPACE:
+	switch (e.type) {
+	case SDL_KEYDOWN:
 	{
-		if (e.type == SDL_KEYDOWN && gameState == GameState::PRE_BALL_LAUNCH)
+		switch (e.key.keysym.sym)
 		{
-			ball->launch();
-			gameState = GameState::PLAYING;
-		}
+		case SDLK_RETURN:
+		case SDLK_KP_ENTER:
+		{
+			if (gameState == GameState::GAME_START)
+			{
+				gameState = GameState::PRE_BALL_LAUNCH;
+			}
 
-		break;
+			break;
+		}
+		case SDLK_SPACE:
+		{
+			if (gameState == GameState::PRE_BALL_LAUNCH)
+			{
+				ball->launch();
+				gameState = GameState::PLAYING;
+			}
+
+			break;
+		}
+		}
 	}
-	default:
-		break;
 	}
+
 }
 
 Player* Game::createPlayer()
@@ -100,6 +116,36 @@ Ball* Game::createBall()
 }
 
 void Game::render()
+{
+	if (gameState == GameState::GAME_START)
+	{
+		renderGameStart();
+	}
+	else if (gameState == GameState::PRE_BALL_LAUNCH)
+	{
+		renderGameplay();
+	}
+	else if (gameState == GameState::PLAYING)
+	{
+		renderGameplay();
+	}
+}
+
+void Game::renderGameStart()
+{
+	for (Entity* entity : entities)
+	{
+		if (entity->tag() != "brick")
+		{
+			entity->render(renderer);
+		}
+	}
+
+	scoresPanel->render(renderer, numLives, score);
+	startPanel->render(renderer);
+}
+
+void Game::renderGameplay()
 {
 	for (Entity* entity : entities)
 	{
@@ -165,7 +211,7 @@ void Game::update(float deltaTime)
 
 	// Update our player
 	player->update(deltaTime);
-	
+
 	// Update the ball based on game state
 	if (gameState == GameState::PRE_BALL_LAUNCH)
 	{

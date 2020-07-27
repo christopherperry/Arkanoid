@@ -10,6 +10,7 @@
 #include "Text.h"
 #include "ScoresPanel.h"
 #include "LevelLoader.h"
+#include "GameStartPanel.h"
 
 enum GameState
 {
@@ -50,7 +51,7 @@ private:
 	// Start with 6 lives
 	int numLives{ 6 };
 	int score{ 0 };
-	GameState gameState{ GameState::PRE_BALL_LAUNCH };
+	GameState gameState{ GameState::GAME_START };
 
 	// Things we create and need to clean up
 	BallLossArea* ballLossArea = nullptr;
@@ -63,6 +64,10 @@ private:
 
 	LevelLoader* levelLoader;
 	ScoresPanel* scoresPanel;
+	GameStartPanel* startPanel;
+
+	void renderGameStart();
+	void renderGameplay();
 
 	Player* createPlayer();
 	Ball* createBall();

@@ -4,7 +4,7 @@
 #include "TextRenderer.h"
 #include "utils/Util.h"
 
-enum PanelText
+enum ScoresPanelText
 {
 	// Digits for rendering the actual score
 	DIGIT_0,
@@ -36,19 +36,19 @@ ScoresPanel::ScoresPanel(SDL_Renderer* renderer, TTF_Font* font, Vector2 positio
 	SDL_Color red{ 188, 25, 0, 255 };
 
 	text = {
-		{PanelText::LIVES, new Text(renderer, font, "Lives:", red) },
-		{PanelText::SCORE, new Text(renderer, font, "Score:", red) },
-		{PanelText::HIGH_SCORE, new Text(renderer, font, "High Score:", red) },
-		{PanelText::DIGIT_0, new Text(renderer, font, "0", white) },
-		{PanelText::DIGIT_1, new Text(renderer, font, "1", white) },
-		{PanelText::DIGIT_2, new Text(renderer, font, "2", white) },
-		{PanelText::DIGIT_3, new Text(renderer, font, "3", white) },
-		{PanelText::DIGIT_4, new Text(renderer, font, "4", white) },
-		{PanelText::DIGIT_5, new Text(renderer, font, "5", white) },
-		{PanelText::DIGIT_6, new Text(renderer, font, "6", white) },
-		{PanelText::DIGIT_7, new Text(renderer, font, "7", white) },
-		{PanelText::DIGIT_8, new Text(renderer, font, "8", white) },
-		{PanelText::DIGIT_9, new Text(renderer, font, "9", white) },
+		{ScoresPanelText::LIVES, new Text(renderer, font, "Lives:", red) },
+		{ScoresPanelText::SCORE, new Text(renderer, font, "Score:", red) },
+		{ScoresPanelText::HIGH_SCORE, new Text(renderer, font, "High Score:", red) },
+		{ScoresPanelText::DIGIT_0, new Text(renderer, font, "0", white) },
+		{ScoresPanelText::DIGIT_1, new Text(renderer, font, "1", white) },
+		{ScoresPanelText::DIGIT_2, new Text(renderer, font, "2", white) },
+		{ScoresPanelText::DIGIT_3, new Text(renderer, font, "3", white) },
+		{ScoresPanelText::DIGIT_4, new Text(renderer, font, "4", white) },
+		{ScoresPanelText::DIGIT_5, new Text(renderer, font, "5", white) },
+		{ScoresPanelText::DIGIT_6, new Text(renderer, font, "6", white) },
+		{ScoresPanelText::DIGIT_7, new Text(renderer, font, "7", white) },
+		{ScoresPanelText::DIGIT_8, new Text(renderer, font, "8", white) },
+		{ScoresPanelText::DIGIT_9, new Text(renderer, font, "9", white) },
 	};
 }
 
@@ -60,7 +60,7 @@ void ScoresPanel::render(SDL_Renderer* renderer, int totalLives, int currentScor
 	//////////////////////////////////////
 	// Score Title
 	//////////////////////////////////////
-	Text* scoreTitle = text[PanelText::SCORE];
+	Text* scoreTitle = text[ScoresPanelText::SCORE];
 	SDL_Rect scoreTitleLocation{ startX, 31, scoreTitle->getWidth(), scoreTitle->getHeight() };
 	TextRenderer::render(renderer, scoreTitle, scoreTitleLocation);
 
@@ -82,7 +82,7 @@ void ScoresPanel::render(SDL_Renderer* renderer, int totalLives, int currentScor
 	//////////////////////////////////////
 	// Lives Title
 	//////////////////////////////////////
-	Text* livesTitle = text[PanelText::LIVES];
+	Text* livesTitle = text[ScoresPanelText::LIVES];
 	SDL_Rect livesTitleLocation{ startX, 150, livesTitle->getWidth(), livesTitle->getHeight() };
 	TextRenderer::render(renderer, livesTitle, livesTitleLocation);
 
