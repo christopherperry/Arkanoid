@@ -7,6 +7,7 @@
 #include "entities/Brick.h"
 #include "entities/Wall.h"
 #include "entities/WallCollider.h"
+#include "Constants.h"
 
 enum BrickId
 {
@@ -31,22 +32,14 @@ std::vector<std::vector<int>> levelOneBricks()
 {
 	std::vector<std::vector<int>> levelOneBricks =
 	{
-		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		{0,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8, 0},
-		{0,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2, 0},
-		{0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 0},
-		{0,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6, 0},
-		{0,  4,  4,  4,  4,  4,  4,  4,  4,  4,  4,  4, 0},
-		{0,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1, 0},
-		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8},
+		{2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6},
+		{4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4},
+		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 	};
 
 	return levelOneBricks;
@@ -83,36 +76,32 @@ LevelBrickLoader::~LevelBrickLoader()
 
 std::vector<Entity*> LevelBrickLoader::loadLevel(int levelNumber)
 {
-	// Let's do 11 bricks and a wall on each side for now
-	static const int NUM_TILES_WIDE = 13;
-	static const int NUM_TILES_HIGH = 16;
-
-	// The tiles are square 31x31
-	static const int TILE_SIZE = 31;
-	static const int OFFSET = TILE_SIZE * 0.5;
-
 	// For now we only have one level so always load that one.
-	std::vector<std::vector<int>> level = levelOneBricks();
+	std::vector<std::vector<int>> bricks = levelOneBricks();
+
+	// Account for the level walls and roof
+	float xOffset = Constants::TILE_SIZE + Constants::OFFSET;
+	float yOffset = Constants::TILE_SIZE + Constants::OFFSET;
 
 	std::vector<Entity*> entities;
 	float locationX, locationY;
-	int i, j;
 
-	for (i = 0; i < NUM_TILES_HIGH; i++)
+	for (int i = 0; i < bricks.size(); i++)
 	{
-		locationY = (i * TILE_SIZE) + OFFSET;
+		locationY = (i * Constants::BRICK_HEIGHT) + yOffset;
 
-		for (j = 0; j < NUM_TILES_WIDE; j++)
+		for (int j = 0; j < Constants::NUM_BRICKS_WIDE; j++)
 		{
-			int spriteId = level[i][j];
+			int spriteId = bricks[i][j];
 			if (spriteId == BrickId::NONE) continue;
 
-			locationX = (j * TILE_SIZE) + OFFSET;
+			locationX = (j * Constants::BRICK_WIDTH) + xOffset;
 			Vector2 position{ locationX, locationY };
 
-			Vector2 extents{ TILE_SIZE * 0.5f, BRICK_HEIGHT * 0.5f };
+			Vector2 extents{ Constants::BRICK_WIDTH * 0.5f, Constants::BRICK_HEIGHT * 0.5f };
 			int numHitsToDestroy = spriteId == 8 ? 2 : 1;
 			int scoreValue = numHitsToDestroy == 2 ? 100 : 50;
+
 			entities.push_back(new Brick{ sprites[spriteId], AABB{ position, extents }, position, numHitsToDestroy, scoreValue });
 		}
 	}

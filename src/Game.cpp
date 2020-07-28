@@ -85,6 +85,7 @@ void Game::reloadLevel()
 	destroyEntities();
 	destroyPowerUps();
 	destroyBullets();
+
 	nonColliders = levelLoader->loadNonColliders(1);
 	wallColliders = levelLoader->loadWallColliders(1);
 	bricks = levelLoader->loadBricks(1);
