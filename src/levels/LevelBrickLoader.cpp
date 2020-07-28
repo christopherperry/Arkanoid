@@ -84,6 +84,30 @@ std::vector<std::vector<int>> levelThreeBricks()
 	};
 }
 
+std::vector<std::vector<int>> levelFourBricks()
+{
+	return std::vector<std::vector<int>>
+	{
+		{ 0,   0, 0, 0, 0,   0,   0, 0, 0, 0,   0 },
+		{ 0,   0, 0, 0, 0,   0,   0, 0, 0, 0,   0 },
+
+		{ 0,   9, 6, 2, 5,   0,   6, 2, 7, 9,   0 },
+		{ 0,   7, 2, 6, 3,   0,   2, 6, 9, 7,   0 },
+		{ 0,   2, 5, 3, 6,   0,   7, 9, 6, 2,   0 },
+		{ 0,   6, 3, 5, 2,   0,   9, 7, 2, 6,   0 },
+		{ 0,   3, 6, 2, 7,   0,   6, 2, 5, 3,   0 },
+		{ 0,   5, 2, 6, 9,   0,   2, 6, 3, 5,   0 },
+		{ 0,   2, 7, 9, 6,   0,   5, 3, 6, 2,   0 },
+		{ 0,   6, 9, 7, 2,   0,   3, 5, 2, 6,   0 },
+		{ 0,   9, 6, 2, 5,   0,   6, 2, 7, 9,   0 },
+		{ 0,   7, 2, 6, 3,   0,   2, 6, 9, 7,   0 },
+		{ 0,   2, 5, 3, 6,   0,   7, 9, 6, 2,   0 },
+		{ 0,   6, 3, 5, 2,   0,   9, 7, 2, 6,   0 },
+		{ 0,   3, 6, 2, 7,   0,   6, 2, 5, 3,   0 },
+		{ 0,   5, 2, 6, 9,   0,   2, 6, 3, 5,   0 },
+	};
+}
+
 enum BrickId
 {
 	NONE,
@@ -107,7 +131,7 @@ std::vector<std::vector<int>> getBricksForLevel(int levelNumber)
 {
 	assert((levelNumber > 0) && levelNumber <= Constants::NUM_LEVELS);
 
-	return levelThreeBricks();
+	return levelFourBricks();
 
 	/*switch (levelNumber)
 	{
