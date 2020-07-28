@@ -70,6 +70,7 @@ private:
 	Mix_Chunk* paddleHit;
 	Mix_Chunk* brickHit;
 	Mix_Chunk* ballLoss;
+	Mix_Chunk* gunshot;
 	Mix_Music* gameStart;
 	Mix_Music* gameEnd;
 

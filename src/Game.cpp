@@ -20,6 +20,7 @@ Game::Game(float windowWidth, float windowHeight, SDL_Renderer* renderer, SDL_Te
 	paddleHit = Mix_LoadWAV("res/paddle-hit.wav");
 	brickHit = Mix_LoadWAV("res/brick-hit.wav");
 	ballLoss = Mix_LoadWAV("res/ball-loss.wav");
+	gunshot = Mix_LoadWAV("res/gunshot.wav");
 	gameStart = Mix_LoadMUS("res/game-start.wav");
 	gameEnd = Mix_LoadMUS("res/game-end.wav");
 
@@ -144,6 +145,7 @@ void Game::onEvent(SDL_Event e)
 				std::pair<Bullet*, Bullet*> bulletPair = bulletSpawner->spawn(player->getPosition());
 				bullets.push_back(bulletPair.first);
 				bullets.push_back(bulletPair.second);
+				playSound(gunshot);
 			}
 
 			break;
