@@ -9,8 +9,10 @@ private:
 	int scoreValue;
 	int numHitsToDestroy;
 	int totalHits{ 0 };
+	SDL_Rect outlineRect;
 public:
-	Brick(Sprite* sprite, AABB boundingBox, Vector2 position, int numHitsToDestroy, int scoreValue) : Entity(sprite, boundingBox, position), numHitsToDestroy{ numHitsToDestroy }, scoreValue{ scoreValue } {};
+	Brick(Sprite* sprite, AABB boundingBox, Vector2 position, int numHitsToDestroy, int scoreValue);
+	void render(SDL_Renderer* renderer) override;
 	void onCollision(Hit* hit) override;
 	bool isAlive() override;
 	std::string tag() override { return "brick"; }
