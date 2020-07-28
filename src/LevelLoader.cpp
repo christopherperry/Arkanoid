@@ -22,18 +22,7 @@ static const int NUM_TILES_HIGH = 16;
 // because we hardcoded numbers to define the level
 enum SpriteId
 {
-	// Bricks
-	BRICK_YELLOW,
-	BRICK_GREEN,
-	BRICK_RED,
-	BRICK_BROWN,
-	BRICK_LAVENDER,
-	BRICK_ORANGE,
-	BRICK_BLUE,
-	BRICK_PURPLE,
-	BRICK_GREY_IDLE,
-	BRICK_GREY_ANIM_1,
-	BRICK_GRAY_ANIM_2,
+	NONE,
 
 	// Walls
 	WALL_CORNER_TOP_LEFT,
@@ -52,29 +41,28 @@ enum SpriteId
 	// Backgrounds
 	BACKGROUND_BLUE,
 
-	NONE = -1
 };
 
 std::vector<std::vector<int>> levelOne()
 {
 	std::vector<std::vector<int>> levelOne =
 	{
-		{11, 17, 18, 17, 18, 17, 18, 17, 18, 17, 18, 17, 12},
-		{13, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15},
-		{13,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8, 15},
-		{13,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2, 15},
-		{13,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 15},
-		{13,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6, 15},
-		{13,  4,  4,  4,  4,  4,  4,  4,  4,  4,  4,  4, 15},
-		{13,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1, 15},
-		{13, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15},
-		{13, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15},
-		{13, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15},
-		{13, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15},
-		{13, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15},
-		{13, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15},
-		{13, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15},
-		{13, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15}
+		{1,  7,  8,  7,  8,  7,  8,  7,  8,  7,  8,  7, 2},
+		{3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 5},
+		{3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 5},
+		{3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 5},
+		{3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 5},
+		{3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 5},
+		{3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 5},
+		{3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 5},
+		{3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 5},
+		{3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 5},
+		{3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 5},
+		{3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 5},
+		{3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 5},
+		{3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 5},
+		{3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 5},
+		{3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 5}
 	};
 
 	return levelOne;
@@ -86,18 +74,6 @@ LevelLoader::LevelLoader(SDL_Texture* texture)
 	// we are asked to render.
 
 	sprites = {
-		// Bricks
-		{BRICK_YELLOW, new Sprite{texture, {225, 193, 31, 16}} },
-		{BRICK_GREEN, new Sprite{texture, {225, 225, 31, 16}} },
-		{BRICK_RED, new Sprite{texture, {225, 257, 31, 16}} },
-		{BRICK_BROWN, new Sprite{texture, {225, 289, 31, 16}} },
-		{BRICK_LAVENDER, new Sprite{texture, {257, 193, 31, 16}} },
-		{BRICK_ORANGE, new Sprite{texture, {257, 225, 31, 16}} },
-		{BRICK_BLUE, new Sprite{texture, {257, 257, 31, 16}} },
-		{BRICK_PURPLE, new Sprite{texture, {257, 289, 31, 16}} },
-		{BRICK_GREY_IDLE, new Sprite{texture, {161, 1, 31, 16}} },
-		{BRICK_GREY_ANIM_1, new Sprite{texture, {129, 1, 31, 16}} },
-		{BRICK_GRAY_ANIM_2, new Sprite{texture, {161, 1, 31, 16}} },
 
 		// Walls
 		{WALL_CORNER_TOP_LEFT, new Sprite{texture, {129, 193, 31, 31}} },
@@ -151,7 +127,7 @@ std::vector<Entity*> LevelLoader::loadLevel(int levelNumber)
 		}
 	}
 
-	// The Walls and Bricks
+	// The Walls
 	for (i = 0; i < NUM_TILES_HIGH; i++)
 	{
 		locationY = (i * TILE_SIZE) + OFFSET;
@@ -164,18 +140,7 @@ std::vector<Entity*> LevelLoader::loadLevel(int levelNumber)
 			locationX = (j * TILE_SIZE) + OFFSET;
 			Vector2 position{ locationX, locationY };
 
-			// Bricks
-			if (spriteId >= 0 && spriteId <= 10)
-			{
-				Vector2 extents{ TILE_SIZE * 0.5f, BRICK_HEIGHT * 0.5f };
-				int numHitsToDestroy = spriteId == 8 ? 2 : 1;
-				int scoreValue = numHitsToDestroy == 2 ? 100 : 50;
-				entities.push_back(new Brick{ sprites[spriteId], AABB{ position, extents }, position, numHitsToDestroy, scoreValue });
-			}
-			else // Wall
-			{
-				entities.push_back(new Wall{ sprites[spriteId], position });
-			}
+			entities.push_back(new Wall{ sprites[spriteId], position });
 		}
 	}
 

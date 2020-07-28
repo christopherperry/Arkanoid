@@ -31,12 +31,14 @@ Game::Game(float windowWidth, float windowHeight, SDL_Renderer* renderer, SDL_Te
 	gameOverPanel = new GameOverPanel(renderer, font, SDL_Rect{ 0, 0, NUM_TILES_WIDE * TILE_SIZE, NUM_TILES_HIGH * TILE_SIZE });
 	scoresPanel = new ScoresPanel(renderer, font, Vector2((NUM_TILES_WIDE * TILE_SIZE) + OFFSET, 0));
 	levelLoader = new LevelLoader(texture);
+	levelBrickLoader = new LevelBrickLoader(texture);
 	bulletSpawner = new BulletSpawner(texture);
 
 	player = createPlayer();
 	ball = createBall();
 
 	entities = levelLoader->loadLevel(1);
+	bricks = levelBrickLoader->loadLevel(1);
 
 	Vector2 bottomPosition(NUM_TILES_WIDE * TILE_SIZE * 0.5f + OFFSET, NUM_TILES_HIGH * TILE_SIZE - 2 * OFFSET);
 	Vector2 bottomExtents(NUM_TILES_WIDE * TILE_SIZE * 0.5f, TILE_SIZE * 0.5f);
@@ -55,6 +57,7 @@ Game::~Game()
 	delete ball;
 	delete scoresPanel;
 	delete levelLoader;
+	delete levelBrickLoader;
 	delete bulletSpawner;
 	delete ballLossArea;
 }
@@ -87,6 +90,7 @@ void Game::reloadLevel()
 	destroyPowerUps();
 	destroyBullets();
 	entities = levelLoader->loadLevel(1);
+	bricks = levelBrickLoader->loadLevel(1);
 }
 
 void Game::destroyEntities()
@@ -96,6 +100,15 @@ void Game::destroyEntities()
 		delete e;
 	}
 	entities.clear();
+}
+
+void Game::destroyBricks()
+{
+	for (Entity* e : bricks)
+	{
+		delete e;
+	}
+	bricks.clear();
 }
 
 void Game::destroyPowerUps()
@@ -213,10 +226,7 @@ void Game::renderGameStart()
 	Logger::log("Render Game Start");
 	for (Entity* entity : entities)
 	{
-		if (entity->tag() != "brick")
-		{
-			entity->render(renderer);
-		}
+		entity->render(renderer);
 	}
 
 	scoresPanel->render(renderer, numLives, score, level);
@@ -247,6 +257,16 @@ void Game::renderGameplay()
 		if (RENDER_COLLIDERS)
 		{
 			entity->renderColliders(renderer);
+		}
+	}
+
+	for (Entity* brick : bricks)
+	{
+		brick->render(renderer);
+
+		if (RENDER_COLLIDERS)
+		{
+			brick->renderColliders(renderer);
 		}
 	}
 
@@ -302,29 +322,29 @@ void Game::onBallLoss()
 void Game::update(float deltaTime)
 {
 	/////////////////////////////
-	// WORLD
+	// BRICKS
 	/////////////////////////////
-	std::vector<Entity*> aliveEntities;
-	for (Entity* entity : entities)
+	std::vector<Entity*> aliveBricks;
+	for (Entity* brick : bricks)
 	{
-		if (entity->isAlive())
+		if (brick->isAlive())
 		{
-			aliveEntities.push_back(entity);
+			aliveBricks.push_back(brick);
 		}
 		else // Brick Break!
 		{
-			PowerUpCapsule* puc = powerUpSpawner->spawn(texture, entity->getPosition());
+			PowerUpCapsule* puc = powerUpSpawner->spawn(texture, brick->getPosition());
 			if (puc != nullptr)
 			{
 				powerUpCapsules.push_back(puc);
 			}
 
-			score += entity->getScoreValue();
-			delete entity;
+			score += brick->getScoreValue();
+			delete brick;
 		}
 	}
-	entities.clear();
-	entities = aliveEntities;
+	bricks.clear();
+	bricks = aliveBricks;
 
 	// Power Ups
 	std::vector<PowerUpCapsule*> alivePowerUps;
@@ -419,6 +439,7 @@ void Game::checkCollisions()
 	}
 	else // Ball vs. Level
 	{
+		// TODO: this part only needs to be against the 3 walls
 		std::vector<std::pair<Entity*, Hit*>> ballCollisions = checkCollisions(ball, "");
 		if (ballCollisions.size() > 0)
 		{
@@ -430,6 +451,21 @@ void Game::checkCollisions()
 			if (RENDER_COLLIDERS)
 			{
 				theThingWeHit->renderCollidersHit(renderer);
+			}
+		}
+
+		for (Entity* brick : bricks)
+		{
+			Hit* hit = ball->checkCollision(*brick);
+			if (hit != nullptr)
+			{
+				ball->onCollision(hit);
+				brick->onCollision(hit);
+
+				if (RENDER_COLLIDERS)
+				{
+					brick->renderCollidersHit(renderer);
+				}
 			}
 		}
 	}
@@ -459,13 +495,11 @@ void Game::checkCollisions()
 	// Bullets vs Bricks
 	for (Bullet* bullet : bullets)
 	{
-		for (Entity* e : entities)
+		for (Entity* brick : bricks)
 		{
-			if (e->tag() != "brick") continue;
-
-			if (bullet->collidesWith(*e))
+			if (bullet->collidesWith(*brick))
 			{
-				e->onCollision(nullptr);
+				brick->onCollision(nullptr);
 				bullet->onCollision(nullptr);
 			}
 		}

@@ -10,6 +10,7 @@
 #include "Text.h"
 #include "ScoresPanel.h"
 #include "LevelLoader.h"
+#include "LevelBrickLoader.h"
 #include "GameStartPanel.h"
 #include "GameOverPanel.h"
 #include "powerups/PowerUpSpawner.h"
@@ -55,6 +56,7 @@ private:
 	SDL_Texture* texture; // This is the sprite sheet
 	
 	std::vector<Entity*> entities;
+	std::vector<Entity*> bricks;
 	std::vector<PowerUpCapsule*> powerUpCapsules;
 	std::vector<Bullet*> bullets;
 
@@ -77,6 +79,7 @@ private:
 	TTF_Font* font;
 
 	LevelLoader* levelLoader;
+	LevelBrickLoader* levelBrickLoader;
 	ScoresPanel* scoresPanel;
 	GameStartPanel* startPanel;
 	GameOverPanel* gameOverPanel;
@@ -92,6 +95,7 @@ private:
 	void reloadLevel();
 
 	void destroyEntities();
+	void destroyBricks();
 	void destroyPowerUps();
 	void destroyBullets();
 
