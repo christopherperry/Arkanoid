@@ -108,6 +108,28 @@ std::vector<std::vector<int>> levelFourBricks()
 	};
 }
 
+std::vector<std::vector<int>> levelFiveBricks()
+{
+	return std::vector<std::vector<int>>
+	{
+		{ 0,   0, 0, 6, 0, 0, 0, 6, 0, 0,   0 },
+		{ 0,   0, 0, 0, 6, 0, 6, 0, 0, 0,   0 },
+		{ 0,   0, 0, 0, 6, 0, 6, 0, 0, 0,   0 },
+		{ 0,   0, 0, 9, 9, 9, 9, 9, 0, 0,   0 },
+		{ 0,   0, 0, 9, 9, 9, 9, 9, 0, 0,   0 },
+		{ 0,   0, 9, 9, 3, 9, 3, 9, 9, 0,   0 },
+		{ 0,   0, 9, 9, 3, 9, 3, 9, 9, 0,   0 },
+		{ 0,   9, 9, 9, 9, 9, 9, 9, 9, 9,   0 },
+		{ 0,   9, 9, 9, 9, 9, 9, 9, 9, 9,   0 },
+		{ 0,   9, 0, 9, 9, 9, 9, 9, 0, 9,   0 },
+		{ 0,   9, 0, 9, 0, 0, 0, 9, 0, 9,   0 },
+		{ 0,   9, 0, 9, 0, 0, 0, 9, 0, 9,   0 },
+		{ 0,   0, 0, 0, 9, 0, 9, 0, 0, 0,   0 },
+		{ 0,   0, 0, 0, 9, 0, 9, 0, 0, 0,   0 },
+		{ 0,   0, 0, 0, 0, 0, 0, 0, 0, 0,   0 },
+	};
+}
+
 enum BrickId
 {
 	NONE,
@@ -131,15 +153,19 @@ std::vector<std::vector<int>> getBricksForLevel(int levelNumber)
 {
 	assert((levelNumber > 0) && levelNumber <= Constants::NUM_LEVELS);
 
-	return levelFourBricks();
-
-	/*switch (levelNumber)
+	switch (levelNumber)
 	{
 	case 1:
 		return levelOneBricks();
 	case 2:
 		return levelTwoBricks();
-	}*/
+	case 3:
+		return levelThreeBricks();
+	case 4:
+		return levelFourBricks();
+	case 5:
+		return levelFiveBricks();
+	}
 }
 
 LevelBrickLoader::LevelBrickLoader(SDL_Texture* texture)
