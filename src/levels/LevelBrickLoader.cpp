@@ -10,24 +10,22 @@
 #include "../entities/WallCollider.h"
 #include "../Constants.h"
 
-enum BrickId
+std::vector<std::vector<int>> levelZero()
 {
-	NONE,
-
-	// Bricks
-	BRICK_GOLD,
-	BRICK_GREEN,
-	BRICK_RED,
-	BRICK_BROWN,
-	BRICK_PINK,
-	BRICK_ORANGE,
-	BRICK_BLUE,
-	BRICK_PURPLE,
-	BRICK_GREY_IDLE,
-	BRICK_GREY_ANIM_1,
-	BRICK_GREY_ANIM_2,
-
-};
+	return std::vector<std::vector<int>>
+	{
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+	};
+}
 
 std::vector<std::vector<int>> levelOneBricks()
 {
@@ -63,11 +61,53 @@ std::vector<std::vector<int>> levelTwoBricks()
 	};
 }
 
+std::vector<std::vector<int>> levelThreeBricks()
+{
+	return std::vector<std::vector<int>>
+	{
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 11, 11, 11, 1, 1, 1, 1, 1, 1, 1, 1 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 1, 1, 1, 1, 1, 1, 1, 1, 11, 11, 11 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 7, 7, 7, 1, 1, 1, 1, 1, 1, 1, 1 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 1, 1, 1, 1, 1, 1, 1, 1, 7, 7, 7 }
+	};
+}
+
+enum BrickId
+{
+	NONE,
+
+	// Bricks
+	BRICK_GOLD,
+	BRICK_GREEN,
+	BRICK_RED,
+	BRICK_BROWN,
+	BRICK_PINK,
+	BRICK_ORANGE,
+	BRICK_BLUE,
+	BRICK_PURPLE,
+	BRICK_GREY_IDLE,
+	BRICK_GREY_ANIM_1,
+	WHITE,
+
+};
+
 std::vector<std::vector<int>> getBricksForLevel(int levelNumber)
 {
 	assert((levelNumber > 0) && levelNumber <= Constants::NUM_LEVELS);
 
-	return levelTwoBricks();
+	return levelThreeBricks();
 
 	/*switch (levelNumber)
 	{
@@ -93,7 +133,7 @@ LevelBrickLoader::LevelBrickLoader(SDL_Texture* texture)
 		{BRICK_ORANGE,      new Sprite{texture, {257, 225, BRICK_WIDTH, BRICK_HEIGHT}} },
 		{BRICK_BLUE,        new Sprite{texture, {257, 257, BRICK_WIDTH, BRICK_HEIGHT}} },
 		{BRICK_PURPLE,      new Sprite{texture, {257, 289, BRICK_WIDTH, BRICK_HEIGHT}} },
-		{BRICK_GREY_ANIM_2, new Sprite{texture, {161,   1, BRICK_WIDTH, BRICK_HEIGHT}} },
+		{WHITE,             new Sprite{texture, {161,   1, BRICK_WIDTH, BRICK_HEIGHT}} },
 		{BRICK_GREY_ANIM_1, new Sprite{texture, {129,   1, BRICK_WIDTH, BRICK_HEIGHT}} },
 		{BRICK_GREY_IDLE,   new Sprite{texture, {97,    1, BRICK_WIDTH, BRICK_HEIGHT}} }
 	};
