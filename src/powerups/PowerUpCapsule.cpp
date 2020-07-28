@@ -33,3 +33,13 @@ void PowerUpCapsule::render(SDL_Renderer* renderer)
 
 	SDL_RenderCopy(renderer, sprite->texture, &sprite->rect, &location);
 }
+
+void PowerUpCapsule::onCollision(Hit* hit)
+{
+	numHits++;
+}
+
+bool PowerUpCapsule::isAlive()
+{
+	return numHits == 0;
+}

@@ -8,6 +8,10 @@ AABB boxForState(PlayerState state, Vector2 position)
 	{
 		return AABB{ position, Vector2{ 27.0f, 5.5f } };
 	}
+	else if (state == PlayerState::SHRUNK)
+	{
+		return AABB{ position, Vector2{ 15.0f, 5.5f } };
+	}
 
 	// Default to regular size
 	return AABB{ position, Vector2{ 21.0f, 5.5f } };
@@ -92,6 +96,10 @@ void Player::setState(PlayerState state)
 	else if (state == PlayerState::GUNNER)
 	{
 		spriteRenderer->setRenderMode(PlayerRenderMode::GUNNER);
+	}
+	else if (state == PlayerState::SHRUNK)
+	{
+		spriteRenderer->setRenderMode(PlayerRenderMode::SHRUNK);
 	}
 }
 

@@ -1,5 +1,6 @@
 #include <map>
 #include <vector>
+#include <algorithm>
 #include <SDL_ttf.h>
 #include "Game.h"
 #include "sprites/sprite.h"
@@ -10,7 +11,7 @@
 #include "TextRenderer.h"
 #include "utils/logger.h"
 
-const static bool RENDER_COLLIDERS = false;
+const static bool RENDER_COLLIDERS = true;
 const static float BALL_SPEED = 300.0f / 1000.0f; // pixels per second, time is in milliseconds
 const static float BALL_SIZE = 6.0f;
 
@@ -82,30 +83,42 @@ void Game::onGameEnd()
 
 void Game::reloadLevel()
 {
+	destroyEntities();
+	destroyPowerUps();
+	destroyBullets();
+	entities = levelLoader->loadLevel(1);
+}
+
+void Game::destroyEntities()
+{
 	for (Entity* e : entities)
 	{
 		delete e;
 	}
 	entities.clear();
+}
 
+void Game::destroyPowerUps()
+{
 	for (PowerUpCapsule* c : powerUpCapsules)
 	{
 		delete c;
 	}
 	powerUpCapsules.clear();
+}
 
+void Game::destroyBullets()
+{
 	for (Bullet* b : bullets)
 	{
 		delete b;
 	}
 	bullets.clear();
-
-	entities = levelLoader->loadLevel(1);
 }
 
 void Game::onEvent(SDL_Event e)
 {
-	if ( (gameState == GameState::PLAYING) || (gameState == GameState::BALL_LAUNCH) )
+	if ((gameState == GameState::PLAYING) || (gameState == GameState::BALL_LAUNCH))
 	{
 		player->onEvent(e);
 	}
@@ -167,7 +180,7 @@ Player* Game::createPlayer()
 Ball* Game::createBall()
 {
 	Vector2 centerOfPaddle = player->getPaddleTopCenterPosition();
-	Vector2 ballPosition{ centerOfPaddle.x, centerOfPaddle.y - BALL_SIZE };
+	Vector2 ballPosition{ centerOfPaddle.x, centerOfPaddle.y };
 	Vector2 ballExtents{ BALL_SIZE  * 0.5f, BALL_SIZE  * 0.5f };
 
 	return new Ball(
@@ -267,6 +280,9 @@ void Game::onBallLoss()
 	// If lives left reset player and ball.
 	numLives--;
 
+	destroyPowerUps();
+	destroyBullets();
+
 	gameState = GameState::BALL_LOSS;
 	player->setState(PlayerState::DISSOLVE);
 
@@ -311,10 +327,21 @@ void Game::update(float deltaTime)
 	entities = aliveEntities;
 
 	// Power Ups
+	std::vector<PowerUpCapsule*> alivePowerUps;
 	for (PowerUpCapsule* capsule : powerUpCapsules)
 	{
-		capsule->update(deltaTime);
+		if (capsule->isAlive())
+		{
+			capsule->update(deltaTime);
+			alivePowerUps.push_back(capsule);
+		}
+		else
+		{
+			delete capsule;
+		}
 	}
+	powerUpCapsules.clear();
+	powerUpCapsules = alivePowerUps;
 
 	// Bullets
 	std::vector<Bullet*> aliveBullets;
@@ -354,7 +381,7 @@ void Game::update(float deltaTime)
 	if (gameState == GameState::BALL_LAUNCH)
 	{
 		Vector2 centerOfPaddle = player->getPaddleTopCenterPosition();
-		Vector2 ballPosition{ centerOfPaddle.x, centerOfPaddle.y - BALL_SIZE };
+		Vector2 ballPosition{ centerOfPaddle.x, centerOfPaddle.y - (BALL_SIZE * 0.5f) };
 		ball->reset(ballPosition);
 	}
 	else
@@ -412,14 +439,19 @@ void Game::checkCollisions()
 	{
 		if (capsule->collidesWith(*player))
 		{
+			capsule->onCollision(nullptr);
 			PowerUp powerUp = capsule->getPowerUp();
-			if (powerUp == PowerUp::EXPAND)
+			switch (powerUp)
 			{
+			case PowerUp::EXPAND:
 				player->setState(PlayerState::EXPANDED);
-			}
-			else if (powerUp == PowerUp::GUN)
-			{
+				break;
+			case PowerUp::GUN:
 				player->setState(PlayerState::GUNNER);
+				break;
+			case PowerUp::SHRINK:
+				player->setState(PlayerState::SHRUNK);
+				break;
 			}
 		}
 	}
@@ -439,7 +471,7 @@ void Game::checkCollisions()
 		}
 	}
 }
-	
+
 
 std::vector<std::pair<Entity*, Hit*>> Game::checkCollisions(Entity* const entity, std::string tag)
 {

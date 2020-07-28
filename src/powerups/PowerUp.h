@@ -1,6 +1,6 @@
 #pragma once
 
-enum PowerUp
+enum class PowerUp
 {
 	// Player can catch the ball and relaunch
 	CATCH,

@@ -15,7 +15,9 @@ enum PlayerSprites
 	EXPANDED_RIGHT,
 
 	GUNNER_LEFT,
-	GUNNER_RIGHT
+	GUNNER_RIGHT,
+
+	SHRUNK
 };
 
 const static int NO_OFFSET = 0;
@@ -39,6 +41,17 @@ void renderTwoSprite(SDL_Renderer* renderer, Sprite* leftHalf, Sprite* rightHalf
 	SDL_RenderCopy(renderer, rightHalf->texture, &rightHalf->rect, &rightHalfLocation);
 }
 
+void renderSingleSprite(SDL_Renderer* renderer, Sprite* sprite, Vector2 position)
+{
+	SDL_Rect location;
+	location.x = position.x - (sprite->rect.w * 0.5f);
+	location.y = position.y - (sprite->rect.h * 0.5f);
+	location.w = sprite->rect.w;
+	location.h = sprite->rect.h;
+
+	SDL_RenderCopy(renderer, sprite->texture, &sprite->rect, &location);
+}
+
 PlayerSpriteRenderer::PlayerSpriteRenderer(SDL_Texture* texture)
 {
 	sprites = {
@@ -56,6 +69,8 @@ PlayerSpriteRenderer::PlayerSpriteRenderer(SDL_Texture* texture)
 
 		{GUNNER_LEFT, new Sprite{texture, SDL_Rect{330, 138, 22, 17}}},
 		{GUNNER_RIGHT, new Sprite{texture, SDL_Rect{353, 138, 22, 17}}},
+
+		{SHRUNK, new Sprite{texture, SDL_Rect{563, 239, 30, 11}}}
 	};
 
 	frames = new AnimationFrames(4, 150, false);
@@ -82,6 +97,10 @@ void PlayerSpriteRenderer::render(SDL_Renderer* renderer, Vector2 position)
 	else if (renderMode == PlayerRenderMode::GUNNER)
 	{
 		renderTwoSprite(renderer, sprites[GUNNER_LEFT], sprites[GUNNER_RIGHT], position, -7);
+	}
+	else if (renderMode == PlayerRenderMode::SHRUNK)
+	{
+		renderSingleSprite(renderer, sprites[SHRUNK], position);
 	}
 	else if (renderMode == PlayerRenderMode::DISSOLVE)
 	{

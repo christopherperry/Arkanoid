@@ -12,7 +12,7 @@ enum class PlayerState
 
 	EXPANDED,
 
-	SHORT,
+	SHRUNK,
 
 	GUNNER, 
 

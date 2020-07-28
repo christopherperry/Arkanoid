@@ -11,7 +11,8 @@ enum class PlayerRenderMode
 	REGULAR,
 	DISSOLVE,
 	EXPANDED,
-	GUNNER
+	GUNNER,
+	SHRUNK
 };
 
 class PlayerSpriteRenderer
