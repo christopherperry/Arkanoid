@@ -238,8 +238,7 @@ void Game::onBallLoss()
 	numLives--;
 
 	gameState = GameState::BALL_LOSS;
-	player->stopMovement();
-	player->dissolve();
+	player->setState(PlayerState::DISSOLVE);
 
 	if (numLives <= 0)
 	{
@@ -356,6 +355,19 @@ void Game::checkCollisions()
 			if (RENDER_COLLIDERS)
 			{
 				theThingWeHit->renderCollidersHit(renderer);
+			}
+		}
+	}
+
+	// PowerUps vs Player
+	for (PowerUpCapsule* capsule : powerUpCapsules)
+	{
+		if (capsule->collidesWith(*player))
+		{
+			PowerUp powerUp = capsule->getPowerUp();
+			if (powerUp == PowerUp::EXPAND)
+			{
+				player->setState(PlayerState::EXPANDED);
 			}
 		}
 	}

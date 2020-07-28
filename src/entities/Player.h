@@ -6,15 +6,17 @@
 #include "../sprites/sprite.h"
 #include "../PlayerSpriteRenderer.h"
 
-enum PlayerState
+enum class PlayerState
 {
 	REGULAR,
 
-	LONG,
+	EXPANDED,
 
 	SHORT,
 
-	LAZER
+	LAZER, 
+
+	DISSOLVE
 };
 
 class Player: public Entity
@@ -24,7 +26,7 @@ private:
 	bool movingRight = false;
 	float moveSpeed = 400 / 1000.0f; // pixels per second, time is in milliseconds
 	PlayerSpriteRenderer* spriteRenderer;
-	PlayerState state{ REGULAR };
+	PlayerState state{ PlayerState::REGULAR };
 	Vector2 startPosition;
 public:
 	Player() = delete;
@@ -34,10 +36,9 @@ public:
 	void onCollision(Hit* hit) override;
 	void onEvent(SDL_Event event);
 	void render(SDL_Renderer* renderer) override;
-	void dissolve();
+	void setState(PlayerState state);
 	bool isReadyToLaunch();
 	void reset();
-	void stopMovement();
 	std::string tag() override { return "player"; }
 };
 

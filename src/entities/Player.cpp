@@ -4,15 +4,18 @@
 // TODO: update this when we have more states
 AABB boxForState(PlayerState state, Vector2 position)
 {
+	if (state == PlayerState::EXPANDED)
+	{
+		return AABB{ position, Vector2{ 27.0f, 5.5f } };
+	}
+
+	// Default to regular size
 	return AABB{ position, Vector2{ 21.0f, 5.5f } };
 }
 
 Player::Player(SDL_Texture* texture, Vector2 position) : Entity(nullptr, AABB{ position, Vector2{ 21.0f, 5.5f } }, position), startPosition{position}
 {
-	Vector2 extents{ 21.0f, 5.5f }; // Paddle size is 42 by 11
-	AABB box{ position, extents };
-	boundingBox = AABB{ position, extents };
-
+	boundingBox = boxForState(state, position);
 	spriteRenderer = new PlayerSpriteRenderer(texture);
 }
 
@@ -67,9 +70,25 @@ void Player::render(SDL_Renderer* renderer)
 	spriteRenderer->render(renderer, position);
 }
 
-void Player::dissolve()
+void Player::setState(PlayerState state)
 {
-	spriteRenderer->startAnimation();
+	this->state = state;
+	this->boundingBox = boxForState(state, position);
+
+	if (state == PlayerState::REGULAR)
+	{
+		spriteRenderer->setRenderMode(PlayerRenderMode::REGULAR);
+	}
+	else if (state == PlayerState::DISSOLVE)
+	{
+		movingLeft = false;
+		movingRight = false;
+		spriteRenderer->setRenderMode(PlayerRenderMode::DISSOLVE);
+	}
+	else if (state == PlayerState::EXPANDED)
+	{
+		spriteRenderer->setRenderMode(PlayerRenderMode::EXPANDED);
+	}
 }
 
 bool Player::isReadyToLaunch()
@@ -80,12 +99,10 @@ bool Player::isReadyToLaunch()
 void Player::reset()
 {
 	position = startPosition;
+	state = PlayerState::REGULAR;
+	boundingBox = boxForState(state, position);
 	boundingBox.moveTo(position);
-	spriteRenderer->resetAnimations();
-}
 
-void Player::stopMovement()
-{
-	movingLeft = false;
-	movingRight = false;
+	spriteRenderer->setRenderMode(PlayerRenderMode::REGULAR);
+	spriteRenderer->resetAnimations();
 }
