@@ -2,8 +2,8 @@
 #include <map>
 #include <vector>
 #include <SDL.h>
-#include "sprites/sprite.h"
-#include "entities/Entity.h"
+#include "../sprites/sprite.h"
+#include "../entities/Entity.h"
 
 class LevelBrickLoader
 {

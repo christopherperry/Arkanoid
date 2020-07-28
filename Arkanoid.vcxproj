@@ -154,7 +154,7 @@ copy $(ProjectDir)lib\*  $(OutDir)</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Constants.cpp" />
-    <ClCompile Include="src\LevelBrickLoader.cpp" />
+    <ClCompile Include="src\levels\LevelBrickLoader.cpp" />
     <ClCompile Include="src\powerups\ShrinkCapsule.cpp" />
     <ClCompile Include="src\BulletSpawner.cpp" />
     <ClCompile Include="src\entities\Bullet.cpp" />
@@ -165,7 +165,7 @@ copy $(ProjectDir)lib\*  $(OutDir)</Command>
     <ClCompile Include="src\AnimationFrames.cpp" />
     <ClCompile Include="src\GameOverPanel.cpp" />
     <ClCompile Include="src\GameStartPanel.cpp" />
-    <ClCompile Include="src\LevelLoader.cpp" />
+    <ClCompile Include="src\levels\LevelLoader.cpp" />
     <ClCompile Include="src\powerups\PowerUpCapsule.cpp" />
     <ClCompile Include="src\ScoresPanel.cpp" />
     <ClCompile Include="src\collisions\Hit.cpp" />
@@ -185,7 +185,7 @@ copy $(ProjectDir)lib\*  $(OutDir)</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Constants.h" />
-    <ClInclude Include="src\LevelBrickLoader.h" />
+    <ClInclude Include="src\levels\LevelBrickLoader.h" />
     <ClInclude Include="src\powerups\ShrinkCapsule.h" />
     <ClInclude Include="src\BulletSpawner.h" />
     <ClInclude Include="src\entities\Bullet.h" />
@@ -198,7 +198,7 @@ copy $(ProjectDir)lib\*  $(OutDir)</Command>
     <ClInclude Include="src\AnimationFrames.h" />
     <ClInclude Include="src\GameOverPanel.h" />
     <ClInclude Include="src\GameStartPanel.h" />
-    <ClInclude Include="src\LevelLoader.h" />
+    <ClInclude Include="src\levels\LevelLoader.h" />
     <ClInclude Include="src\ScoresPanel.h" />
     <ClInclude Include="src\entities\BallLossArea.h" />
     <ClInclude Include="src\entities\BackgroundTile.h" />

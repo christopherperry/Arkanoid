@@ -24,5 +24,6 @@ void Brick::onCollision(Hit* hit)
 
 bool Brick::isAlive()
 {
+	if (numHitsToDestroy == -1) return true;
 	return totalHits < numHitsToDestroy;
 }

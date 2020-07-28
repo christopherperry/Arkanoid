@@ -21,5 +21,7 @@ public:
 	static const int NUM_BRICKS_WIDE = 11;
 
 	static const int START_LIVES = 6;
+
+	static const int NUM_LEVELS = 2;
 };
 
