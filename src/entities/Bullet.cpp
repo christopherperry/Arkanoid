@@ -6,3 +6,13 @@ void Bullet::update(float deltaTimeMillis)
 	position.y -= velocity.y * deltaTimeMillis;
 	boundingBox.moveTo(position);
 }
+
+void Bullet::onCollision(Hit * hit)
+{
+	numHits++;
+}
+
+bool Bullet::isAlive()
+{
+	return numHits == 0;
+}

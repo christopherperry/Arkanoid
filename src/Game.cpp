@@ -315,10 +315,21 @@ void Game::update(float deltaTime)
 	}
 
 	// Bullets
+	std::vector<Bullet*> aliveBullets;
 	for (Bullet* bullet : bullets)
 	{
-		bullet->update(deltaTime);
+		if (bullet->isAlive())
+		{
+			bullet->update(deltaTime);
+			aliveBullets.push_back(bullet);
+		}
+		else // Dead bullet
+		{
+			delete bullet;
+		}
 	}
+	bullets.clear();
+	bullets = aliveBullets;
 
 	/////////////////////////////
 	// PLAYER
@@ -364,7 +375,8 @@ void Game::checkCollisions()
 	}
 
 	// Player vs. Level
-	std::vector<std::pair<Entity*, Hit*>> playerCollisions = checkCollisions(player);
+	// TODO: We only need to do this vs the two side walls
+	std::vector<std::pair<Entity*, Hit*>> playerCollisions = checkCollisions(player, "wall");
 	if (playerCollisions.size() > 0)
 	{
 		player->onCollision(playerCollisions.at(0).second);
@@ -378,7 +390,7 @@ void Game::checkCollisions()
 	}
 	else // Ball vs. Level
 	{
-		std::vector<std::pair<Entity*, Hit*>> ballCollisions = checkCollisions(ball);
+		std::vector<std::pair<Entity*, Hit*>> ballCollisions = checkCollisions(ball, "");
 		if (ballCollisions.size() > 0)
 		{
 			// Let's just handle one for now
@@ -409,17 +421,36 @@ void Game::checkCollisions()
 			}
 		}
 	}
-}
 
-std::vector<std::pair<Entity*, Hit*>> Game::checkCollisions(Entity* const entity)
+	// Bullets vs Bricks
+	for (Bullet* bullet : bullets)
+	{
+		for (Entity* e : entities)
+		{
+			if (e->tag() != "brick") continue;
+
+			if (bullet->collidesWith(*e))
+			{
+				e->onCollision(nullptr);
+				bullet->onCollision(nullptr);
+			}
+		}
+	}
+}
+	
+
+std::vector<std::pair<Entity*, Hit*>> Game::checkCollisions(Entity* const entity, std::string tag)
 {
 	std::vector<std::pair<Entity*, Hit*>> collisions;
 	for (Entity* e : entities)
 	{
-		Hit* hit = entity->checkCollision(*e);
-		if (hit != nullptr)
+		if (tag == "" || e->tag() == tag)
 		{
-			collisions.push_back(std::pair(e, hit));
+			Hit* hit = entity->checkCollision(*e);
+			if (hit != nullptr)
+			{
+				collisions.push_back(std::pair(e, hit));
+			}
 		}
 	}
 

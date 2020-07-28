@@ -96,7 +96,7 @@ private:
 	Player* createPlayer();
 	Ball* createBall();
 	void onBallLoss();
-	std::vector<std::pair<Entity*, Hit*>> checkCollisions(Entity* const entity);
+	std::vector<std::pair<Entity*, Hit*>> checkCollisions(Entity* const entity, std::string tag);
 public:
 	Game(float windowWidth, float windowHeight, SDL_Renderer* renderer, SDL_Texture* texture);
 	~Game();
