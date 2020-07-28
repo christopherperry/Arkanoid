@@ -1,12 +1,18 @@
 #include "GameStartPanel.h"
 #include "TextRenderer.h"
+#include "sprites/sprite.h"
 
 enum StartPanelText
 {
 	PRESS_ENTER_TO_START
 };
 
-GameStartPanel::GameStartPanel(SDL_Renderer * renderer, TTF_Font * font, SDL_Rect panelRect)
+enum StartPanelSprites
+{
+	LOGO
+};
+
+GameStartPanel::GameStartPanel(SDL_Texture* texture, SDL_Renderer* renderer, TTF_Font* font, SDL_Rect panelRect)
 {
 	this->panelRect = panelRect;
 
@@ -15,10 +21,22 @@ GameStartPanel::GameStartPanel(SDL_Renderer * renderer, TTF_Font * font, SDL_Rec
 	text = {
 		{StartPanelText::PRESS_ENTER_TO_START, new Text(renderer, font, "Press ENTER to Start", red) },
 	};
+
+	sprites = {
+		{ LOGO, new Sprite{ texture, SDL_Rect{289, 193, 190, 94} } }
+	};
 }
 
 void GameStartPanel::render(SDL_Renderer* renderer)
 {
+	Sprite* logoSprite = sprites[LOGO];
+	int logoWidth = logoSprite->rect.w;
+	int logoHeight = logoSprite->rect.h;
+	int logoPositionX = (panelRect.w * 0.5f) - (logoWidth * 0.5f);
+	int logoPositionY = 31;
+	SDL_Rect logoLocation{ logoPositionX, logoPositionY, logoWidth, logoHeight };
+	SDL_RenderCopy(renderer, logoSprite->texture, &logoSprite->rect, &logoLocation);
+
 	// Center the start text for now.
 	// After we add power ups etc we'll add instructions to this screen.
 	Text* gameStartText = text[StartPanelText::PRESS_ENTER_TO_START];
