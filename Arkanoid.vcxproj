@@ -153,6 +153,7 @@ copy $(ProjectDir)lib\*  $(OutDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Constants.cpp" />
     <ClCompile Include="src\LevelBrickLoader.cpp" />
     <ClCompile Include="src\powerups\ShrinkCapsule.cpp" />
     <ClCompile Include="src\BulletSpawner.cpp" />
@@ -183,6 +184,7 @@ copy $(ProjectDir)lib\*  $(OutDir)</Command>
     <ClCompile Include="src\utils\Util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Constants.h" />
     <ClInclude Include="src\LevelBrickLoader.h" />
     <ClInclude Include="src\powerups\ShrinkCapsule.h" />
     <ClInclude Include="src\BulletSpawner.h" />

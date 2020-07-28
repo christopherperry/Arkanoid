@@ -2,6 +2,7 @@
 
 #include <map>
 #include <vector>
+#include "Constants.h"
 #include "sprites/sprite.h"
 #include "entities/Entity.h"
 #include "entities/Player.h"
@@ -37,18 +38,6 @@ enum GameState
 class Game
 {
 private:
-	// The tiles are square 31x31
-	static const int TILE_SIZE = 31;
-	static const int OFFSET = TILE_SIZE * 0.5;
-	static const int BRICK_HEIGHT = 16;
-	static const int WALL_TOP_THICKNESS = 13;
-
-	// Let's do 11 bricks and a wall on each side for now
-	static const int NUM_TILES_WIDE = 13;
-	static const int NUM_TILES_HIGH = 16;
-
-	static const int START_LIVES = 6;
-
 	float windowWidth;
 	float windowHeight;
 	
@@ -62,7 +51,7 @@ private:
 	std::vector<Bullet*> bullets;
 
 	int level{ 1 };
-	int numLives{ START_LIVES };
+	int numLives{ Constants::START_LIVES };
 	int score{ 0 };
 	GameState gameState{ GameState::GAME_START };
 
@@ -102,8 +91,6 @@ private:
 	void playSound(Mix_Chunk* sound);
 	void playMusic(Mix_Music* music);
 
-	Player* createPlayer();
-	Ball* createBall();
 	void onBallLoss();
 	std::vector<std::pair<Entity*, Hit*>> checkCollisions(Entity* const entity, std::string tag);
 public:

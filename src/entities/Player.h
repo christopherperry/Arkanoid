@@ -28,9 +28,10 @@ private:
 	PlayerSpriteRenderer* spriteRenderer;
 	PlayerState state{ PlayerState::REGULAR };
 	Vector2 startPosition;
+	Player(SDL_Texture* texture, Vector2 position);
 public:
 	Player() = delete;
-	Player(SDL_Texture* texture, Vector2 position);
+	static Player* createNew(SDL_Texture* texture);
 	Vector2 getPaddleTopCenterPosition();
 	void update(float deltaTime);
 	void onCollision(Hit* hit) override;

@@ -2,6 +2,7 @@
 #include <vector>
 #include <algorithm>
 #include <SDL_ttf.h>
+#include "Constants.h"
 #include "Game.h"
 #include "sprites/sprite.h"
 #include "entities/Entity.h"
@@ -10,10 +11,6 @@
 #include "Text.h"
 #include "TextRenderer.h"
 #include "utils/logger.h"
-
-const static bool RENDER_COLLIDERS = true;
-const static float BALL_SPEED = 300.0f / 1000.0f; // pixels per second, time is in milliseconds
-const static float BALL_SIZE = 6.0f;
 
 Game::Game(float windowWidth, float windowHeight, SDL_Renderer* renderer, SDL_Texture* texture) :
 	windowWidth{ windowWidth }, windowHeight{ windowHeight }, renderer{ renderer }, texture{ texture }
@@ -27,21 +24,21 @@ Game::Game(float windowWidth, float windowHeight, SDL_Renderer* renderer, SDL_Te
 
 	font = TTF_OpenFont("res/font-retro.ttf", 28);
 
-	startPanel = new GameStartPanel(texture, renderer, font, SDL_Rect{ 0, 0, NUM_TILES_WIDE * TILE_SIZE, NUM_TILES_HIGH * TILE_SIZE });
-	gameOverPanel = new GameOverPanel(renderer, font, SDL_Rect{ 0, 0, NUM_TILES_WIDE * TILE_SIZE, NUM_TILES_HIGH * TILE_SIZE });
-	scoresPanel = new ScoresPanel(renderer, font, Vector2((NUM_TILES_WIDE * TILE_SIZE) + OFFSET, 0));
+	startPanel = new GameStartPanel(texture, renderer, font, SDL_Rect{ 0, 0, Constants::NUM_TILES_WIDE * Constants::TILE_SIZE, Constants::NUM_TILES_HIGH * Constants::TILE_SIZE });
+	gameOverPanel = new GameOverPanel(renderer, font, SDL_Rect{ 0, 0, Constants::NUM_TILES_WIDE * Constants::TILE_SIZE, Constants::NUM_TILES_HIGH * Constants::TILE_SIZE });
+	scoresPanel = new ScoresPanel(renderer, font, Vector2((Constants::NUM_TILES_WIDE * Constants::TILE_SIZE) + Constants::OFFSET, 0));
 	levelLoader = new LevelLoader(texture);
 	bulletSpawner = new BulletSpawner(texture);
 
-	player = createPlayer();
-	ball = createBall();
+	player = Player::createNew(texture);
+	ball = Ball::createNew(texture, player->getPaddleTopCenterPosition(), brickHit, paddleHit);
 
 	nonColliders = levelLoader->loadNonColliders(1);
 	wallColliders = levelLoader->loadWallColliders(1);
 	bricks = levelLoader->loadBricks(1);
 
-	Vector2 bottomPosition(NUM_TILES_WIDE * TILE_SIZE * 0.5f + OFFSET, NUM_TILES_HIGH * TILE_SIZE - 2 * OFFSET);
-	Vector2 bottomExtents(NUM_TILES_WIDE * TILE_SIZE * 0.5f, TILE_SIZE * 0.5f);
+	Vector2 bottomPosition(Constants::NUM_TILES_WIDE * Constants::TILE_SIZE * 0.5f + Constants::OFFSET, Constants::NUM_TILES_HIGH * Constants::TILE_SIZE - 2 * Constants::OFFSET);
+	Vector2 bottomExtents(Constants::NUM_TILES_WIDE * Constants::TILE_SIZE * 0.5f, Constants::TILE_SIZE * 0.5f);
 	ballLossArea = new BallLossArea(AABB{ bottomPosition, bottomExtents }, bottomPosition);
 }
 
@@ -78,7 +75,7 @@ void Game::onGameStart()
 
 void Game::onGameEnd()
 {
-	numLives = START_LIVES;
+	numLives = Constants::START_LIVES;
 	score = 0;
 	playMusic(gameEnd);
 }
@@ -187,30 +184,6 @@ void Game::onEvent(SDL_Event e)
 	}
 }
 
-Player* Game::createPlayer()
-{
-	int positionX = (NUM_TILES_WIDE * TILE_SIZE * 0.5f);
-	int positionY = (NUM_TILES_HIGH - 2) * TILE_SIZE;
-	Vector2 position = Vector2(positionX, positionY);
-
-	return new Player(texture, position);
-}
-
-Ball* Game::createBall()
-{
-	Vector2 centerOfPaddle = player->getPaddleTopCenterPosition();
-	Vector2 ballPosition{ centerOfPaddle.x, centerOfPaddle.y };
-	Vector2 ballExtents{ BALL_SIZE  * 0.5f, BALL_SIZE  * 0.5f };
-
-	return new Ball(
-		new Sprite{ texture, {463, 142, 6, 6} },
-		AABB{ ballPosition, ballExtents },
-		ballPosition,
-		brickHit,
-		paddleHit
-	);
-}
-
 void Game::render()
 {
 	if (gameState == GameState::GAME_START)
@@ -260,7 +233,7 @@ void Game::renderGameplay()
 
 	for (Entity* wc : wallColliders)
 	{
-		if (RENDER_COLLIDERS)
+		if (Constants::RENDER_COLLIDERS)
 		{
 			wc->renderColliders(renderer);
 		}
@@ -270,7 +243,7 @@ void Game::renderGameplay()
 	{
 		brick->render(renderer);
 
-		if (RENDER_COLLIDERS)
+		if (Constants::RENDER_COLLIDERS)
 		{
 			brick->renderColliders(renderer);
 		}
@@ -292,7 +265,7 @@ void Game::renderGameplay()
 	ball->render(renderer);
 	scoresPanel->render(renderer, numLives, score, level);
 
-	if (RENDER_COLLIDERS)
+	if (Constants::RENDER_COLLIDERS)
 	{
 		player->renderColliders(renderer);
 		ball->renderColliders(renderer);
@@ -407,7 +380,7 @@ void Game::update(float deltaTime)
 	if (gameState == GameState::BALL_LAUNCH)
 	{
 		Vector2 centerOfPaddle = player->getPaddleTopCenterPosition();
-		Vector2 ballPosition{ centerOfPaddle.x, centerOfPaddle.y - (BALL_SIZE * 0.5f) };
+		Vector2 ballPosition{ centerOfPaddle.x, centerOfPaddle.y - (Constants::BALL_SIZE * 0.5f) };
 		ball->reset(ballPosition);
 	}
 	else
@@ -470,7 +443,7 @@ void Game::checkCollisions()
 				brick->onCollision(hit);
 				delete hit;
 
-				if (RENDER_COLLIDERS)
+				if (Constants::RENDER_COLLIDERS)
 				{
 					brick->renderCollidersHit(renderer);
 				}

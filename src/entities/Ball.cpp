@@ -1,14 +1,26 @@
 #include <iostream>
 #include "Ball.h"
 #include "../math/Vector2.h"
+#include "../Constants.h"
 
-const static float BALL_SPEED = 300.0f / 1000.0f; // pixels per second, time is in milliseconds
+Ball* Ball::createNew(SDL_Texture* texture, Vector2 position, Mix_Chunk* hitBrickSound, Mix_Chunk* hitPaddleSound)
+{
+	Vector2 ballExtents{ Constants::BALL_SIZE  * 0.5f, Constants::BALL_SIZE  * 0.5f };
+
+	return new Ball(
+		new Sprite{ texture, {463, 142, 6, 6} },
+		AABB{ position, ballExtents },
+		position,
+		hitBrickSound,
+		hitPaddleSound
+	);
+}
 
 void Ball::launch()
 {
 	float pi = 2 * std::acos(0);
 	float angleRadians = 45.0f * (pi / 180.0f);
-	Vector2 startVelocity = Vector2(std::cos(angleRadians), -std::sin(angleRadians)) * BALL_SPEED;
+	Vector2 startVelocity = Vector2(std::cos(angleRadians), -std::sin(angleRadians)) * Constants::BALL_SPEED;
 
 	this->velocity = startVelocity;
 }

@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "../utils/logger.h"
+#include "../Constants.h"
 
 // TODO: update this when we have more states
 AABB boxForState(PlayerState state, Vector2 position)
@@ -15,6 +16,15 @@ AABB boxForState(PlayerState state, Vector2 position)
 
 	// Default to regular size
 	return AABB{ position, Vector2{ 21.0f, 5.5f } };
+}
+
+Player* Player::createNew(SDL_Texture * texture)
+{
+	int positionX = (Constants::NUM_TILES_WIDE * Constants::TILE_SIZE * 0.5f);
+	int positionY = (Constants::NUM_TILES_HIGH - 2) * Constants::TILE_SIZE;
+	Vector2 position = Vector2(positionX, positionY);
+
+	return new Player(texture, position);
 }
 
 Player::Player(SDL_Texture* texture, Vector2 position) : Entity(nullptr, AABB{ position, Vector2{ 21.0f, 5.5f } }, position), startPosition{position}
