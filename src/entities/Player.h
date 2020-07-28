@@ -14,7 +14,7 @@ enum class PlayerState
 
 	SHORT,
 
-	LAZER, 
+	GUNNER, 
 
 	DISSOLVE
 };

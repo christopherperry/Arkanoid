@@ -13,13 +13,18 @@ enum PlayerSprites
 
 	EXPANDED_LEFT,
 	EXPANDED_RIGHT,
+
+	GUNNER_LEFT,
+	GUNNER_RIGHT
 };
 
-void renderTwoSprite(SDL_Renderer* renderer, Sprite* leftHalf, Sprite* rightHalf, Vector2 position)
+const static int NO_OFFSET = 0;
+
+void renderTwoSprite(SDL_Renderer* renderer, Sprite* leftHalf, Sprite* rightHalf, Vector2 position, int yOffset)
 {
 	SDL_Rect leftHalfLocation;
 	leftHalfLocation.x = position.x - leftHalf->rect.w;
-	leftHalfLocation.y = position.y - (leftHalf->rect.h * 0.5f);
+	leftHalfLocation.y = position.y - (leftHalf->rect.h * 0.5f) + yOffset;
 	leftHalfLocation.w = leftHalf->rect.w;
 	leftHalfLocation.h = leftHalf->rect.h;
 
@@ -27,7 +32,7 @@ void renderTwoSprite(SDL_Renderer* renderer, Sprite* leftHalf, Sprite* rightHalf
 
 	SDL_Rect rightHalfLocation;
 	rightHalfLocation.x = position.x;
-	rightHalfLocation.y = position.y - (rightHalf->rect.h * 0.5f);
+	rightHalfLocation.y = position.y - (rightHalf->rect.h * 0.5f) + yOffset;
 	rightHalfLocation.w = rightHalf->rect.w;
 	rightHalfLocation.h = rightHalf->rect.h;
 
@@ -48,6 +53,9 @@ PlayerSpriteRenderer::PlayerSpriteRenderer(SDL_Texture* texture)
 
 		{EXPANDED_LEFT, new Sprite{texture, SDL_Rect{261, 143, 27, 11}}},
 		{EXPANDED_RIGHT, new Sprite{texture, SDL_Rect{289, 143, 27, 11}}},
+
+		{GUNNER_LEFT, new Sprite{texture, SDL_Rect{330, 138, 22, 17}}},
+		{GUNNER_RIGHT, new Sprite{texture, SDL_Rect{353, 138, 22, 17}}},
 	};
 
 	frames = new AnimationFrames(4, 150, false);
@@ -65,11 +73,15 @@ void PlayerSpriteRenderer::render(SDL_Renderer* renderer, Vector2 position)
 {
 	if (renderMode == PlayerRenderMode::REGULAR)
 	{
-		renderTwoSprite(renderer, sprites[REG_LEFT], sprites[REG_RIGHT], position);
+		renderTwoSprite(renderer, sprites[REG_LEFT], sprites[REG_RIGHT], position, NO_OFFSET);
 	}
 	else if (renderMode == PlayerRenderMode::EXPANDED)
 	{
-		renderTwoSprite(renderer, sprites[EXPANDED_LEFT], sprites[EXPANDED_RIGHT], position);
+		renderTwoSprite(renderer, sprites[EXPANDED_LEFT], sprites[EXPANDED_RIGHT], position, NO_OFFSET);
+	}
+	else if (renderMode == PlayerRenderMode::GUNNER)
+	{
+		renderTwoSprite(renderer, sprites[GUNNER_LEFT], sprites[GUNNER_RIGHT], position, -7);
 	}
 	else if (renderMode == PlayerRenderMode::DISSOLVE)
 	{
@@ -77,16 +89,16 @@ void PlayerSpriteRenderer::render(SDL_Renderer* renderer, Vector2 position)
 		switch (currentFrame)
 		{
 		case 0:
-			renderTwoSprite(renderer, sprites[REG_LEFT], sprites[REG_RIGHT], position);
+			renderTwoSprite(renderer, sprites[REG_LEFT], sprites[REG_RIGHT], position, NO_OFFSET);
 			break;
 		case 1:
-			renderTwoSprite(renderer, sprites[REG_LEFT_DISSOLVE_1], sprites[REG_RIGHT_DISSOLVE_1], position);
+			renderTwoSprite(renderer, sprites[REG_LEFT_DISSOLVE_1], sprites[REG_RIGHT_DISSOLVE_1], position, NO_OFFSET);
 			break;
 		case 2:
-			renderTwoSprite(renderer, sprites[REG_LEFT_DISSOLVE_2], sprites[REG_RIGHT_DISSOLVE_2], position);
+			renderTwoSprite(renderer, sprites[REG_LEFT_DISSOLVE_2], sprites[REG_RIGHT_DISSOLVE_2], position, NO_OFFSET);
 			break;
 		case 3:
-			renderTwoSprite(renderer, sprites[REG_LEFT_DISSOLVE_3], sprites[REG_RIGHT_DISSOLVE_3], position);
+			renderTwoSprite(renderer, sprites[REG_LEFT_DISSOLVE_3], sprites[REG_RIGHT_DISSOLVE_3], position, NO_OFFSET);
 			break;
 		default:
 			// don't render anything. 

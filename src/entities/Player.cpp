@@ -89,6 +89,10 @@ void Player::setState(PlayerState state)
 	{
 		spriteRenderer->setRenderMode(PlayerRenderMode::EXPANDED);
 	}
+	else if (state == PlayerState::GUNNER)
+	{
+		spriteRenderer->setRenderMode(PlayerRenderMode::GUNNER);
+	}
 }
 
 bool Player::isReadyToLaunch()
