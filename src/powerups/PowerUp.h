@@ -15,6 +15,6 @@ enum PowerUp
 	GUN,
 
 	// Shrinks the size of the paddle
-	OUCH
+	SHRINK
 };
 

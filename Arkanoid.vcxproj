@@ -153,6 +153,7 @@ copy $(ProjectDir)lib\*  $(OutDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\powerups\ShrinkCapsule.cpp" />
     <ClCompile Include="src\BulletSpawner.cpp" />
     <ClCompile Include="src\entities\Bullet.cpp" />
     <ClCompile Include="src\powerups\GunnerCapsule.cpp" />
@@ -181,6 +182,7 @@ copy $(ProjectDir)lib\*  $(OutDir)</Command>
     <ClCompile Include="src\utils\Util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\powerups\ShrinkCapsule.h" />
     <ClInclude Include="src\BulletSpawner.h" />
     <ClInclude Include="src\entities\Bullet.h" />
     <ClInclude Include="src\powerups\GunnerCapsule.h" />

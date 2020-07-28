@@ -93,6 +93,9 @@
     <ClCompile Include="src\BulletSpawner.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\powerups\ShrinkCapsule.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\sprites\sprite.h">
@@ -195,6 +198,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\BulletSpawner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\powerups\ShrinkCapsule.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
