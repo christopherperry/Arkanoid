@@ -55,7 +55,8 @@ private:
 	SDL_Renderer* renderer;
 	SDL_Texture* texture; // This is the sprite sheet
 	
-	std::vector<Entity*> entities;
+	std::vector<Entity*> nonColliders;
+	std::vector<Entity*> wallColliders;
 	std::vector<Entity*> bricks;
 	std::vector<PowerUpCapsule*> powerUpCapsules;
 	std::vector<Bullet*> bullets;
@@ -79,7 +80,6 @@ private:
 	TTF_Font* font;
 
 	LevelLoader* levelLoader;
-	LevelBrickLoader* levelBrickLoader;
 	ScoresPanel* scoresPanel;
 	GameStartPanel* startPanel;
 	GameOverPanel* gameOverPanel;

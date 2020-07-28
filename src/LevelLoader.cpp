@@ -72,7 +72,6 @@ LevelLoader::LevelLoader(SDL_Texture* texture)
 {
 	// We create all of the sprites once and use them to render the level
 	// we are asked to render.
-
 	sprites = {
 
 		// Walls
@@ -94,56 +93,22 @@ LevelLoader::LevelLoader(SDL_Texture* texture)
 		// Background
 		{BACKGROUND_BLUE, new Sprite{texture, {129, 385, 31, 31}} }
 	};
+
+	levelBrickLoader = new LevelBrickLoader(texture);
 }
 
 LevelLoader::~LevelLoader()
 {
+	delete levelBrickLoader;
+
 	for (auto const&[spriteId, sprite] : sprites)
 	{
 		delete sprite;
 	}
 }
 
-std::vector<Entity*> LevelLoader::loadLevel(int levelNumber)
+std::vector<Entity*> LevelLoader::loadWallColliders(int level)
 {
-	// For now we only have one level so always load that one.
-	std::vector<std::vector<int>> level = levelOne();
-
-	std::vector<Entity*> entities;
-	float locationX, locationY;
-	int i, j;
-
-	// The Background Tiles
-	for (i = 0; i < NUM_TILES_HIGH; i++)
-	{
-		locationY = (i * TILE_SIZE) + OFFSET;
-
-		for (j = 1; j < NUM_TILES_WIDE - 1; j++)
-		{
-			locationX = (j * TILE_SIZE) + OFFSET;
-			Vector2 position{ locationX, locationY };
-			AABB boundingBox{ position, {TILE_SIZE * 0.5f, TILE_SIZE * 0.5f} };
-			entities.push_back(new BackgroundTile{ sprites[SpriteId::BACKGROUND_BLUE], boundingBox, position });
-		}
-	}
-
-	// The Walls
-	for (i = 0; i < NUM_TILES_HIGH; i++)
-	{
-		locationY = (i * TILE_SIZE) + OFFSET;
-
-		for (j = 0; j < NUM_TILES_WIDE; j++)
-		{
-			int spriteId = level[i][j];
-			if (spriteId == SpriteId::NONE) continue;
-
-			locationX = (j * TILE_SIZE) + OFFSET;
-			Vector2 position{ locationX, locationY };
-
-			entities.push_back(new Wall{ sprites[spriteId], position });
-		}
-	}
-
 	// Create separate Entities for the walls because having boxes for each tile causes collision issues
 	Vector2 leftPosition(TILE_SIZE * 0.5f, NUM_TILES_HIGH * TILE_SIZE * 0.5f);
 	Vector2 leftExtents(TILE_SIZE * 0.5f, NUM_TILES_HIGH * TILE_SIZE * 0.5f);
@@ -157,9 +122,52 @@ std::vector<Entity*> LevelLoader::loadLevel(int levelNumber)
 	Vector2 topExtents(NUM_TILES_WIDE * TILE_SIZE * 0.5f, TILE_SIZE * 0.5f);
 	WallCollider* topWall = new WallCollider(AABB{ topPosition, topExtents }, topPosition);
 
-	entities.push_back(leftWall);
-	entities.push_back(rightWall);
-	entities.push_back(topWall);
+	return std::vector<Entity*>{ leftWall, rightWall, topWall };
+}
+
+std::vector<Entity*> LevelLoader::loadNonColliders(int level)
+{
+	std::vector<Entity*> entities;
+	float locationX, locationY;
+
+	// The Background Tiles
+	for (int i = 0; i < NUM_TILES_HIGH; i++)
+	{
+		locationY = (i * TILE_SIZE) + OFFSET;
+
+		for (int j = 1; j < NUM_TILES_WIDE - 1; j++)
+		{
+			locationX = (j * TILE_SIZE) + OFFSET;
+			Vector2 position{ locationX, locationY };
+			AABB boundingBox{ position, {TILE_SIZE * 0.5f, TILE_SIZE * 0.5f} };
+			entities.push_back(new BackgroundTile{ sprites[SpriteId::BACKGROUND_BLUE], boundingBox, position });
+		}
+	}
+
+	// For now we only have one level so always load that one.
+	std::vector<std::vector<int>> theLevel = levelOne();
+
+	// The Walls
+	for (int i = 0; i < NUM_TILES_HIGH; i++)
+	{
+		locationY = (i * TILE_SIZE) + OFFSET;
+
+		for (int j = 0; j < NUM_TILES_WIDE; j++)
+		{
+			int spriteId = theLevel[i][j];
+			if (spriteId == SpriteId::NONE) continue;
+
+			locationX = (j * TILE_SIZE) + OFFSET;
+			Vector2 position{ locationX, locationY };
+
+			entities.push_back(new Wall{ sprites[spriteId], position });
+		}
+	}
 
 	return entities;
+}
+
+std::vector<Entity*> LevelLoader::loadBricks(int level)
+{
+	return levelBrickLoader->loadLevel(level);
 }

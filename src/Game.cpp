@@ -31,14 +31,14 @@ Game::Game(float windowWidth, float windowHeight, SDL_Renderer* renderer, SDL_Te
 	gameOverPanel = new GameOverPanel(renderer, font, SDL_Rect{ 0, 0, NUM_TILES_WIDE * TILE_SIZE, NUM_TILES_HIGH * TILE_SIZE });
 	scoresPanel = new ScoresPanel(renderer, font, Vector2((NUM_TILES_WIDE * TILE_SIZE) + OFFSET, 0));
 	levelLoader = new LevelLoader(texture);
-	levelBrickLoader = new LevelBrickLoader(texture);
 	bulletSpawner = new BulletSpawner(texture);
 
 	player = createPlayer();
 	ball = createBall();
 
-	entities = levelLoader->loadLevel(1);
-	bricks = levelBrickLoader->loadLevel(1);
+	nonColliders = levelLoader->loadNonColliders(1);
+	wallColliders = levelLoader->loadWallColliders(1);
+	bricks = levelLoader->loadBricks(1);
 
 	Vector2 bottomPosition(NUM_TILES_WIDE * TILE_SIZE * 0.5f + OFFSET, NUM_TILES_HIGH * TILE_SIZE - 2 * OFFSET);
 	Vector2 bottomExtents(NUM_TILES_WIDE * TILE_SIZE * 0.5f, TILE_SIZE * 0.5f);
@@ -57,7 +57,6 @@ Game::~Game()
 	delete ball;
 	delete scoresPanel;
 	delete levelLoader;
-	delete levelBrickLoader;
 	delete bulletSpawner;
 	delete ballLossArea;
 }
@@ -89,24 +88,31 @@ void Game::reloadLevel()
 	destroyEntities();
 	destroyPowerUps();
 	destroyBullets();
-	entities = levelLoader->loadLevel(1);
-	bricks = levelBrickLoader->loadLevel(1);
+	nonColliders = levelLoader->loadNonColliders(1);
+	wallColliders = levelLoader->loadWallColliders(1);
+	bricks = levelLoader->loadBricks(1);
 }
 
 void Game::destroyEntities()
 {
-	for (Entity* e : entities)
+	for (Entity* e : nonColliders)
 	{
 		delete e;
 	}
-	entities.clear();
+	nonColliders.clear();
+
+	for (Entity* w : wallColliders)
+	{
+		delete w;
+	}
+	wallColliders.clear();
 }
 
 void Game::destroyBricks()
 {
-	for (Entity* e : bricks)
+	for (Entity* b : bricks)
 	{
-		delete e;
+		delete b;
 	}
 	bricks.clear();
 }
@@ -224,7 +230,7 @@ void Game::render()
 void Game::renderGameStart()
 {
 	Logger::log("Render Game Start");
-	for (Entity* entity : entities)
+	for (Entity* entity : nonColliders)
 	{
 		entity->render(renderer);
 	}
@@ -236,12 +242,9 @@ void Game::renderGameStart()
 void Game::renderGameOver()
 {
 	Logger::log("Render Game Over");
-	for (Entity* entity : entities)
+	for (Entity* entity : nonColliders)
 	{
-		if (entity->tag() != "brick")
-		{
-			entity->render(renderer);
-		}
+		entity->render(renderer);
 	}
 
 	scoresPanel->render(renderer, numLives, score, level);
@@ -250,13 +253,16 @@ void Game::renderGameOver()
 
 void Game::renderGameplay()
 {
-	for (Entity* entity : entities)
+	for (Entity* entity : nonColliders)
 	{
 		entity->render(renderer);
+	}
 
+	for (Entity* wc : wallColliders)
+	{
 		if (RENDER_COLLIDERS)
 		{
-			entity->renderColliders(renderer);
+			wc->renderColliders(renderer);
 		}
 	}
 
@@ -423,12 +429,15 @@ void Game::checkCollisions()
 		return;
 	}
 
-	// Player vs. Level
-	// TODO: We only need to do this vs the two side walls
-	std::vector<std::pair<Entity*, Hit*>> playerCollisions = checkCollisions(player, "wall");
-	if (playerCollisions.size() > 0)
+	// Player vs. Walls
+	for (Entity* wall : wallColliders)
 	{
-		player->onCollision(playerCollisions.at(0).second);
+		Hit* hit = player->checkCollision(*wall);
+		if (hit != nullptr)
+		{
+			player->onCollision(hit);
+			delete hit;
+		}
 	}
 
 	// Ball vs. Player
@@ -436,24 +445,22 @@ void Game::checkCollisions()
 	if (hitPlayer != nullptr)
 	{
 		ball->onCollision(hitPlayer);
+		delete hitPlayer;
 	}
-	else // Ball vs. Level
+	else
 	{
-		// TODO: this part only needs to be against the 3 walls
-		std::vector<std::pair<Entity*, Hit*>> ballCollisions = checkCollisions(ball, "");
-		if (ballCollisions.size() > 0)
+		// Ball vs. Walls
+		for (Entity* wall : wallColliders)
 		{
-			// Let's just handle one for now
-			Entity* theThingWeHit = ballCollisions[0].first;
-			theThingWeHit->onCollision(ballCollisions[0].second); // Passing this may be interpreted wrong if we decide to interpret it
-			ball->onCollision(ballCollisions[0].second);
-
-			if (RENDER_COLLIDERS)
+			Hit* hit = ball->checkCollision(*wall);
+			if (hit != nullptr)
 			{
-				theThingWeHit->renderCollidersHit(renderer);
+				ball->onCollision(hit);
+				delete hit;
 			}
 		}
 
+		// Ball vs. Bricks
 		for (Entity* brick : bricks)
 		{
 			Hit* hit = ball->checkCollision(*brick);
@@ -461,6 +468,7 @@ void Game::checkCollisions()
 			{
 				ball->onCollision(hit);
 				brick->onCollision(hit);
+				delete hit;
 
 				if (RENDER_COLLIDERS)
 				{
@@ -504,23 +512,4 @@ void Game::checkCollisions()
 			}
 		}
 	}
-}
-
-
-std::vector<std::pair<Entity*, Hit*>> Game::checkCollisions(Entity* const entity, std::string tag)
-{
-	std::vector<std::pair<Entity*, Hit*>> collisions;
-	for (Entity* e : entities)
-	{
-		if (tag == "" || e->tag() == tag)
-		{
-			Hit* hit = entity->checkCollision(*e);
-			if (hit != nullptr)
-			{
-				collisions.push_back(std::pair(e, hit));
-			}
-		}
-	}
-
-	return collisions;
 }
