@@ -37,6 +37,7 @@ public:
 	void onEvent(SDL_Event event);
 	void render(SDL_Renderer* renderer) override;
 	void setState(PlayerState state);
+	PlayerState getState();
 	bool isReadyToLaunch();
 	void reset();
 	std::string tag() override { return "player"; }

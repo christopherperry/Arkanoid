@@ -13,6 +13,7 @@
 #include "GameStartPanel.h"
 #include "GameOverPanel.h"
 #include "powerups/PowerUpSpawner.h"
+#include "BulletSpawner.h"
 
 enum GameState
 {
@@ -55,6 +56,7 @@ private:
 	
 	std::vector<Entity*> entities;
 	std::vector<PowerUpCapsule*> powerUpCapsules;
+	std::vector<Bullet*> bullets;
 
 	int level{ 1 };
 	int numLives{ START_LIVES };
@@ -78,6 +80,7 @@ private:
 	GameStartPanel* startPanel;
 	GameOverPanel* gameOverPanel;
 	PowerUpSpawner* powerUpSpawner;
+	BulletSpawner* bulletSpawner;
 
 	void renderGameStart();
 	void renderGameplay();

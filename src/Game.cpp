@@ -29,6 +29,7 @@ Game::Game(float windowWidth, float windowHeight, SDL_Renderer* renderer, SDL_Te
 	gameOverPanel = new GameOverPanel(renderer, font, SDL_Rect{ 0, 0, NUM_TILES_WIDE * TILE_SIZE, NUM_TILES_HIGH * TILE_SIZE });
 	scoresPanel = new ScoresPanel(renderer, font, Vector2((NUM_TILES_WIDE * TILE_SIZE) + OFFSET, 0));
 	levelLoader = new LevelLoader(texture);
+	bulletSpawner = new BulletSpawner(texture);
 
 	player = createPlayer();
 	ball = createBall();
@@ -51,6 +52,8 @@ Game::~Game()
 	delete player;
 	delete ball;
 	delete scoresPanel;
+	delete levelLoader;
+	delete bulletSpawner;
 	delete ballLossArea;
 }
 
@@ -83,6 +86,18 @@ void Game::reloadLevel()
 		delete e;
 	}
 	entities.clear();
+
+	for (PowerUpCapsule* c : powerUpCapsules)
+	{
+		delete c;
+	}
+	powerUpCapsules.clear();
+
+	for (Bullet* b : bullets)
+	{
+		delete b;
+	}
+	bullets.clear();
 
 	entities = levelLoader->loadLevel(1);
 }
@@ -122,6 +137,13 @@ void Game::onEvent(SDL_Event e)
 			{
 				gameState = GameState::BALL_LAUNCH;
 				reloadLevel();
+			}
+
+			if (player->getState() == PlayerState::GUNNER && bulletSpawner->canSpawn())
+			{
+				std::pair<Bullet*, Bullet*> bulletPair = bulletSpawner->spawn(player->getPosition());
+				bullets.push_back(bulletPair.first);
+				bullets.push_back(bulletPair.second);
 			}
 
 			break;
@@ -219,6 +241,12 @@ void Game::renderGameplay()
 		capsule->render(renderer);
 	}
 
+	// Bullets
+	for (Bullet* bullet : bullets)
+	{
+		bullet->render(renderer);
+	}
+
 	player->render(renderer);
 	ball->render(renderer);
 	scoresPanel->render(renderer, numLives, score, level);
@@ -284,6 +312,12 @@ void Game::update(float deltaTime)
 	for (PowerUpCapsule* capsule : powerUpCapsules)
 	{
 		capsule->update(deltaTime);
+	}
+
+	// Bullets
+	for (Bullet* bullet : bullets)
+	{
+		bullet->update(deltaTime);
 	}
 
 	/////////////////////////////

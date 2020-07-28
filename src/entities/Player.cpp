@@ -95,6 +95,11 @@ void Player::setState(PlayerState state)
 	}
 }
 
+PlayerState Player::getState()
+{
+	return state;
+}
+
 bool Player::isReadyToLaunch()
 {
 	return !spriteRenderer->isAnimating();
