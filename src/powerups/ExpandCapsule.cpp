@@ -12,25 +12,3 @@ ExpandCapsule::ExpandCapsule(SDL_Texture* texture, Vector2 position) : PowerUpCa
 		{ 6, new Sprite{texture, SDL_Rect{485, 353, 23, 11}} }
 	};
 }
-
-ExpandCapsule::~ExpandCapsule()
-{
-	for (auto const&[_, sprite] : sprites)
-	{
-		delete sprite;
-	}
-}
-
-void ExpandCapsule::render(SDL_Renderer* renderer)
-{
-	int frameNumber = animationFrames.getCurrentFrame();
-	Sprite* sprite = sprites[frameNumber];
-
-	SDL_Rect location;
-	location.x = position.x - (sprite->rect.w * 0.5f);
-	location.y = position.y - (sprite->rect.h * 0.5f);
-	location.w = sprite->rect.w;
-	location.h = sprite->rect.h;
-
-	SDL_RenderCopy(renderer, sprite->texture, &sprite->rect, &location);
-}

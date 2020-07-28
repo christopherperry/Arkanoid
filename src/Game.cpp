@@ -369,6 +369,10 @@ void Game::checkCollisions()
 			{
 				player->setState(PlayerState::EXPANDED);
 			}
+			else if (powerUp == PowerUp::GUN)
+			{
+				player->setState(PlayerState::GUNNER);
+			}
 		}
 	}
 }
