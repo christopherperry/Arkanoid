@@ -17,7 +17,7 @@
 #include "powerups/PowerUpSpawner.h"
 #include "BulletSpawner.h"
 
-enum GameState
+enum class GameState
 {
 	////////////////////////////////
 	// Game is starting.
@@ -112,9 +112,8 @@ private:
 	void renderGameplay();
 	void renderGameOver();
 
-	void onGameStart();
 	void onGameEnd();
-	void reloadLevel();
+	void loadLevel(int levelNumber);
 
 	void destroyEntities();
 	void destroyBricks();
@@ -125,7 +124,6 @@ private:
 	void playMusic(Mix_Music* music);
 
 	void onBallLoss();
-	std::vector<std::pair<Entity*, Hit*>> checkCollisions(Entity* const entity, std::string tag);
 public:
 	Game(float windowWidth, float windowHeight, SDL_Renderer* renderer, SDL_Texture* texture);
 	~Game();

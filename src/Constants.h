@@ -5,6 +5,8 @@ class Constants
 public:
 	const static bool RENDER_COLLIDERS;
 	const static float BALL_SPEED; // pixels per second, time is in milliseconds
+	const static float BALL_SPEED_MAX; // pixels per second, time is in milliseconds
+	const static float BALL_SPEED_MAX_SQUARED; // pixels per second, time is in milliseconds
 	const static float BALL_SIZE;
 
 	// The tiles are square 31x31
@@ -22,6 +24,6 @@ public:
 
 	static const int START_LIVES = 6;
 
-	static const int NUM_LEVELS = 2;
+	static const int NUM_LEVELS = 5;
 };
 

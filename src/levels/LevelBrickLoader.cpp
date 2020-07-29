@@ -24,6 +24,10 @@ std::vector<std::vector<int>> levelZero()
 		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2 },
 	};
 }
 
@@ -46,18 +50,16 @@ std::vector<std::vector<int>> levelTwoBricks()
 {
 	return std::vector<std::vector<int>>
 	{
-		{ 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-		{ 5, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-		{ 5, 4, 2, 0, 0, 0, 0, 0, 0, 0, 0 },
-		{ 5, 4, 2, 7, 0, 0, 0, 0, 0, 0, 0 },
-		{ 5, 4, 2, 7, 3, 0, 0, 0, 0, 0, 0 },
-		{ 5, 4, 2, 7, 3, 5, 0, 0, 0, 0, 0 },
-		{ 5, 4, 2, 7, 3, 5, 4, 0, 0, 0, 0 },
-		{ 5, 4, 2, 7, 3, 5, 4, 2, 0, 0, 0 },
-		{ 5, 4, 2, 7, 3, 5, 4, 2, 7, 0, 0 },
-		{ 5, 4, 2, 7, 3, 5, 4, 2, 7, 3, 0 },
-		{ 5, 4, 2, 7, 3, 5, 4, 2, 7, 3, 0 },
-		{ 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 5 }
+		{ 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 4, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 4, 8, 2, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 4, 8, 2, 7, 0, 0, 0, 0, 0, 0, 0 },
+		{ 4, 8, 2, 7, 3, 0, 0, 0, 0, 0, 0 },
+		{ 4, 8, 2, 7, 3, 4, 8, 2, 0, 0, 0 },
+		{ 4, 8, 2, 7, 3, 4, 8, 2, 7, 0, 0 },
+		{ 4, 8, 2, 7, 3, 4, 8, 2, 7, 3, 0 },
+		{ 4, 8, 2, 7, 3, 4, 8, 2, 7, 3, 0 },
+		{ 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 4 }
 	};
 }
 
@@ -134,23 +136,60 @@ enum BrickId
 {
 	NONE,
 
-	// Bricks
+	// Unbreakable - 0pts
 	BRICK_GOLD,
+
+	// 80 pts
 	BRICK_GREEN,
+
+	// 90 pts
 	BRICK_RED,
+
+	// 60 pts
 	BRICK_BROWN,
+
+	// 110 pts
 	BRICK_PINK,
+
+	// 120 pts
 	BRICK_ORANGE,
+
+	// 100 pts
 	BRICK_BLUE,
-	BRICK_PURPLE,
+
+	// 70 pts
+	BRICK_PURPLE, // replacement for light blue
+
+	// 50 x Level Number pts
 	BRICK_GREY_IDLE,
 	BRICK_GREY_ANIM_1,
+
+	// 50 pts
 	WHITE,
 
 };
 
+int pointsForBrick(int brickId, int levelNumber)
+{
+	switch (brickId)
+	{
+	case BRICK_GREEN: return 80;
+	case BRICK_RED: return 90;
+	case BRICK_BROWN: return 60;
+	case BRICK_PINK: return 110;
+	case BRICK_ORANGE: return 120;
+	case BRICK_BLUE: return 100;
+	case BRICK_PURPLE: return 70;
+	case WHITE: return 50;
+	case BRICK_GREY_IDLE: return 50 * levelNumber;
+	}
+
+	return 0;
+}
+
 std::vector<std::vector<int>> getBricksForLevel(int levelNumber)
 {
+	return levelZero();
 	assert((levelNumber > 0) && levelNumber <= Constants::NUM_LEVELS);
 
 	switch (levelNumber)
@@ -233,7 +272,7 @@ std::vector<Entity*> LevelBrickLoader::loadLevel(int levelNumber)
 				numHitsToDestroy = 2;
 			}
 
-			int scoreValue = numHitsToDestroy == 2 ? 100 : 50;
+			int scoreValue = pointsForBrick(spriteId, levelNumber);
 
 			entities.push_back(new Brick{ sprites[spriteId], AABB{ position, extents }, position, numHitsToDestroy, scoreValue });
 		}

@@ -25,6 +25,12 @@ void Ball::launch()
 	this->velocity = startVelocity;
 }
 
+void Ball::increaseSpeed()
+{
+	// Increases until max velocity, then maintains that velocity.
+	velocity += velocity * 0.1f * (1.0f - velocity.squareMagnitude() / Constants::BALL_SPEED_MAX_SQUARED);
+}
+
 void Ball::reset(Vector2 position)
 {
 	this->velocity = Vector2::zero;

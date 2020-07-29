@@ -16,6 +16,21 @@ float Vector2::dot(const Vector2& other)
 	return (x * other.x) + (y * other.y);
 }
 
+float Vector2::magnitude()
+{
+	return sqrt(squareMagnitude());
+}
+
+float Vector2::squareMagnitude()
+{
+	return (x * x) + (y * y);
+}
+
+Vector2 Vector2::normalized()
+{
+	return *this * (1.0f / magnitude());
+}
+
 Vector2 Vector2::operator-(const Vector2& other)
 {
 	return Vector2(x - other.x, y - other.y);
@@ -29,4 +44,11 @@ Vector2 Vector2::operator+(const Vector2& other)
 Vector2 Vector2::operator*(float scalar)
 {
 	return Vector2(scalar * x, scalar * y);
+}
+
+Vector2 Vector2::operator+=(const Vector2& other)
+{
+	this->x += other.x;
+	this->y += other.y;
+	return *this;
 }

@@ -15,6 +15,7 @@ public:
 	Ball() = delete;
 	static Ball* createNew(SDL_Texture* texture, Vector2 position, Mix_Chunk* hitBrickSound, Mix_Chunk* hitPaddleSound);
 	void launch();
+	void increaseSpeed();
 	void reset(Vector2 position);
 	void update(float deltaTime);
 	void onCollision(Hit* hit) override;
