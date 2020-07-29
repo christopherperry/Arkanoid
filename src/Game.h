@@ -86,6 +86,7 @@ private:
 	int level{ 1 };
 	int numLives{ Constants::START_LIVES };
 	int score{ 0 };
+	int oneUpScoreCounter{ 0 };
 	GameState gameState{ GameState::GAME_START };
 
 	// Things we create and need to clean up
@@ -123,6 +124,7 @@ private:
 	void playSound(Mix_Chunk* sound);
 	void playMusic(Mix_Music* music);
 
+	void increaseScore(int amount);
 	void onBallLoss();
 public:
 	Game(float windowWidth, float windowHeight, SDL_Renderer* renderer, SDL_Texture* texture);

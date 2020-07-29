@@ -25,5 +25,7 @@ public:
 	static const int START_LIVES = 6;
 
 	static const int NUM_LEVELS = 5;
+	static const int CAPSULE_COLLECTION_POINTS = 1000;
+	static const int ONE_UP_HIGH_SCORE = 25000;
 };
 

@@ -176,7 +176,7 @@ void Game::update(float deltaTime)
 				powerUpCapsules.push_back(puc);
 			}
 
-			score += brick->getScoreValue();
+			increaseScore(brick->getScoreValue());
 			delete brick;
 		}
 	}
@@ -200,6 +200,7 @@ void Game::update(float deltaTime)
 		}
 		else
 		{
+			increaseScore(Constants::CAPSULE_COLLECTION_POINTS);
 			delete capsule;
 		}
 	}
@@ -313,9 +314,10 @@ void Game::checkCollisions()
 	{
 		if (capsule->collidesWith(*player))
 		{
+			score += Constants::CAPSULE_COLLECTION_POINTS;
 			capsule->onCollision(nullptr);
-			PowerUp powerUp = capsule->getPowerUp();
-			switch (powerUp)
+
+			switch (capsule->getPowerUp())
 			{
 			case PowerUp::EXPAND:
 				player->setState(PlayerState::EXPANDED);
@@ -436,6 +438,18 @@ void Game::renderGameplay()
 		player->renderColliders(renderer);
 		ball->renderColliders(renderer);
 		ballLossArea->renderColliders(renderer);
+	}
+}
+
+void Game::increaseScore(int amount)
+{
+	score += amount;
+	oneUpScoreCounter += amount;
+	if (oneUpScoreCounter >= Constants::ONE_UP_HIGH_SCORE)
+	{
+		// TODO: play a sound
+		numLives++;
+		oneUpScoreCounter %= Constants::ONE_UP_HIGH_SCORE;
 	}
 }
 

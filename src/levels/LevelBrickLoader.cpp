@@ -187,6 +187,34 @@ int pointsForBrick(int brickId, int levelNumber)
 	return 0;
 }
 
+int hitsToDestroyBrick(int brickId, int levelNumber)
+{
+	switch (brickId)
+	{
+		case BRICK_GOLD: return -1;
+		case BRICK_GREY_IDLE:
+		{
+			if (levelNumber < 9)
+			{
+				return 2;
+			}
+
+			if (levelNumber < 17)
+			{
+				return 3;
+			}
+
+			if (levelNumber < 25)
+			{
+				return 4;
+			}
+
+			return 5;
+		}
+		default: return 1;
+	}
+}
+
 std::vector<std::vector<int>> getBricksForLevel(int levelNumber)
 {
 	return levelZero();
@@ -262,16 +290,7 @@ std::vector<Entity*> LevelBrickLoader::loadLevel(int levelNumber)
 
 			Vector2 extents{ Constants::BRICK_WIDTH * 0.5f, Constants::BRICK_HEIGHT * 0.5f };
 
-			int numHitsToDestroy = 1;
-			if (spriteId == 1)
-			{
-				numHitsToDestroy = -1; // indestructable
-			}
-			else if (spriteId == 9)
-			{
-				numHitsToDestroy = 2;
-			}
-
+			int numHitsToDestroy = hitsToDestroyBrick(spriteId, levelNumber);
 			int scoreValue = pointsForBrick(spriteId, levelNumber);
 
 			entities.push_back(new Brick{ sprites[spriteId], AABB{ position, extents }, position, numHitsToDestroy, scoreValue });
