@@ -6,6 +6,7 @@
 class PowerUpSpawner
 {
 public:
+	PowerUpSpawner();
 	PowerUpCapsule* spawn(SDL_Texture* texture, Vector2 position);
 };
 

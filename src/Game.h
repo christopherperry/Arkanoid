@@ -19,17 +19,50 @@
 
 enum GameState
 {
-	// Start Panel Shown
+	////////////////////////////////
+	// Game is starting.
+	//
+	// Start screen with instructions
+	// is shown.
+	////////////////////////////////
 	GAME_START,
 
-	// Ball hasn't been launched yet
+	////////////////////////////////
+	// Level is loaded.
+	//
+	// Round number is shown.
+	////////////////////////////////
+	ROUND_START,
+
+	////////////////////////////////
+	// Game has started.
+	//
+	// Player can now launch the ball.
+	////////////////////////////////
 	BALL_LAUNCH,
 
-	// Ball is in play
+	////////////////////////////////
+	// Gameplay is happening.
+	////////////////////////////////
 	PLAYING,
 
-	// Lost a ball, player dissolves
+	////////////////////////////////
+	// Lost a ball. Player dissolves.
+	//
+	// All active bullets and power ups
+	// are destroyed.
+	////////////////////////////////
 	BALL_LOSS,
+
+	////////////////////////////////
+	// Player has destroyed all bricks.
+	//
+	// Updates are paused briefly.
+	////////////////////////////////
+	ROUND_WIN,
+
+	// Game win
+	GAME_WIN,
 
 	// Game is over
 	GAME_OVER
