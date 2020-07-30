@@ -78,6 +78,9 @@ void Game::loadLevel(int levelNumber)
 	player->reset();
 }
 
+/////////////////////////////////////////////////////////
+// onEvent
+/////////////////////////////////////////////////////////
 void Game::onEvent(SDL_Event e)
 {
 	bool enterPressed = false;
@@ -135,7 +138,9 @@ void Game::onEvent(SDL_Event e)
 	}
 }
 
-// TODO: do this in a faster way, i.e. don't copy just remove in place
+/////////////////////////////////////////////////////////
+// update
+/////////////////////////////////////////////////////////
 void Game::update(float deltaTime)
 {
 	// Don't update positions during round win transition
@@ -213,6 +218,9 @@ void Game::update(float deltaTime)
 	}
 }
 
+/////////////////////////////////////////////////////////
+// checkCollisions
+/////////////////////////////////////////////////////////
 void Game::checkCollisions()
 {
 	if (gameState != GameState::PLAYING && gameState != GameState::BALL_LAUNCH)
@@ -263,6 +271,9 @@ void Game::checkCollisions()
 	entities::checkCollidesWithAndEmptyNotify(bullets, bricks);
 }
 
+/////////////////////////////////////////////////////////
+// render
+/////////////////////////////////////////////////////////
 void Game::render()
 {
 	switch (gameState)
