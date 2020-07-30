@@ -116,9 +116,6 @@ private:
 	void onGameEnd();
 	void loadLevel(int levelNumber);
 
-	void playSound(Mix_Chunk* sound);
-	void playMusic(Mix_Music* music);
-
 	void increaseScore(int amount);
 	void onBallLoss();
 public:

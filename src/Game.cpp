@@ -1,13 +1,13 @@
 #include <map>
 #include <vector>
 #include <algorithm>
-#include <SDL_ttf.h>
 #include "Constants.h"
 #include "Game.h"
 #include "sprites/sprite.h"
 #include "entities/Entity.h"
 #include "entities/Player.h"
 #include "entities/Ball.h"
+#include "Sounds.h"
 #include "Text.h"
 #include "TextRenderer.h"
 #include "utils/logger.h"
@@ -107,7 +107,7 @@ void Game::onEvent(SDL_Event e)
 	if (enterPressed && gameState == GameState::GAME_START)
 	{
 		gameState = GameState::BALL_LAUNCH;
-		playMusic(gameStart);
+		Sounds::play(gameStart);
 	}
 
 	if (spacePressed)
@@ -124,7 +124,7 @@ void Game::onEvent(SDL_Event e)
 				std::pair<Bullet*, Bullet*> bulletPair = bulletSpawner->spawn(player->getPosition());
 				bullets.push_back(bulletPair.first);
 				bullets.push_back(bulletPair.second);
-				playSound(gunshot);
+				Sounds::play(gunshot);
 			}
 		}
 	}
@@ -289,22 +289,14 @@ void Game::render()
 
 void Game::renderGameStart()
 {
-	for (Entity* entity : nonColliders)
-	{
-		entity->render(renderer);
-	}
-
+	entities::renderAll(nonColliders, renderer);
 	scoresPanel->render(renderer, numLives, score, level);
 	startPanel->render(renderer);
 }
 
 void Game::renderGameOver()
 {
-	for (Entity* entity : nonColliders)
-	{
-		entity->render(renderer);
-	}
-
+	entities::renderAll(nonColliders, renderer);
 	scoresPanel->render(renderer, numLives, score, level);
 	gameOverPanel->render(renderer);
 }
@@ -319,13 +311,6 @@ void Game::renderGameplay()
 	player->render(renderer);
 	ball->render(renderer);
 	scoresPanel->render(renderer, numLives, score, level);
-
-	if (Constants::RENDER_COLLIDERS)
-	{
-		player->renderColliders(renderer);
-		ball->renderColliders(renderer);
-		ballLossArea->renderColliders(renderer);
-	}
 }
 
 void Game::increaseScore(int amount)
@@ -360,7 +345,7 @@ void Game::onBallLoss()
 	}
 	else
 	{
-		playSound(ballLoss);
+		Sounds::play(ballLoss);
 	}
 }
 
@@ -369,15 +354,5 @@ void Game::onGameEnd()
 	numLives = Constants::START_LIVES;
 	score = 0;
 	level = 1;
-	playMusic(gameEnd);
-}
-
-void Game::playSound(Mix_Chunk* sound)
-{
-	Mix_PlayChannel(-1, sound, 0);
-}
-
-void Game::playMusic(Mix_Music* music)
-{
-	Mix_PlayMusic(music, 0);
+	Sounds::play(gameEnd);
 }
