@@ -13,6 +13,7 @@ private:
 public:
 	Brick(Sprite* sprite, AABB boundingBox, Vector2 position, int numHitsToDestroy, int scoreValue);
 	void render(SDL_Renderer* renderer) override;
+	void update(float deltaTime) override {}; // do nothing
 	void onCollision(Hit* hit) override;
 	bool isAlive() override;
 	std::string tag() override { return "brick"; }

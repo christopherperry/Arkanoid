@@ -19,7 +19,7 @@ PowerUpCapsule* randomPowerUp(SDL_Texture* texture, Vector2 position)
 	{
 		return new GunnerCapsule(texture, position);
 	}
-	else if (v <= 100) // 45%
+	else // 45%
 	{
 		return new ExpandCapsule(texture, position);
 	}

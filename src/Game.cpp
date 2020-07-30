@@ -12,6 +12,11 @@
 #include "TextRenderer.h"
 #include "utils/logger.h"
 
+bool isAlive(Entity* entity)
+{
+	return entity->isAlive();
+}
+
 Game::Game(float windowWidth, float windowHeight, SDL_Renderer* renderer, SDL_Texture* texture) :
 	windowWidth{ windowWidth }, windowHeight{ windowHeight }, renderer{ renderer }, texture{ texture }
 {
@@ -161,68 +166,24 @@ void Game::update(float deltaTime)
 	/////////////////////////////
 	// BRICKS
 	/////////////////////////////
-	std::vector<Entity*> aliveBricks;
-	for (Entity* brick : bricks)
-	{
-		if (brick->isAlive())
-		{
-			aliveBricks.push_back(brick);
-		}
-		else // Brick Break!
-		{
-			PowerUpCapsule* puc = powerUpSpawner->spawn(texture, brick->getPosition());
-			if (puc != nullptr)
-			{
-				powerUpCapsules.push_back(puc);
-			}
+	entities::Func<Entity*> increaseScoreAndSpawnPowerUp = [&](Entity* e) {
+		increaseScore(e->getScoreValue());
+		PowerUpCapsule* puc = powerUpSpawner->spawn(texture,e->getPosition());
+		if (puc != nullptr) powerUps.push_back(puc);
+	};
+	entities::removeDeadThenForEach(bricks, increaseScoreAndSpawnPowerUp);
+	entities::updateEach(bricks, deltaTime);
 
-			increaseScore(brick->getScoreValue());
-			delete brick;
-		}
-	}
-	bricks.clear();
-	bricks = aliveBricks;
-
-	if (bricks.size() == 0)
-	{
-		gameState = GameState::ROUND_WIN;
-		return;
-	}
-
-	// Power Ups
-	std::vector<PowerUpCapsule*> alivePowerUps;
-	for (PowerUpCapsule* capsule : powerUpCapsules)
-	{
-		if (capsule->isAlive())
-		{
-			capsule->update(deltaTime);
-			alivePowerUps.push_back(capsule);
-		}
-		else
-		{
-			increaseScore(Constants::CAPSULE_COLLECTION_POINTS);
-			delete capsule;
-		}
-	}
-	powerUpCapsules.clear();
-	powerUpCapsules = alivePowerUps;
+	/////////////////////////////
+	// POWER UPS
+	/////////////////////////////
+	entities::Func<Entity*> collectPoints = [&](Entity* e) { increaseScore(Constants::CAPSULE_COLLECTION_POINTS); };
+	entities::removeDeadThenForEach(powerUps, collectPoints);
+	entities::updateEach(powerUps, deltaTime);
 
 	// Bullets
-	std::vector<Bullet*> aliveBullets;
-	for (Bullet* bullet : bullets)
-	{
-		if (bullet->isAlive())
-		{
-			bullet->update(deltaTime);
-			aliveBullets.push_back(bullet);
-		}
-		else // Dead bullet
-		{
-			delete bullet;
-		}
-	}
-	bullets.clear();
-	bullets = aliveBullets;
+	entities::removeDead(bullets);
+	entities::updateEach(bullets, deltaTime);
 
 	/////////////////////////////
 	// PLAYER
@@ -242,6 +203,11 @@ void Game::update(float deltaTime)
 	else
 	{
 		ball->update(deltaTime);
+	}
+
+	if (bricks.size() == 0)
+	{
+		gameState = GameState::ROUND_WIN;
 	}
 }
 
@@ -310,30 +276,24 @@ void Game::checkCollisions()
 	}
 
 	// PowerUps vs Player
-	for (PowerUpCapsule* capsule : powerUpCapsules)
+	for (Entity* capsule : powerUps)
 	{
 		if (capsule->collidesWith(*player))
 		{
 			score += Constants::CAPSULE_COLLECTION_POINTS;
 			capsule->onCollision(nullptr);
-
-			switch (capsule->getPowerUp())
-			{
-			case PowerUp::EXPAND:
+			std::string tag = capsule->tag();
+			if (tag == "expand")
 				player->setState(PlayerState::EXPANDED);
-				break;
-			case PowerUp::GUN:
+			if (tag == "gun")
 				player->setState(PlayerState::GUNNER);
-				break;
-			case PowerUp::SHRINK:
+			if (tag == "shrink")
 				player->setState(PlayerState::SHRUNK);
-				break;
-			}
 		}
 	}
 
 	// Bullets vs Bricks
-	for (Bullet* bullet : bullets)
+	for (Entity* bullet : bullets)
 	{
 		for (Entity* brick : bricks)
 		{
@@ -418,13 +378,13 @@ void Game::renderGameplay()
 	}
 
 	// Power Ups
-	for (PowerUpCapsule* capsule : powerUpCapsules)
+	for (Entity* capsule : powerUps)
 	{
 		capsule->render(renderer);
 	}
 
 	// Bullets
-	for (Bullet* bullet : bullets)
+	for (Entity* bullet : bullets)
 	{
 		bullet->render(renderer);
 	}
@@ -511,16 +471,16 @@ void Game::destroyBricks()
 
 void Game::destroyPowerUps()
 {
-	for (PowerUpCapsule* c : powerUpCapsules)
+	for (Entity* c : powerUps)
 	{
 		delete c;
 	}
-	powerUpCapsules.clear();
+	powerUps.clear();
 }
 
 void Game::destroyBullets()
 {
-	for (Bullet* b : bullets)
+	for (Entity* b : bullets)
 	{
 		delete b;
 	}

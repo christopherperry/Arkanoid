@@ -80,8 +80,8 @@ private:
 	std::vector<Entity*> nonColliders;
 	std::vector<Entity*> wallColliders;
 	std::vector<Entity*> bricks;
-	std::vector<PowerUpCapsule*> powerUpCapsules;
-	std::vector<Bullet*> bullets;
+	std::vector<Entity*> powerUps;
+	std::vector<Entity*> bullets;
 
 	int level{ 1 };
 	int numLives{ Constants::START_LIVES };

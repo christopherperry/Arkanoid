@@ -34,3 +34,14 @@ void Entity::renderCollidersHit(SDL_Renderer* renderer)
 {
 	boundingBox.renderHit(renderer);
 }
+
+void entities::updateEach(const std::vector<Entity*>& entities, float deltaTime)
+{
+	std::for_each(std::begin(entities), std::end(entities), [=](Entity* e) -> void { e->update(deltaTime); });
+}
+
+void entities::removeDead(std::vector<Entity*>& entities)
+{
+	std::vector<Entity*>::iterator newEnd = std::partition(entities.begin(), entities.end(), [=](Entity* e) -> bool { return e->isAlive(); });
+	entities.erase(newEnd, entities.end());
+}
