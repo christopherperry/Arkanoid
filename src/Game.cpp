@@ -65,9 +65,11 @@ void Game::loadLevel(int levelNumber)
 {
 	Logger::log(std::string{ "Loading level" } += std::to_string(levelNumber));
 
-	destroyEntities();
-	destroyPowerUps();
-	destroyBullets();
+	entities::deleteAll(nonColliders);
+	entities::deleteAll(wallColliders);
+	entities::deleteAll(powerUps);
+	entities::deleteAll(bullets);
+	entities::deleteAll(bricks);
 
 	nonColliders = levelLoader->loadNonColliders(levelNumber);
 	wallColliders = levelLoader->loadWallColliders(levelNumber);
@@ -166,7 +168,7 @@ void Game::update(float deltaTime)
 	/////////////////////////////
 	// BRICKS
 	/////////////////////////////
-	entities::Func<Entity*> increaseScoreAndSpawnPowerUp = [&](Entity* e) {
+	entities::Func1<Entity*> increaseScoreAndSpawnPowerUp = [&](Entity* e) {
 		increaseScore(e->getScoreValue());
 		PowerUpCapsule* puc = powerUpSpawner->spawn(texture,e->getPosition());
 		if (puc != nullptr) powerUps.push_back(puc);
@@ -177,7 +179,7 @@ void Game::update(float deltaTime)
 	/////////////////////////////
 	// POWER UPS
 	/////////////////////////////
-	entities::Func<Entity*> collectPoints = [&](Entity* e) { increaseScore(Constants::CAPSULE_COLLECTION_POINTS); };
+	entities::Func1<Entity*> collectPoints = [&](Entity* e) { increaseScore(Constants::CAPSULE_COLLECTION_POINTS); };
 	entities::removeDeadThenForEach(powerUps, collectPoints);
 	entities::updateEach(powerUps, deltaTime);
 
@@ -225,15 +227,7 @@ void Game::checkCollisions()
 	}
 
 	// Player vs. Walls
-	for (Entity* wall : wallColliders)
-	{
-		Hit* hit = player->checkCollision(*wall);
-		if (hit != nullptr)
-		{
-			player->onCollision(hit);
-			delete hit;
-		}
-	}
+	entities::checkAndNotifyCollisions(wallColliders, player);
 
 	// Ball vs. Player
 	Hit* hitPlayer = ball->checkCollision(*player);
@@ -245,65 +239,28 @@ void Game::checkCollisions()
 	else
 	{
 		// Ball vs. Walls
-		for (Entity* wall : wallColliders)
-		{
-			Hit* hit = ball->checkCollision(*wall);
-			if (hit != nullptr)
-			{
-				ball->onCollision(hit);
-				delete hit;
-			}
-		}
+		entities::checkAndNotifyCollisions(wallColliders, ball);
 
 		// Ball vs. Bricks
-		for (Entity* brick : bricks)
-		{
-			Hit* hit = ball->checkCollision(*brick);
-			if (hit != nullptr)
-			{
-				ball->onCollision(hit);
-				brick->onCollision(hit);
-				delete hit;
-
-				ball->increaseSpeed();
-
-				if (Constants::RENDER_COLLIDERS)
-				{
-					brick->renderCollidersHit(renderer);
-				}
-			}
-		}
+		entities::Func onBallHitBrick = [&]() -> void { ball->increaseSpeed(); };
+		entities::checkAndNotifyCollisions(bricks, ball, &onBallHitBrick);
 	}
 
 	// PowerUps vs Player
-	for (Entity* capsule : powerUps)
-	{
-		if (capsule->collidesWith(*player))
-		{
-			score += Constants::CAPSULE_COLLECTION_POINTS;
-			capsule->onCollision(nullptr);
-			std::string tag = capsule->tag();
-			if (tag == "expand")
-				player->setState(PlayerState::EXPANDED);
-			if (tag == "gun")
-				player->setState(PlayerState::GUNNER);
-			if (tag == "shrink")
-				player->setState(PlayerState::SHRUNK);
-		}
-	}
+	entities::Func1<Entity*> onPowerUpHitPlayer = [&](Entity* capsule) -> void { 
+		score += Constants::CAPSULE_COLLECTION_POINTS;
+		std::string tag = capsule->tag();
+		if (tag == "expand")
+			player->setState(PlayerState::EXPANDED);
+		if (tag == "gun")
+			player->setState(PlayerState::GUNNER);
+		if (tag == "shrink")
+			player->setState(PlayerState::SHRUNK);
+	};
+	entities::checkCollidesWithAndNotify(powerUps, player, &onPowerUpHitPlayer);
 
 	// Bullets vs Bricks
-	for (Entity* bullet : bullets)
-	{
-		for (Entity* brick : bricks)
-		{
-			if (bullet->collidesWith(*brick))
-			{
-				brick->onCollision(nullptr);
-				bullet->onCollision(nullptr);
-			}
-		}
-	}
+	entities::checkCollidesWithAndEmptyNotify(bullets, bricks);
 }
 
 void Game::render()
@@ -354,40 +311,10 @@ void Game::renderGameOver()
 
 void Game::renderGameplay()
 {
-	for (Entity* entity : nonColliders)
-	{
-		entity->render(renderer);
-	}
-
-	for (Entity* wc : wallColliders)
-	{
-		if (Constants::RENDER_COLLIDERS)
-		{
-			wc->renderColliders(renderer);
-		}
-	}
-
-	for (Entity* brick : bricks)
-	{
-		brick->render(renderer);
-
-		if (Constants::RENDER_COLLIDERS)
-		{
-			brick->renderColliders(renderer);
-		}
-	}
-
-	// Power Ups
-	for (Entity* capsule : powerUps)
-	{
-		capsule->render(renderer);
-	}
-
-	// Bullets
-	for (Entity* bullet : bullets)
-	{
-		bullet->render(renderer);
-	}
+	entities::renderAll(nonColliders, renderer);
+	entities::renderAll(bricks, renderer);
+	entities::renderAll(powerUps, renderer);
+	entities::renderAll(bullets, renderer);
 
 	player->render(renderer);
 	ball->render(renderer);
@@ -419,8 +346,8 @@ void Game::onBallLoss()
 	// If lives left reset player and ball.
 	numLives--;
 
-	destroyPowerUps();
-	destroyBullets();
+	entities::deleteAll(powerUps);
+	entities::deleteAll(bullets);
 
 	gameState = GameState::BALL_LOSS;
 	player->setState(PlayerState::DISSOLVE);
@@ -443,48 +370,6 @@ void Game::onGameEnd()
 	score = 0;
 	level = 1;
 	playMusic(gameEnd);
-}
-
-void Game::destroyEntities()
-{
-	for (Entity* e : nonColliders)
-	{
-		delete e;
-	}
-	nonColliders.clear();
-
-	for (Entity* w : wallColliders)
-	{
-		delete w;
-	}
-	wallColliders.clear();
-}
-
-void Game::destroyBricks()
-{
-	for (Entity* b : bricks)
-	{
-		delete b;
-	}
-	bricks.clear();
-}
-
-void Game::destroyPowerUps()
-{
-	for (Entity* c : powerUps)
-	{
-		delete c;
-	}
-	powerUps.clear();
-}
-
-void Game::destroyBullets()
-{
-	for (Entity* b : bullets)
-	{
-		delete b;
-	}
-	bullets.clear();
 }
 
 void Game::playSound(Mix_Chunk* sound)

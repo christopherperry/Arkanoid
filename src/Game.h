@@ -116,11 +116,6 @@ private:
 	void onGameEnd();
 	void loadLevel(int levelNumber);
 
-	void destroyEntities();
-	void destroyBricks();
-	void destroyPowerUps();
-	void destroyBullets();
-
 	void playSound(Mix_Chunk* sound);
 	void playMusic(Mix_Music* music);
 

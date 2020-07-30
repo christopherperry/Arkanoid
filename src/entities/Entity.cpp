@@ -35,6 +35,15 @@ void Entity::renderCollidersHit(SDL_Renderer* renderer)
 	boundingBox.renderHit(renderer);
 }
 
+void entities::deleteAll(std::vector<Entity*>& entities)
+{
+	for (Entity* e : entities)
+	{
+		delete e;
+	}
+	entities.clear();
+}
+
 void entities::updateEach(const std::vector<Entity*>& entities, float deltaTime)
 {
 	std::for_each(std::begin(entities), std::end(entities), [=](Entity* e) -> void { e->update(deltaTime); });
@@ -44,4 +53,59 @@ void entities::removeDead(std::vector<Entity*>& entities)
 {
 	std::vector<Entity*>::iterator newEnd = std::partition(entities.begin(), entities.end(), [=](Entity* e) -> bool { return e->isAlive(); });
 	entities.erase(newEnd, entities.end());
+}
+
+void entities::renderAll(std::vector<Entity*>& entities, SDL_Renderer* renderer)
+{
+	for (Entity* e : entities)
+	{
+		e->render(renderer);
+	}
+}
+
+void entities::checkAndNotifyCollisions(const std::vector<Entity*>& entities, Entity* entity, Func* f)
+{
+	for (Entity* other : entities)
+	{
+		Hit* hit = entity->checkCollision(*other);
+		if (hit != nullptr)
+		{
+			(*other).onCollision(hit);
+			entity->onCollision(hit);
+			delete hit;
+
+			if (f != nullptr)
+			{
+				(*f)();
+			}
+		}
+	}
+}
+
+void entities::checkCollidesWithAndNotify(const std::vector<Entity*>& entities, Entity* entity, Func1<Entity*>* f)
+{
+	for (Entity* other : entities)
+	{
+		if (other->collidesWith(*entity))
+		{
+			other->onCollision(nullptr);
+			if (f != nullptr) (*f)(other);
+		}
+	}
+
+}
+
+void entities::checkCollidesWithAndEmptyNotify(const std::vector<Entity*>& entities, const std::vector<Entity*>& otherEntities)
+{
+	for (Entity* thisEntity : entities)
+	{
+		for (Entity* thatEntity : otherEntities)
+		{
+			if (thisEntity->collidesWith(*thatEntity))
+			{
+				thisEntity->onCollision(nullptr);
+				thatEntity->onCollision(nullptr);
+			}
+		}
+	}
 }

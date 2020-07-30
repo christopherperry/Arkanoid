@@ -33,14 +33,24 @@ public:
 namespace entities
 {
 	template <typename T>
-	using Func = std::function<void(T)>;
+	using Func1 = std::function<void(T)>;
+
+	using Func = std::function<void()>;
+
+	void deleteAll(std::vector<Entity*>& entities);
 
 	void updateEach(const std::vector<Entity*>& entities, float deltaTime);
 
 	void removeDead(std::vector<Entity*>& entities);
 
+	void renderAll(std::vector<Entity*>& entities, SDL_Renderer* renderer);
+
+	void checkAndNotifyCollisions(const std::vector<Entity*>& entities, Entity* entity, Func* f = nullptr);
+	void checkCollidesWithAndNotify(const std::vector<Entity*>& entities, Entity* entity, Func1<Entity*>* f = nullptr);
+	void checkCollidesWithAndEmptyNotify(const std::vector<Entity*>& entities, const std::vector<Entity*>& otherEntities);
+
 	template <typename T>
-	void removeDeadThenForEach(std::vector<Entity*>& entities, Func<T> f)
+	void removeDeadThenForEach(std::vector<Entity*>& entities, Func1<T> f)
 	{
 		std::vector<Entity*>::iterator newEnd = std::partition(entities.begin(), entities.end(), [=](Entity* e) -> bool { return e->isAlive(); });
 		for (std::vector<Entity*>::iterator it = newEnd; it != entities.end(); ++it)
