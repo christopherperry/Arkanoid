@@ -135,8 +135,6 @@ private:
 	void updateGameplay(float deltaTime);
 	void updateBallLoss(float deltaTime);
 	void updateRoundWin(float deltaTime);
-	void updateGameOver(float deltaTime);
-	void updateGameWin(float deltaTime);
 
 	void onGameEnd();
 	void loadLevel(int levelNumber);

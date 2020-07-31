@@ -72,14 +72,28 @@ void Ball::onCollision(Hit* hit)
 	position = position - hit->delta;
 	boundingBox.moveBy(-hit->delta.x, -hit->delta.y);
 
-	// Next we change the velocity of the ball to mirror the current velocity
-	// ReflectedVelocity = CurrentVelocity - 2 (CurrentVelocity dot hitnormal) hitnormal
-	Vector2 normal = -hit->normal;
-	float dotNormal = velocity.dot(normal);
-	Vector2 reflectedVelocity = velocity - (normal * (2 * dotNormal));
+	////////////////////////////////////////////////
+	// Ball Velocity Change
+	////////////////////////////////////////////////
 
-	std::cout << "V = (" << velocity.x << ", " << velocity.y << ")" << std::endl;
-	std::cout << "VR = (" << reflectedVelocity.x << ", " << reflectedVelocity.y << ")" << std::endl;
+	// If the ball hit the side of the paddle we just reverse the velocity so
+	// the ball doesn't reflect off the side and we lose it immediately (not fun gameplay)
+	if (hit->tag == "player" && abs(hit->normal.x) == 1.0f)
+	{
+		std::cout << "Ball hit paddle side, reversing the velocity..." << std::endl;
+		velocity = -velocity;
+	}
+	else
+	{
+		// Else we mirror the current velocity around the collision normal using some 3D math.
+		// ReflectedVelocity = CurrentVelocity - 2 (CurrentVelocity dot hitnormal) hitnormal
+		Vector2 normal = -hit->normal;
+		float dotNormal = velocity.dot(normal);
+		Vector2 reflectedVelocity = velocity - (normal * (2 * dotNormal));
 
-	velocity = reflectedVelocity;
+		std::cout << "V = (" << velocity.x << ", " << velocity.y << ")" << std::endl;
+		std::cout << "VR = (" << reflectedVelocity.x << ", " << reflectedVelocity.y << ")" << std::endl;
+
+		velocity = reflectedVelocity;
+	}
 }

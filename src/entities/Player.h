@@ -28,11 +28,13 @@ private:
 	PlayerSpriteRenderer* spriteRenderer;
 	PlayerState state{ PlayerState::REGULAR };
 	Vector2 startPosition;
+	Vector2 velocity;
 	Player(SDL_Texture* texture, Vector2 position);
 public:
 	Player() = delete;
 	static Player* createNew(SDL_Texture* texture);
 	Vector2 getPaddleTopCenterPosition();
+	Vector2 getVelocity() override;
 	void update(float deltaTime);
 	void onCollision(Hit* hit) override;
 	void onEvent(SDL_Event event);

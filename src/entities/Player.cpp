@@ -52,6 +52,11 @@ Vector2 Player::getPaddleTopCenterPosition()
 	return Vector2(boundingBox.position.x, boundingBox.position.y - boundingBox.extents.y);
 }
 
+Vector2 Player::getVelocity()
+{
+	return velocity;
+}
+
 void Player::update(float deltaTime)
 {
 	spriteRenderer->update(deltaTime);
@@ -66,10 +71,10 @@ void Player::update(float deltaTime)
 		directionX = 1;
 	}
 
-	float distanceX = directionX * moveSpeed * deltaTime;
-	position.x += distanceX;
+	velocity = Vector2(directionX * moveSpeed * deltaTime, 0.0f);
+	position.x += velocity.x;
 
-	boundingBox.moveBy(distanceX, 0);
+	boundingBox.moveBy(velocity.x, 0);
 }
 
 void Player::onCollision(Hit* hit)

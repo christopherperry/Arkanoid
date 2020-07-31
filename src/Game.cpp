@@ -135,14 +135,8 @@ void Game::update(float deltaTime)
 	case GameState::BALL_LOSS:
 		updateBallLoss(deltaTime);
 		break;
-	case GameState::GAME_OVER:
-		updateGameOver(deltaTime);
-		break;
 	case GameState::ROUND_WIN:
 		updateRoundWin(deltaTime);
-		break;
-	case GameState::GAME_WIN:
-		updateGameWin(deltaTime);
 		break;
 	}
 }
@@ -260,11 +254,6 @@ void Game::updateBallLoss(float deltaTime)
 	}
 }
 
-void Game::updateGameOver(float deltaTime)
-{
-	
-}
-
 void Game::updateRoundWin(float deltaTime)
 {
 	if (level == Constants::NUM_LEVELS)
@@ -283,11 +272,6 @@ void Game::updateRoundWin(float deltaTime)
 		// 2 second delay then changes the state
 		timerTasks.push_back(new TimerTask(2000, [&]() { gameState = GameState::BALL_LAUNCH; }));
 	}
-}
-
-void Game::updateGameWin(float deltaTime)
-{
-	
 }
 
 /////////////////////////////////////////////////////////

@@ -17,6 +17,7 @@ public:
 	Entity() = delete;
 	Entity(Sprite* sprite, AABB boundingBox, Vector2 position) : sprite(sprite), boundingBox(boundingBox), position(position) {};
 	Vector2 getPosition() { return position; }
+	virtual Vector2 getVelocity() { return Vector2::zero; }
 	virtual bool collidesWith(Entity& other);
 	virtual void update(float deltaTime) = 0;
 	virtual Hit* checkCollision(Entity& other);
