@@ -63,7 +63,7 @@ void entities::renderAll(std::vector<Entity*>& entities, SDL_Renderer* renderer)
 	}
 }
 
-void entities::checkAndNotifyCollisions(const std::vector<Entity*>& entities, Entity* entity, Func* f)
+void entities::checkAndNotifyCollisions(const std::vector<Entity*>& entities, Entity* entity, functions::Func* f)
 {
 	for (Entity* other : entities)
 	{
@@ -82,7 +82,7 @@ void entities::checkAndNotifyCollisions(const std::vector<Entity*>& entities, En
 	}
 }
 
-void entities::checkCollidesWithAndNotify(const std::vector<Entity*>& entities, Entity* entity, Func1<Entity*>* f)
+void entities::checkCollidesWithAndNotify(const std::vector<Entity*>& entities, Entity* entity, functions::Func1<Entity*>* f)
 {
 	for (Entity* other : entities)
 	{

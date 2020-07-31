@@ -12,11 +12,6 @@
 #include "TextRenderer.h"
 #include "utils/logger.h"
 
-bool isAlive(Entity* entity)
-{
-	return entity->isAlive();
-}
-
 Game::Game(float windowWidth, float windowHeight, SDL_Renderer* renderer, SDL_Texture* texture) :
 	windowWidth{ windowWidth }, windowHeight{ windowHeight }, renderer{ renderer }, texture{ texture }
 {
@@ -30,6 +25,7 @@ Game::Game(float windowWidth, float windowHeight, SDL_Renderer* renderer, SDL_Te
 	font = TTF_OpenFont("res/font-retro.ttf", 28);
 
 	startPanel = new GameStartPanel(texture, renderer, font, SDL_Rect{ 0, 0, Constants::NUM_TILES_WIDE * Constants::TILE_SIZE, Constants::NUM_TILES_HIGH * Constants::TILE_SIZE });
+	roundStartPanel = new RoundStartPanel(renderer, font, SDL_Rect{ 0, 0, Constants::NUM_TILES_WIDE * Constants::TILE_SIZE, Constants::NUM_TILES_HIGH * Constants::TILE_SIZE });
 	gameOverPanel = new GameOverPanel(renderer, font, SDL_Rect{ 0, 0, Constants::NUM_TILES_WIDE * Constants::TILE_SIZE, Constants::NUM_TILES_HIGH * Constants::TILE_SIZE });
 	scoresPanel = new ScoresPanel(renderer, font, Vector2((Constants::NUM_TILES_WIDE * Constants::TILE_SIZE) + Constants::OFFSET, 0));
 	levelLoader = new LevelLoader(texture);
@@ -83,53 +79,23 @@ void Game::loadLevel(int levelNumber)
 /////////////////////////////////////////////////////////
 void Game::onEvent(SDL_Event e)
 {
-	bool enterPressed = false;
-	bool spacePressed = false;
-
-	if (e.type == SDL_KEYDOWN)
+	SDL_Keycode keycode = e.key.keysym.sym;
+	switch (keycode)
 	{
-		SDL_Keycode keycode = e.key.keysym.sym;
-		switch (keycode)
-		{
-			case SDLK_RETURN:
-			case SDLK_KP_ENTER:
-			{
-				Logger::log("Enter Pressed");
-				enterPressed = true;
-				break;
-			}
-			case SDLK_SPACE:
-			{
-				Logger::log("Space Pressed");
-				spacePressed = true;
-				break;
-			}
-		}
+	case SDLK_RETURN:
+	case SDLK_KP_ENTER:
+	{
+		Logger::log("Enter Pressed");
+		enterPressed = e.type == SDL_KEYDOWN;
+		break;
 	}
-
-	if (enterPressed && gameState == GameState::GAME_START)
+	case SDLK_SPACE:
 	{
-		gameState = GameState::BALL_LAUNCH;
-		Sounds::play(gameStart);
+		Logger::log("Space Pressed");
+		spacePressed = e.type == SDL_KEYDOWN;
+		Logger::log(std::to_string(spacePressed));
+		break;
 	}
-
-	if (spacePressed)
-	{
-		if (gameState == GameState::BALL_LAUNCH)
-		{
-			ball->launch();
-			gameState = GameState::PLAYING;
-		}
-		else if (gameState == GameState::PLAYING)
-		{
-			if (player->getState() == PlayerState::GUNNER && bulletSpawner->canSpawn())
-			{
-				std::pair<Bullet*, Bullet*> bulletPair = bulletSpawner->spawn(player->getPosition());
-				bullets.push_back(bulletPair.first);
-				bullets.push_back(bulletPair.second);
-				Sounds::play(gunshot);
-			}
-		}
 	}
 
 	if ((gameState == GameState::PLAYING) || (gameState == GameState::BALL_LAUNCH))
@@ -143,39 +109,87 @@ void Game::onEvent(SDL_Event e)
 /////////////////////////////////////////////////////////
 void Game::update(float deltaTime)
 {
-	// Don't update positions during round win transition
-	if (gameState == GameState::ROUND_WIN)
-	{
-		Logger::log("Round win!");
-		if (level == Constants::NUM_LEVELS)
-		{
-			gameState = GameState::GAME_WIN;
-		}
-		else // Go to next level
-		{
-			level++;
-			loadLevel(level);
-			gameState = GameState::BALL_LAUNCH;
-		}
-		return;
-	}
+	TimerTask::removeFinished(timerTasks);
+	TimerTask::update(timerTasks, deltaTime);
 
-	if (gameState == GameState::BALL_LOSS)
+	switch (gameState)
 	{
-		if (player->isReadyToLaunch())
-		{
-			player->reset();
-			gameState = GameState::BALL_LAUNCH;
-			return;
-		}
+	case GameState::GAME_START:
+		//Logger::log("Update GAME_START");
+		updateGameStart(deltaTime);
+		break;
+	case GameState::ROUND_START:
+		//Logger::log("Update ROUND_START");
+		updateRoundStart(deltaTime);
+		break;
+	case GameState::BALL_LAUNCH:
+		//Logger::log("Update BALL_LAUNCH");
+		updateBallLaunch(deltaTime);
+		break;
+	case GameState::PLAYING:
+		//Logger::log("Update PLAYING");
+		updateGameplay(deltaTime);
+		break;
+	case GameState::BALL_LOSS:
+		//Logger::log("Update BALL_LOSS");
+		updateBallLoss(deltaTime);
+		break;
+	case GameState::GAME_OVER:
+		Logger::log("Update GAME_OVER");
+		updateGameOver(deltaTime);
+		break;
+	case GameState::GAME_WIN:
+		Logger::log("Update GAME_WIN");
+		updateGameWin(deltaTime);
+		break;
+	}
+}
+
+void Game::updateGameStart(float deltaTime)
+{
+	if (enterPressed)
+	{
+		gameState = GameState::ROUND_START;
+		Sounds::play(gameStart);
+	}
+}
+
+void Game::updateRoundStart(float deltaTime)
+{
+	timerTasks.push_back(new TimerTask(2000, [&]() { gameState = GameState::BALL_LAUNCH; }) );
+}
+
+void Game::updateBallLaunch(float deltaTime)
+{
+	player->update(deltaTime);
+
+	// Stick the ball to the paddle
+	Vector2 centerOfPaddle = player->getPaddleTopCenterPosition();
+	Vector2 ballPosition{ centerOfPaddle.x, centerOfPaddle.y - (Constants::BALL_SIZE * 0.5f) };
+	ball->reset(ballPosition);
+
+	if (spacePressed)
+	{
+		ball->launch();
+		gameState = GameState::PLAYING;
+	}
+}
+
+void Game::updateGameplay(float deltaTime)
+{
+	// Early exit on round win
+	if (bricks.size() == 0)
+	{
+		gameState = GameState::ROUND_WIN;
+		return;
 	}
 
 	/////////////////////////////
 	// BRICKS
 	/////////////////////////////
-	entities::Func1<Entity*> increaseScoreAndSpawnPowerUp = [&](Entity* e) {
+	functions::Func1<Entity*> increaseScoreAndSpawnPowerUp = [&](Entity* e) {
 		increaseScore(e->getScoreValue());
-		PowerUpCapsule* puc = powerUpSpawner->spawn(texture,e->getPosition());
+		PowerUpCapsule* puc = powerUpSpawner->spawn(texture, e->getPosition());
 		if (puc != nullptr) powerUps.push_back(puc);
 	};
 	entities::removeDeadThenForEach(bricks, increaseScoreAndSpawnPowerUp);
@@ -184,38 +198,63 @@ void Game::update(float deltaTime)
 	/////////////////////////////
 	// POWER UPS
 	/////////////////////////////
-	entities::Func1<Entity*> collectPoints = [&](Entity* e) { increaseScore(Constants::CAPSULE_COLLECTION_POINTS); };
+	functions::Func1<Entity*> collectPoints = [&](Entity* e) { increaseScore(Constants::CAPSULE_COLLECTION_POINTS); };
 	entities::removeDeadThenForEach(powerUps, collectPoints);
 	entities::updateEach(powerUps, deltaTime);
 
-	// Bullets
+	/////////////////////////////
+	// BULLETS
+	/////////////////////////////
 	entities::removeDead(bullets);
 	entities::updateEach(bullets, deltaTime);
 
+	if (spacePressed && player->getState() == PlayerState::GUNNER && bulletSpawner->canSpawn())
+	{
+		std::pair<Bullet*, Bullet*> bulletPair = bulletSpawner->spawn(player->getPosition());
+		bullets.push_back(bulletPair.first);
+		bullets.push_back(bulletPair.second);
+		Sounds::play(gunshot);
+	}
+
 	/////////////////////////////
-	// PLAYER
+	// PLAYER and BALL
 	/////////////////////////////
 	player->update(deltaTime);
+	ball->update(deltaTime);
+}
 
-	/////////////////////////////
-	// BALL
-	/////////////////////////////
-	// Make the ball "stick" to the paddle on pre-launch
-	if (gameState == GameState::BALL_LAUNCH)
-	{
-		Vector2 centerOfPaddle = player->getPaddleTopCenterPosition();
-		Vector2 ballPosition{ centerOfPaddle.x, centerOfPaddle.y - (Constants::BALL_SIZE * 0.5f) };
-		ball->reset(ballPosition);
-	}
-	else
-	{
-		ball->update(deltaTime);
-	}
+void Game::updateBallLoss(float deltaTime)
+{
+	player->update(deltaTime);
+	ball->update(deltaTime);
 
-	if (bricks.size() == 0)
+	if (player->isReadyToLaunch())
 	{
-		gameState = GameState::ROUND_WIN;
+		player->reset();
+		gameState = GameState::BALL_LAUNCH;
 	}
+}
+
+void Game::updateGameOver(float deltaTime)
+{
+}
+
+void Game::updateRoundWin(float deltaTime)
+{
+	if (level == Constants::NUM_LEVELS)
+	{
+		gameState = GameState::GAME_WIN;
+	}
+	else // Go to next round
+	{
+		level++;
+		loadLevel(level);
+		gameState = GameState::ROUND_START;
+	}
+}
+
+void Game::updateGameWin(float deltaTime)
+{
 }
 
 /////////////////////////////////////////////////////////
@@ -250,12 +289,12 @@ void Game::checkCollisions()
 		entities::checkAndNotifyCollisions(wallColliders, ball);
 
 		// Ball vs. Bricks
-		entities::Func onBallHitBrick = [&]() -> void { ball->increaseSpeed(); };
+		functions::Func onBallHitBrick = [&]() -> void { ball->increaseSpeed(); };
 		entities::checkAndNotifyCollisions(bricks, ball, &onBallHitBrick);
 	}
 
 	// PowerUps vs Player
-	entities::Func1<Entity*> onPowerUpHitPlayer = [&](Entity* capsule) -> void { 
+	functions::Func1<Entity*> onPowerUpHitPlayer = [&](Entity* capsule) -> void {
 		score += Constants::CAPSULE_COLLECTION_POINTS;
 		std::string tag = capsule->tag();
 		if (tag == "expand")
@@ -278,23 +317,20 @@ void Game::render()
 {
 	switch (gameState)
 	{
+	case GameState::GAME_START:
+		renderGameStart();
+		break;
+	case GameState::ROUND_START:
+		renderRoundStart();
+		break;
 	case GameState::BALL_LAUNCH:
 	case GameState::PLAYING:
 	case GameState::BALL_LOSS:
-	{
 		renderGameplay();
 		break;
-	}
-	case GameState::GAME_START:
-	{
-		renderGameStart();
-		break;
-	}
 	case GameState::GAME_OVER:
-	{
 		renderGameOver();
 		break;
-	}
 	}
 }
 
@@ -303,6 +339,13 @@ void Game::renderGameStart()
 	entities::renderAll(nonColliders, renderer);
 	scoresPanel->render(renderer, numLives, score, level);
 	startPanel->render(renderer);
+}
+
+void Game::renderRoundStart()
+{
+	entities::renderAll(nonColliders, renderer);
+	scoresPanel->render(renderer, numLives, score, level);
+	roundStartPanel->render(renderer, level);
 }
 
 void Game::renderGameOver()

@@ -155,6 +155,7 @@ copy $(ProjectDir)lib\*  $(OutDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\RoundStartPanel.cpp" />
     <ClCompile Include="src\Sounds.cpp" />
     <ClCompile Include="src\Constants.cpp" />
     <ClCompile Include="src\levels\LevelBrickLoader.cpp" />
@@ -178,6 +179,7 @@ copy $(ProjectDir)lib\*  $(OutDir)</Command>
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\entities\Entity.cpp" />
     <ClCompile Include="src\collisions\AABB.cpp" />
+    <ClCompile Include="src\TimerTask.cpp" />
     <ClCompile Include="src\utils\logger.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\TextureLoader.cpp" />
@@ -187,6 +189,7 @@ copy $(ProjectDir)lib\*  $(OutDir)</Command>
     <ClCompile Include="src\utils\Util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\RoundStartPanel.h" />
     <ClInclude Include="src\Sounds.h" />
     <ClInclude Include="src\Constants.h" />
     <ClInclude Include="src\levels\LevelBrickLoader.h" />
@@ -215,6 +218,7 @@ copy $(ProjectDir)lib\*  $(OutDir)</Command>
     <ClInclude Include="src\entities\Entity.h" />
     <ClInclude Include="src\collisions\AABB.h" />
     <ClInclude Include="src\utils\cleanup.h" />
+    <ClInclude Include="src\utils\Functions.h" />
     <ClInclude Include="src\utils\logger.h" />
     <ClInclude Include="src\resources.h" />
     <ClInclude Include="src\sprites\sprite.h" />
@@ -225,7 +229,7 @@ copy $(ProjectDir)lib\*  $(OutDir)</Command>
     <ClInclude Include="src\TextRenderer.h" />
     <ClInclude Include="src\Text.h" />
     <ClInclude Include="src\utils\Util.h" />
-    <ClInclude Include="src\Timer.h" />
+    <ClInclude Include="src\TimerTask.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

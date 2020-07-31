@@ -13,9 +13,11 @@
 #include "levels/LevelLoader.h"
 #include "levels/LevelBrickLoader.h"
 #include "GameStartPanel.h"
+#include "RoundStartPanel.h"
 #include "GameOverPanel.h"
 #include "powerups/PowerUpSpawner.h"
 #include "BulletSpawner.h"
+#include "TimerTask.h"
 
 enum class GameState
 {
@@ -83,6 +85,11 @@ private:
 	std::vector<Entity*> powerUps;
 	std::vector<Entity*> bullets;
 
+	std::vector<TimerTask*> timerTasks;
+
+	bool enterPressed{ false };
+	bool spacePressed{ false };
+
 	int level{ 1 };
 	int numLives{ Constants::START_LIVES };
 	int score{ 0 };
@@ -105,13 +112,24 @@ private:
 	LevelLoader* levelLoader;
 	ScoresPanel* scoresPanel;
 	GameStartPanel* startPanel;
+	RoundStartPanel* roundStartPanel;
 	GameOverPanel* gameOverPanel;
 	PowerUpSpawner* powerUpSpawner;
 	BulletSpawner* bulletSpawner;
 
 	void renderGameStart();
+	void renderRoundStart();
 	void renderGameplay();
 	void renderGameOver();
+
+	void updateGameStart(float deltaTime);
+	void updateRoundStart(float deltaTime);
+	void updateBallLaunch(float deltaTime);
+	void updateGameplay(float deltaTime);
+	void updateBallLoss(float deltaTime);
+	void updateRoundWin(float deltaTime);
+	void updateGameOver(float deltaTime);
+	void updateGameWin(float deltaTime);
 
 	void onGameEnd();
 	void loadLevel(int levelNumber);
