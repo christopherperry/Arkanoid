@@ -217,7 +217,7 @@ int hitsToDestroyBrick(int brickId, int levelNumber)
 
 std::vector<std::vector<int>> getBricksForLevel(int levelNumber)
 {
-	//return levelZero();
+	return levelZero();
 	assert((levelNumber > 0) && levelNumber <= Constants::NUM_LEVELS);
 
 	switch (levelNumber)

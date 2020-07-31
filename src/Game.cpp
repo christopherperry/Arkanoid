@@ -138,6 +138,9 @@ void Game::update(float deltaTime)
 		Logger::log("Update GAME_OVER");
 		updateGameOver(deltaTime);
 		break;
+	case GameState::ROUND_WIN:
+		updateRoundWin(deltaTime);
+		break;
 	case GameState::GAME_WIN:
 		Logger::log("Update GAME_WIN");
 		updateGameWin(deltaTime);
@@ -156,6 +159,7 @@ void Game::updateGameStart(float deltaTime)
 
 void Game::updateRoundStart(float deltaTime)
 {
+	// 2 second delay then changes the state
 	timerTasks.push_back(new TimerTask(2000, [&]() { gameState = GameState::BALL_LAUNCH; }) );
 }
 
@@ -177,13 +181,6 @@ void Game::updateBallLaunch(float deltaTime)
 
 void Game::updateGameplay(float deltaTime)
 {
-	// Early exit on round win
-	if (bricks.size() == 0)
-	{
-		gameState = GameState::ROUND_WIN;
-		return;
-	}
-
 	/////////////////////////////
 	// BRICKS
 	/////////////////////////////
@@ -194,6 +191,13 @@ void Game::updateGameplay(float deltaTime)
 	};
 	entities::removeDeadThenForEach(bricks, increaseScoreAndSpawnPowerUp);
 	entities::updateEach(bricks, deltaTime);
+
+	// Early exit on round win
+	if (bricks.size() == 0)
+	{
+		gameState = GameState::ROUND_WIN;
+		return;
+	}
 
 	/////////////////////////////
 	// POWER UPS
@@ -326,6 +330,7 @@ void Game::render()
 	case GameState::BALL_LAUNCH:
 	case GameState::PLAYING:
 	case GameState::BALL_LOSS:
+	case GameState::ROUND_WIN:
 		renderGameplay();
 		break;
 	case GameState::GAME_OVER:
