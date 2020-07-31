@@ -10,10 +10,11 @@ private:
 	Vector2 velocity{ 0.0f, 0.0f };
 	Mix_Chunk* hitBrickSound;
 	Mix_Chunk* hitPaddleSound;
-	Ball(Sprite* sprite, AABB boundingBox, Vector2 position, Mix_Chunk* hitBrickSound, Mix_Chunk* hitPaddleSound) : Entity(sprite, boundingBox, position), hitBrickSound{ hitBrickSound }, hitPaddleSound{ hitPaddleSound } {};
+	Mix_Chunk* hitUnbreakableBrickSound;
+	Ball(Sprite* sprite, AABB boundingBox, Vector2 position, Mix_Chunk* hitBrickSound, Mix_Chunk* hitUnbreakableBrickSound, Mix_Chunk* hitPaddleSound) : Entity(sprite, boundingBox, position), hitBrickSound{ hitBrickSound }, hitUnbreakableBrickSound{ hitUnbreakableBrickSound }, hitPaddleSound{ hitPaddleSound } {};
 public:
 	Ball() = delete;
-	static Ball* createNew(SDL_Texture* texture, Vector2 position, Mix_Chunk* hitBrickSound, Mix_Chunk* hitPaddleSound);
+	static Ball* createNew(SDL_Texture* texture, Vector2 position, Mix_Chunk* hitBrickSound, Mix_Chunk* hitUnbreakableBrickSound, Mix_Chunk* hitPaddleSound);
 	void launch();
 	void increaseSpeed();
 	void reset(Vector2 position);

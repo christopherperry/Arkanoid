@@ -2,8 +2,9 @@
 #include "Ball.h"
 #include "../math/Vector2.h"
 #include "../Constants.h"
+#include "../Sounds.h"
 
-Ball* Ball::createNew(SDL_Texture* texture, Vector2 position, Mix_Chunk* hitBrickSound, Mix_Chunk* hitPaddleSound)
+Ball* Ball::createNew(SDL_Texture* texture, Vector2 position, Mix_Chunk* hitBrickSound, Mix_Chunk* hitUnbreakableBrickSound, Mix_Chunk* hitPaddleSound)
 {
 	Vector2 ballExtents{ Constants::BALL_SIZE  * 0.5f, Constants::BALL_SIZE  * 0.5f };
 
@@ -12,6 +13,7 @@ Ball* Ball::createNew(SDL_Texture* texture, Vector2 position, Mix_Chunk* hitBric
 		AABB{ position, ballExtents },
 		position,
 		hitBrickSound,
+		hitUnbreakableBrickSound,
 		hitPaddleSound
 	);
 }
@@ -55,11 +57,15 @@ void Ball::onCollision(Hit* hit)
 	std::string tag = hit->tag;
 	if (tag == "player")
 	{
-		Mix_PlayChannel(-1, hitPaddleSound, 0);
+		Sounds::play(hitPaddleSound);
 	}
 	else if (tag == "brick")
 	{
-		Mix_PlayChannel(-1, hitBrickSound, 0);
+		Sounds::play(hitBrickSound);
+	}
+	else if (tag == "unbreakable-brick")
+	{
+		Sounds::play(hitUnbreakableBrickSound);
 	}
 
 	// We need to first move the ball to not be in a colliding state

@@ -217,7 +217,7 @@ int hitsToDestroyBrick(int brickId, int levelNumber)
 
 std::vector<std::vector<int>> getBricksForLevel(int levelNumber)
 {
-	//return levelZero();
+	//return levelFiveBricks();
 	assert((levelNumber > 0) && levelNumber <= Constants::NUM_LEVELS);
 
 	switch (levelNumber)
@@ -294,8 +294,9 @@ std::vector<Entity*> LevelBrickLoader::loadLevel(int levelNumber)
 
 			int numHitsToDestroy = hitsToDestroyBrick(spriteId, levelNumber);
 			int scoreValue = pointsForBrick(spriteId, levelNumber);
+			std::string tag = ((spriteId == BrickId::BRICK_GOLD) || (spriteId == BrickId::BRICK_GREY_IDLE)) ? "unbreakable-brick" : "brick" ;
 
-			entities.push_back(new Brick{ sprites[spriteId], AABB{ position, extents }, position, numHitsToDestroy, scoreValue });
+			entities.push_back(new Brick{ sprites[spriteId], AABB{ position, extents }, position, numHitsToDestroy, scoreValue, tag});
 		}
 	}
 

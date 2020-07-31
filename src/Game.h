@@ -103,8 +103,12 @@ private:
 	Ball* ball = nullptr;
 	Mix_Chunk* paddleHit;
 	Mix_Chunk* brickHit;
+	Mix_Chunk* brickHitUnbreakable;
+	Mix_Chunk* shrink;
+	Mix_Chunk* expand;
 	Mix_Chunk* ballLoss;
 	Mix_Chunk* gunshot;
+	Mix_Chunk* extraLife;
 	Mix_Music* gameStart;
 	Mix_Music* gameEnd;
 

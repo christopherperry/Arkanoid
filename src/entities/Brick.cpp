@@ -1,8 +1,8 @@
 #include <iostream>
 #include "Brick.h"
 
-Brick::Brick(Sprite * sprite, AABB boundingBox, Vector2 position, int numHitsToDestroy, int scoreValue) : 
-	Entity(sprite, boundingBox, position), numHitsToDestroy{ numHitsToDestroy }, scoreValue{ scoreValue }
+Brick::Brick(Sprite * sprite, AABB boundingBox, Vector2 position, int numHitsToDestroy, int scoreValue, std::string tag) : 
+	Entity(sprite, boundingBox, position), numHitsToDestroy{ numHitsToDestroy }, scoreValue{ scoreValue }, brickTag{ tag }
 {
 	int sizeX = (int) boundingBox.extents.x;
 	int sizeY = (int) boundingBox.extents.y;

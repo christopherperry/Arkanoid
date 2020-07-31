@@ -15,8 +15,13 @@
 Game::Game(float windowWidth, float windowHeight, SDL_Renderer* renderer, SDL_Texture* texture) :
 	windowWidth{ windowWidth }, windowHeight{ windowHeight }, renderer{ renderer }, texture{ texture }
 {
+	shrink = Mix_LoadWAV("res/shrink.wav");
+	expand = Mix_LoadWAV("res/expand.wav");
+	extraLife = Mix_LoadWAV("res/extra-life.wav");
+	paddleHit = Mix_LoadWAV("res/paddle-hit.wav");
 	paddleHit = Mix_LoadWAV("res/paddle-hit.wav");
 	brickHit = Mix_LoadWAV("res/brick-hit.wav");
+	brickHitUnbreakable = Mix_LoadWAV("res/unbreakable-brick.wav");
 	ballLoss = Mix_LoadWAV("res/ball-loss.wav");
 	gunshot = Mix_LoadWAV("res/gunshot.wav");
 	gameStart = Mix_LoadMUS("res/game-start.wav");
@@ -33,7 +38,7 @@ Game::Game(float windowWidth, float windowHeight, SDL_Renderer* renderer, SDL_Te
 	bulletSpawner = new BulletSpawner(texture);
 
 	player = Player::createNew(texture);
-	ball = Ball::createNew(texture, player->getPaddleTopCenterPosition(), brickHit, paddleHit);
+	ball = Ball::createNew(texture, player->getPaddleTopCenterPosition(), brickHit, brickHitUnbreakable, paddleHit);
 
 	Vector2 bottomPosition(Constants::NUM_TILES_WIDE * Constants::TILE_SIZE * 0.5f + Constants::OFFSET, Constants::NUM_TILES_HIGH * Constants::TILE_SIZE - 2 * Constants::OFFSET);
 	Vector2 bottomExtents(Constants::NUM_TILES_WIDE * Constants::TILE_SIZE * 0.5f, Constants::TILE_SIZE * 0.5f);
@@ -325,12 +330,19 @@ void Game::checkCollisions()
 	functions::Func1<Entity*> onPowerUpHitPlayer = [&](Entity* capsule) -> void {
 		score += Constants::CAPSULE_COLLECTION_POINTS;
 		std::string tag = capsule->tag();
-		if (tag == "expand")
+		if (tag == "expand") {
 			player->setState(PlayerState::EXPANDED);
-		if (tag == "gun")
+			Sounds::play(expand);
+		}
+		if (tag == "gun") {
 			player->setState(PlayerState::GUNNER);
-		if (tag == "shrink")
+			Sounds::play(expand);
+		}
+		if (tag == "shrink") {
 			player->setState(PlayerState::SHRUNK);
+			Sounds::play(shrink);
+		}
+			
 	};
 	entities::checkCollidesWithAndNotify(powerUps, player, &onPowerUpHitPlayer);
 
@@ -412,8 +424,8 @@ void Game::increaseScore(int amount)
 	oneUpScoreCounter += amount;
 	if (oneUpScoreCounter >= Constants::ONE_UP_HIGH_SCORE)
 	{
-		// TODO: play a sound
 		numLives++;
+		Sounds::play(extraLife);
 		oneUpScoreCounter %= Constants::ONE_UP_HIGH_SCORE;
 	}
 }
