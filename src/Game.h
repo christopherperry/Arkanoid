@@ -15,6 +15,7 @@
 #include "GameStartPanel.h"
 #include "RoundStartPanel.h"
 #include "GameOverPanel.h"
+#include "GameWinPanel.h"
 #include "powerups/PowerUpSpawner.h"
 #include "BulletSpawner.h"
 #include "TimerTask.h"
@@ -114,6 +115,7 @@ private:
 	GameStartPanel* startPanel;
 	RoundStartPanel* roundStartPanel;
 	GameOverPanel* gameOverPanel;
+	GameWinPanel* gameWinPanel;
 	PowerUpSpawner* powerUpSpawner;
 	BulletSpawner* bulletSpawner;
 
@@ -121,6 +123,7 @@ private:
 	void renderRoundStart();
 	void renderGameplay();
 	void renderGameOver();
+	void renderGameWin();
 
 	void updateGameStart(float deltaTime);
 	void updateRoundStart(float deltaTime);

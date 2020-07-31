@@ -155,6 +155,7 @@ copy $(ProjectDir)lib\*  $(OutDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\GameWinPanel.cpp" />
     <ClCompile Include="src\RoundStartPanel.cpp" />
     <ClCompile Include="src\Sounds.cpp" />
     <ClCompile Include="src\Constants.cpp" />
@@ -189,6 +190,7 @@ copy $(ProjectDir)lib\*  $(OutDir)</Command>
     <ClCompile Include="src\utils\Util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\GameWinPanel.h" />
     <ClInclude Include="src\RoundStartPanel.h" />
     <ClInclude Include="src\Sounds.h" />
     <ClInclude Include="src\Constants.h" />

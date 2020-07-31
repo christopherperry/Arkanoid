@@ -27,6 +27,7 @@ Game::Game(float windowWidth, float windowHeight, SDL_Renderer* renderer, SDL_Te
 	startPanel = new GameStartPanel(texture, renderer, font, SDL_Rect{ 0, 0, Constants::NUM_TILES_WIDE * Constants::TILE_SIZE, Constants::NUM_TILES_HIGH * Constants::TILE_SIZE });
 	roundStartPanel = new RoundStartPanel(renderer, font, SDL_Rect{ 0, 0, Constants::NUM_TILES_WIDE * Constants::TILE_SIZE, Constants::NUM_TILES_HIGH * Constants::TILE_SIZE });
 	gameOverPanel = new GameOverPanel(renderer, font, SDL_Rect{ 0, 0, Constants::NUM_TILES_WIDE * Constants::TILE_SIZE, Constants::NUM_TILES_HIGH * Constants::TILE_SIZE });
+	gameWinPanel = new GameWinPanel(texture, renderer, font, SDL_Rect{ 0, 0, Constants::NUM_TILES_WIDE * Constants::TILE_SIZE, Constants::NUM_TILES_HIGH * Constants::TILE_SIZE });
 	scoresPanel = new ScoresPanel(renderer, font, Vector2((Constants::NUM_TILES_WIDE * Constants::TILE_SIZE) + Constants::OFFSET, 0));
 	levelLoader = new LevelLoader(texture);
 	bulletSpawner = new BulletSpawner(texture);
@@ -115,34 +116,27 @@ void Game::update(float deltaTime)
 	switch (gameState)
 	{
 	case GameState::GAME_START:
-		//Logger::log("Update GAME_START");
 		updateGameStart(deltaTime);
 		break;
 	case GameState::ROUND_START:
-		//Logger::log("Update ROUND_START");
 		updateRoundStart(deltaTime);
 		break;
 	case GameState::BALL_LAUNCH:
-		//Logger::log("Update BALL_LAUNCH");
 		updateBallLaunch(deltaTime);
 		break;
 	case GameState::PLAYING:
-		//Logger::log("Update PLAYING");
 		updateGameplay(deltaTime);
 		break;
 	case GameState::BALL_LOSS:
-		//Logger::log("Update BALL_LOSS");
 		updateBallLoss(deltaTime);
 		break;
 	case GameState::GAME_OVER:
-		Logger::log("Update GAME_OVER");
 		updateGameOver(deltaTime);
 		break;
 	case GameState::ROUND_WIN:
 		updateRoundWin(deltaTime);
 		break;
 	case GameState::GAME_WIN:
-		Logger::log("Update GAME_WIN");
 		updateGameWin(deltaTime);
 		break;
 	}
@@ -150,17 +144,25 @@ void Game::update(float deltaTime)
 
 void Game::updateGameStart(float deltaTime)
 {
+	level = 1;
+	score = 0;
+	player->reset();
+
 	if (enterPressed)
 	{
+		loadLevel(level);
 		gameState = GameState::ROUND_START;
 		Sounds::play(gameStart);
+
+		// 2 second delay then changes the state
+		timerTasks.push_back(new TimerTask(2000, [&]() { gameState = GameState::BALL_LAUNCH; }));
 	}
 }
 
 void Game::updateRoundStart(float deltaTime)
 {
-	// 2 second delay then changes the state
-	timerTasks.push_back(new TimerTask(2000, [&]() { gameState = GameState::BALL_LAUNCH; }) );
+	// Do nothing, we're waiting on the task we kicked off
+	// see updateGameStart()
 }
 
 void Game::updateBallLaunch(float deltaTime)
@@ -181,6 +183,20 @@ void Game::updateBallLaunch(float deltaTime)
 
 void Game::updateGameplay(float deltaTime)
 {
+	// Game Over Scenario
+	if (numLives <= 0)
+	{
+		numLives = 0;
+		gameState = GameState::GAME_OVER;
+		onGameEnd();
+
+		// We'll go back to the title screen after five seconds
+		timerTasks.push_back(new TimerTask(5000, [&]() { gameState = GameState::GAME_START; }));
+
+		// early exit
+		return;
+	}
+
 	/////////////////////////////
 	// BRICKS
 	/////////////////////////////
@@ -241,6 +257,7 @@ void Game::updateBallLoss(float deltaTime)
 
 void Game::updateGameOver(float deltaTime)
 {
+	
 }
 
 void Game::updateRoundWin(float deltaTime)
@@ -248,17 +265,24 @@ void Game::updateRoundWin(float deltaTime)
 	if (level == Constants::NUM_LEVELS)
 	{
 		gameState = GameState::GAME_WIN;
+
+		// 10 second delay then changes the state
+		timerTasks.push_back(new TimerTask(10000, [&]() { gameState = GameState::GAME_START; }));
 	}
 	else // Go to next round
 	{
 		level++;
 		loadLevel(level);
 		gameState = GameState::ROUND_START;
+
+		// 2 second delay then changes the state
+		timerTasks.push_back(new TimerTask(2000, [&]() { gameState = GameState::BALL_LAUNCH; }));
 	}
 }
 
 void Game::updateGameWin(float deltaTime)
 {
+	
 }
 
 /////////////////////////////////////////////////////////
@@ -336,6 +360,9 @@ void Game::render()
 	case GameState::GAME_OVER:
 		renderGameOver();
 		break;
+	case GameState::GAME_WIN:
+		renderGameWin();
+		break;
 	}
 }
 
@@ -358,6 +385,13 @@ void Game::renderGameOver()
 	entities::renderAll(nonColliders, renderer);
 	scoresPanel->render(renderer, numLives, score, level);
 	gameOverPanel->render(renderer);
+}
+
+void Game::renderGameWin()
+{
+	entities::renderAll(nonColliders, renderer);
+	scoresPanel->render(renderer, numLives, score, level);
+	gameWinPanel->render(renderer);
 }
 
 void Game::renderGameplay()
@@ -395,17 +429,7 @@ void Game::onBallLoss()
 
 	gameState = GameState::BALL_LOSS;
 	player->setState(PlayerState::DISSOLVE);
-
-	if (numLives <= 0)
-	{
-		numLives = 0;
-		gameState = GameState::GAME_OVER;
-		onGameEnd();
-	}
-	else
-	{
-		Sounds::play(ballLoss);
-	}
+	Sounds::play(ballLoss);
 }
 
 void Game::onGameEnd()
