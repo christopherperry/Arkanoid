@@ -55,6 +55,15 @@ void entities::updateEach(const std::vector<Entity*>& entities, float deltaTime)
 	std::for_each(std::begin(entities), std::end(entities), [=](Entity* e) -> void { e->update(deltaTime); });
 }
 
+bool entities::containsOnly(const std::vector<Entity*>& entities, std::string tag)
+{
+	for (Entity* e : entities)
+	{
+		if (e->tag() != tag) return false;
+	}
+	return true;
+}
+
 void entities::removeDead(std::vector<Entity*>& entities)
 {
 	std::vector<Entity*>::iterator newEnd = std::partition(entities.begin(), entities.end(), [=](Entity* e) -> bool { return e->isAlive(); });

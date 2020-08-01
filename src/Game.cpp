@@ -38,7 +38,7 @@ Game::Game(float windowWidth, float windowHeight, SDL_Renderer* renderer, SDL_Te
 	bulletSpawner = new BulletSpawner(texture);
 
 	player = Player::createNew(texture);
-	ball = Ball::createNew(texture, player->getPaddleTopCenterPosition(), brickHit, brickHitUnbreakable, paddleHit);
+	ball = Ball::createNew(texture, player->getPaddleTopCenterPosition() + Vector2{0.0f, 6.0f}, brickHit, brickHitUnbreakable, paddleHit);
 
 	Vector2 bottomPosition(Constants::NUM_TILES_WIDE * Constants::TILE_SIZE * 0.5f + Constants::OFFSET, Constants::NUM_TILES_HIGH * Constants::TILE_SIZE - 2 * Constants::OFFSET);
 	Vector2 bottomExtents(Constants::NUM_TILES_WIDE * Constants::TILE_SIZE * 0.5f, Constants::TILE_SIZE * 0.5f);
@@ -123,9 +123,6 @@ void Game::update(float deltaTime)
 	case GameState::GAME_START:
 		updateGameStart(deltaTime);
 		break;
-	case GameState::ROUND_START:
-		updateRoundStart(deltaTime);
-		break;
 	case GameState::BALL_LAUNCH:
 		updateBallLaunch(deltaTime);
 		break;
@@ -158,19 +155,13 @@ void Game::updateGameStart(float deltaTime)
 	}
 }
 
-void Game::updateRoundStart(float deltaTime)
-{
-	// Do nothing, we're waiting on the task we kicked off
-	// see updateGameStart()
-}
-
 void Game::updateBallLaunch(float deltaTime)
 {
 	player->update(deltaTime);
 
 	// Stick the ball to the paddle
 	Vector2 centerOfPaddle = player->getPaddleTopCenterPosition();
-	Vector2 ballPosition{ centerOfPaddle.x, centerOfPaddle.y - (Constants::BALL_SIZE * 0.5f) };
+	Vector2 ballPosition{ centerOfPaddle.x, centerOfPaddle.y - (Constants::BALL_SIZE) };
 	ball->reset(ballPosition);
 
 	if (spacePressed)
@@ -208,7 +199,7 @@ void Game::updateGameplay(float deltaTime)
 	entities::updateEach(bricks, deltaTime);
 
 	// Early exit on round win
-	if (bricks.size() == 0)
+	if (bricks.size() == 0 || entities::containsOnly(bricks, "unbreakable-brick"))
 	{
 		gameState = GameState::ROUND_WIN;
 		return;

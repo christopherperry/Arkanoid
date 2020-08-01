@@ -87,7 +87,9 @@ void Player::onCollision(Hit* hit)
 void Player::render(SDL_Renderer* renderer)
 {
 	spriteRenderer->render(renderer, position);
-	boundingBox.render(renderer);
+
+	if (Constants::RENDER_COLLIDERS)
+		boundingBox.render(renderer);
 }
 
 void Player::setState(PlayerState state)

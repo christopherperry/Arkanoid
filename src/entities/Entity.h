@@ -38,6 +38,8 @@ namespace entities
 
 	void updateEach(const std::vector<Entity*>& entities, float deltaTime);
 
+	bool containsOnly(const std::vector<Entity*>& entities, std::string tag);
+
 	void removeDead(std::vector<Entity*>& entities);
 
 	void renderAll(std::vector<Entity*>& entities, SDL_Renderer* renderer);

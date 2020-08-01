@@ -294,7 +294,16 @@ std::vector<Entity*> LevelBrickLoader::loadLevel(int levelNumber)
 
 			int numHitsToDestroy = hitsToDestroyBrick(spriteId, levelNumber);
 			int scoreValue = pointsForBrick(spriteId, levelNumber);
-			std::string tag = ((spriteId == BrickId::BRICK_GOLD) || (spriteId == BrickId::BRICK_GREY_IDLE)) ? "unbreakable-brick" : "brick" ;
+
+			std::string tag = "brick";
+			if (spriteId == BrickId::BRICK_GOLD)
+			{
+				tag = "unbreakable-brick";
+			}
+			else if (spriteId == BrickId::BRICK_GREY_IDLE)
+			{
+				tag = "grey-brick";
+			}
 
 			entities.push_back(new Brick{ sprites[spriteId], AABB{ position, extents }, position, numHitsToDestroy, scoreValue, tag});
 		}

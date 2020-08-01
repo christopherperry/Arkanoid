@@ -65,7 +65,7 @@ void Ball::onCollision(Hit* hit)
 	{
 		Sounds::play(hitBrickSound);
 	}
-	else if (tag == "unbreakable-brick")
+	else if (tag == "unbreakable-brick" || tag == "grey-brick")
 	{
 		Sounds::play(hitUnbreakableBrickSound);
 	}

@@ -130,7 +130,6 @@ private:
 	void renderGameWin();
 
 	void updateGameStart(float deltaTime);
-	void updateRoundStart(float deltaTime);
 	void updateBallLaunch(float deltaTime);
 	void updateGameplay(float deltaTime);
 	void updateBallLoss(float deltaTime);
