@@ -22,7 +22,13 @@ void Entity::render(SDL_Renderer* renderer)
 	location.w = sprite->rect.w;
 	location.h = sprite->rect.h;
 
+	location.x /= scale.x;
+	location.y /= scale.y;
+
+	SDL_RenderSetScale(renderer, scale.x, scale.y);
 	SDL_RenderCopy(renderer, sprite->texture, &sprite->rect, &location);
+
+	SDL_RenderSetScale(renderer, 1.0f, 1.0f);
 }
 
 void Entity::renderColliders(SDL_Renderer* renderer)

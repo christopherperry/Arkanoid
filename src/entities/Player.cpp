@@ -3,19 +3,19 @@
 #include "../Constants.h"
 
 // TODO: update this when we have more states
-AABB boxForState(PlayerState state, Vector2 position)
+AABB boxForState(PlayerState state, Vector2 position, Vector2 scale)
 {
 	if (state == PlayerState::EXPANDED)
 	{
-		return AABB{ position, Vector2{ 27.0f, 5.5f } };
+		return AABB{ position, Vector2{ scale.x * 27.0f, scale.y * 5.5f } };
 	}
 	else if (state == PlayerState::SHRUNK)
 	{
-		return AABB{ position, Vector2{ 15.0f, 5.5f } };
+		return AABB{ position, Vector2{ scale.x * 15.0f, scale.y * 5.5f } };
 	}
 
 	// Default to regular size
-	return AABB{ position, Vector2{ 21.0f, 5.5f } };
+	return AABB{ position, Vector2{ scale.x * 21.0f, scale.y * 5.5f } };
 }
 
 Player* Player::createNew(SDL_Texture * texture)
@@ -24,12 +24,12 @@ Player* Player::createNew(SDL_Texture * texture)
 	int positionY = (Constants::NUM_TILES_HIGH - 2) * Constants::TILE_SIZE;
 	Vector2 position = Vector2(positionX, positionY);
 
-	return new Player(texture, position);
+	return new Player(texture, position, Vector2{ 1.5f, 1.5f });
 }
 
-Player::Player(SDL_Texture* texture, Vector2 position) : Entity(nullptr, AABB{ position, Vector2{ 21.0f, 5.5f } }, position), startPosition{position}
+Player::Player(SDL_Texture* texture, Vector2 position, Vector2 scale) : Entity(nullptr, AABB{ position, Vector2{ 21.0f, 5.5f } }, position, scale), startPosition{position}
 {
-	boundingBox = boxForState(state, position);
+	boundingBox = boxForState(state, position, scale);
 	spriteRenderer = new PlayerSpriteRenderer(texture);
 }
 
@@ -87,12 +87,13 @@ void Player::onCollision(Hit* hit)
 void Player::render(SDL_Renderer* renderer)
 {
 	spriteRenderer->render(renderer, position);
+	boundingBox.render(renderer);
 }
 
 void Player::setState(PlayerState state)
 {
 	this->state = state;
-	this->boundingBox = boxForState(state, position);
+	this->boundingBox = boxForState(state, position, scale);
 
 	if (state == PlayerState::REGULAR)
 	{
@@ -132,7 +133,7 @@ void Player::reset()
 {
 	position = startPosition;
 	state = PlayerState::REGULAR;
-	boundingBox = boxForState(state, position);
+	boundingBox = boxForState(state, position, scale);
 	boundingBox.moveTo(position);
 
 	spriteRenderer->setRenderMode(PlayerRenderMode::REGULAR);

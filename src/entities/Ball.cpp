@@ -6,12 +6,14 @@
 
 Ball* Ball::createNew(SDL_Texture* texture, Vector2 position, Mix_Chunk* hitBrickSound, Mix_Chunk* hitUnbreakableBrickSound, Mix_Chunk* hitPaddleSound)
 {
-	Vector2 ballExtents{ Constants::BALL_SIZE  * 0.5f, Constants::BALL_SIZE  * 0.5f };
+	Vector2 scale{ 1.5f, 1.5f };
+	Vector2 ballExtents{ Constants::BALL_SIZE  * 0.5f * scale.x, Constants::BALL_SIZE * 0.5f * scale.y };
 
 	return new Ball(
 		new Sprite{ texture, {463, 142, 6, 6} },
 		AABB{ position, ballExtents },
 		position,
+		scale,
 		hitBrickSound,
 		hitUnbreakableBrickSound,
 		hitPaddleSound
@@ -78,7 +80,7 @@ void Ball::onCollision(Hit* hit)
 
 	// If the ball hit the side of the paddle we just reverse the velocity so
 	// the ball doesn't reflect off the side and we lose it immediately (not fun gameplay)
-	if (hit->tag == "player" && abs(hit->normal.x) == 1.0f)
+	if (tag == "player" && abs(hit->normal.x) == 1.0f)
 	{
 		std::cout << "Ball hit paddle side, reversing the velocity..." << std::endl;
 		velocity = -velocity;
@@ -91,9 +93,23 @@ void Ball::onCollision(Hit* hit)
 		float dotNormal = velocity.dot(normal);
 		Vector2 reflectedVelocity = velocity - (normal * (2 * dotNormal));
 
-		std::cout << "V = (" << velocity.x << ", " << velocity.y << ")" << std::endl;
-		std::cout << "VR = (" << reflectedVelocity.x << ", " << reflectedVelocity.y << ")" << std::endl;
+		std::cout << "Velocity = (" << velocity.x << ", " << velocity.y << ")" << std::endl;
+		std::cout << "Reflected Velocity = (" << reflectedVelocity.x << ", " << reflectedVelocity.y << ")" << std::endl;
 
 		velocity = reflectedVelocity;
+
+		// Adjust the velocity if the thing we hit was moving
+		if (abs(hit->velocity.x) > 0.0f)
+		{
+			std::cout << "Adjusting ball velocity, the thing we hit was moving" << std::endl;
+			if (hit->velocity.x < 0.0f) // moving left
+			{
+				velocity.x = velocity.x * (velocity.x > 0.0f ? 0.6f : 1.05f);
+			}
+			else // moving right
+			{
+				velocity.x = velocity.x * (velocity.x < 0.0f ? 0.6f : 1.05f);
+			}
+		}
 	}
 }

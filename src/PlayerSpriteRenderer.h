@@ -18,6 +18,7 @@ enum class PlayerRenderMode
 class PlayerSpriteRenderer
 {
 private:
+	Vector2 scale{ 1.5f, 1.5f };
 	std::map<int, Sprite*> sprites;
 	AnimationFrames* frames;
 	PlayerRenderMode renderMode{ PlayerRenderMode::REGULAR };

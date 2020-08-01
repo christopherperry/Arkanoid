@@ -11,11 +11,12 @@ class Entity
 {
 protected:
 	Vector2 position;
+	Vector2 scale;
 	Sprite* sprite;
 	AABB boundingBox;
 public:
 	Entity() = delete;
-	Entity(Sprite* sprite, AABB boundingBox, Vector2 position) : sprite(sprite), boundingBox(boundingBox), position(position) {};
+	Entity(Sprite* sprite, AABB boundingBox, Vector2 position, Vector2 scale = Vector2{ 1.0f, 1.0f }) : sprite(sprite), boundingBox(boundingBox), position(position), scale{ scale } {};
 	Vector2 getPosition() { return position; }
 	virtual Vector2 getVelocity() { return Vector2::zero; }
 	virtual bool collidesWith(Entity& other);

@@ -297,6 +297,7 @@ void Game::checkCollisions()
 	Hit* hitPlayer = ball->checkCollision(*player);
 	if (hitPlayer != nullptr)
 	{
+		hitPlayer->velocity = player->getVelocity();
 		ball->onCollision(hitPlayer);
 		delete hitPlayer;
 	}

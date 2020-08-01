@@ -173,7 +173,6 @@ copy $(ProjectDir)lib\*  $(OutDir)</Command>
     <ClCompile Include="src\levels\LevelLoader.cpp" />
     <ClCompile Include="src\powerups\PowerUpCapsule.cpp" />
     <ClCompile Include="src\ScoresPanel.cpp" />
-    <ClCompile Include="src\collisions\Hit.cpp" />
     <ClCompile Include="src\entities\Ball.cpp" />
     <ClCompile Include="src\entities\Player.cpp" />
     <ClCompile Include="src\entities\Brick.cpp" />

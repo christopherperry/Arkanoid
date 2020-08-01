@@ -51,9 +51,6 @@
     <ClCompile Include="src\collisions\AABB.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\collisions\Hit.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\math\Vector2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

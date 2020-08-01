@@ -11,7 +11,7 @@ private:
 	Mix_Chunk* hitBrickSound;
 	Mix_Chunk* hitPaddleSound;
 	Mix_Chunk* hitUnbreakableBrickSound;
-	Ball(Sprite* sprite, AABB boundingBox, Vector2 position, Mix_Chunk* hitBrickSound, Mix_Chunk* hitUnbreakableBrickSound, Mix_Chunk* hitPaddleSound) : Entity(sprite, boundingBox, position), hitBrickSound{ hitBrickSound }, hitUnbreakableBrickSound{ hitUnbreakableBrickSound }, hitPaddleSound{ hitPaddleSound } {};
+	Ball(Sprite* sprite, AABB boundingBox, Vector2 position, Vector2 scale, Mix_Chunk* hitBrickSound, Mix_Chunk* hitUnbreakableBrickSound, Mix_Chunk* hitPaddleSound) : Entity(sprite, boundingBox, position, scale), hitBrickSound{ hitBrickSound }, hitUnbreakableBrickSound{ hitUnbreakableBrickSound }, hitPaddleSound{ hitPaddleSound } {};
 public:
 	Ball() = delete;
 	static Ball* createNew(SDL_Texture* texture, Vector2 position, Mix_Chunk* hitBrickSound, Mix_Chunk* hitUnbreakableBrickSound, Mix_Chunk* hitPaddleSound);
