@@ -40,22 +40,19 @@ std::vector<Entity*> Ball::disrupt()
 	// Seed the RNG
 	srand(SDL_GetTicks());
 
+	// Create two balls moving upward at a random angle between 45 and 135 degrees
 	float pi = 2 * std::acos(0);
-	int randomAngleDegrees = (rand() % 180) + 1; // between 1 and 180
+	int randomAngleDegrees = (rand() % 135) + 45;
 	float randomAngleRadians = randomAngleDegrees * (pi / 180.0f);
 
 	Ball* ballCopyOne = new Ball(*this);
-	ballCopyOne->velocity = velocity.rotated(randomAngleRadians);
+	ballCopyOne->velocity = Vector2(cos(randomAngleRadians), -1.0f) * Constants::BALL_SPEED;
 
-	randomAngleDegrees = (rand() % 180) + 1; // between 1 and 180
+	randomAngleDegrees = (rand() % 135) + 45;
 	randomAngleRadians = randomAngleDegrees * (pi / 180.0f);
 
 	Ball* ballCopyTwo = new Ball(*this);
-	ballCopyTwo->velocity = velocity.rotated(randomAngleRadians);
-
-	// Make sure they're both pointing up
-	ballCopyOne->velocity.y = abs(ballCopyOne->velocity.y) * -1.0f;
-	ballCopyTwo->velocity.y = abs(ballCopyOne->velocity.y) * -1.0f;
+	ballCopyTwo->velocity = Vector2(cos(randomAngleRadians), -1.0f) * Constants::BALL_SPEED;
 
 	return std::vector<Entity*>{ ballCopyOne, ballCopyTwo };
 }
