@@ -4,24 +4,29 @@
 #include "ExpandCapsule.h"
 #include "GunnerCapsule.h"
 #include "ShrinkCapsule.h"
+#include "DisruptorCapsule.h"
 
 PowerUpCapsule* randomPowerUp(SDL_Texture* texture, Vector2 position)
 {
 	int v = (rand() % 100) + 1; // between 1 and 100
 	assert(v >= 1 && v <= 100);
 
-	if (v <= 10) // 10%
+	if (v <= 5) // 5%
 	{
 		// If you get this it's just bad luck
 		return new ShrinkCapsule(texture, position);
 	}
-	else if (v <= 55) // 45%
+	else if (v <= 55) // 50%
 	{
-		return new GunnerCapsule(texture, position);
+		return new DisruptorCapsule(texture, position);
 	}
-	else // 45%
+	else if (v <= 80) // 25%
 	{
 		return new ExpandCapsule(texture, position);
+	}
+	else // 20%
+	{
+		return new GunnerCapsule(texture, position);
 	}
 }
 
@@ -36,8 +41,8 @@ PowerUpCapsule* PowerUpSpawner::spawn(SDL_Texture* texture, Vector2 position)
 	int v = (rand() % 100) + 1; // between 1 and 100
 	assert(v >= 1 && v <= 100);
 
-	// 15% chance to get a power up
-	if (v <= 15)
+	// 8% chance to get a power up
+	if (v <= 8)
 	{
 		return randomPowerUp(texture, position);
 	}

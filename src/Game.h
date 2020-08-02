@@ -86,6 +86,8 @@ private:
 	std::vector<Entity*> powerUps;
 	std::vector<Entity*> bullets;
 
+	std::vector<Entity*> balls;
+
 	std::vector<TimerTask*> timerTasks;
 
 	bool enterPressed{ false };
@@ -100,7 +102,6 @@ private:
 	// Things we create and need to clean up
 	BallLossArea* ballLossArea = nullptr;
 	Player* player = nullptr;
-	Ball* ball = nullptr;
 	Mix_Chunk* paddleHit;
 	Mix_Chunk* brickHit;
 	Mix_Chunk* brickHitUnbreakable;

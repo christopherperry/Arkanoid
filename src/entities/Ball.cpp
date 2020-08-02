@@ -91,7 +91,7 @@ void Ball::onCollision(Hit* hit)
 		// ReflectedVelocity = CurrentVelocity - 2 (CurrentVelocity dot hitnormal) hitnormal
 		Vector2 normal = -hit->normal;
 		float dotNormal = velocity.dot(normal);
-		Vector2 reflectedVelocity = velocity - (normal * (2 * dotNormal));
+		Vector2 reflectedVelocity = velocity - (normal * (2.0f * dotNormal));
 
 		std::cout << "Velocity = (" << velocity.x << ", " << velocity.y << ")" << std::endl;
 		std::cout << "Reflected Velocity = (" << reflectedVelocity.x << ", " << reflectedVelocity.y << ")" << std::endl;
@@ -104,11 +104,11 @@ void Ball::onCollision(Hit* hit)
 			std::cout << "Adjusting ball velocity, the thing we hit was moving" << std::endl;
 			if (hit->velocity.x < 0.0f) // moving left
 			{
-				velocity.x = velocity.x * (velocity.x > 0.0f ? 0.6f : 1.05f);
+				velocity.x = velocity.x * (velocity.x > 0.0f ? 0.6f : 1.08f);
 			}
 			else // moving right
 			{
-				velocity.x = velocity.x * (velocity.x < 0.0f ? 0.6f : 1.05f);
+				velocity.x = velocity.x * (velocity.x < 0.0f ? 0.6f : 1.08f);
 			}
 		}
 	}

@@ -42,6 +42,8 @@ namespace entities
 
 	void removeDead(std::vector<Entity*>& entities);
 
+	void removeIfColliding(std::vector<Entity*>& entities, Entity* entity);
+
 	void renderAll(std::vector<Entity*>& entities, SDL_Renderer* renderer);
 
 	void checkAndNotifyCollisions(const std::vector<Entity*>& entities, Entity* entity, functions::Func* f = nullptr);

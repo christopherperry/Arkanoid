@@ -38,7 +38,7 @@ Game::Game(float windowWidth, float windowHeight, SDL_Renderer* renderer, SDL_Te
 	bulletSpawner = new BulletSpawner(texture);
 
 	player = Player::createNew(texture);
-	ball = Ball::createNew(texture, player->getPaddleTopCenterPosition() + Vector2{0.0f, 6.0f}, brickHit, brickHitUnbreakable, paddleHit);
+	balls.push_back(Ball::createNew(texture, player->getPaddleTopCenterPosition() + Vector2{ 0.0f, 6.0f }, brickHit, brickHitUnbreakable, paddleHit));
 
 	Vector2 bottomPosition(Constants::NUM_TILES_WIDE * Constants::TILE_SIZE * 0.5f + Constants::OFFSET, Constants::NUM_TILES_HIGH * Constants::TILE_SIZE - 2 * Constants::OFFSET);
 	Vector2 bottomExtents(Constants::NUM_TILES_WIDE * Constants::TILE_SIZE * 0.5f, Constants::TILE_SIZE * 0.5f);
@@ -56,7 +56,6 @@ Game::~Game()
 	Mix_FreeMusic(gameEnd);
 
 	delete player;
-	delete ball;
 	delete scoresPanel;
 	delete levelLoader;
 	delete bulletSpawner;
@@ -162,11 +161,12 @@ void Game::updateBallLaunch(float deltaTime)
 	// Stick the ball to the paddle
 	Vector2 centerOfPaddle = player->getPaddleTopCenterPosition();
 	Vector2 ballPosition{ centerOfPaddle.x, centerOfPaddle.y - (Constants::BALL_SIZE) };
-	ball->reset(ballPosition);
+	
+	std::for_each(balls.begin(), balls.end(), [&](Entity* ball) { reinterpret_cast<Ball*>(ball)->reset(ballPosition); });
 
 	if (spacePressed)
 	{
-		ball->launch();
+		std::for_each(balls.begin(), balls.end(), [&](Entity* ball) { reinterpret_cast<Ball*>(ball)->launch(); });
 		gameState = GameState::PLAYING;
 	}
 }
@@ -230,13 +230,13 @@ void Game::updateGameplay(float deltaTime)
 	// PLAYER and BALL
 	/////////////////////////////
 	player->update(deltaTime);
-	ball->update(deltaTime);
+	std::for_each(balls.begin(), balls.end(), [&](Entity* ball) { ball->update(deltaTime); });
 }
 
 void Game::updateBallLoss(float deltaTime)
 {
 	player->update(deltaTime);
-	ball->update(deltaTime);
+	std::for_each(balls.begin(), balls.end(), [&](Entity* ball) { ball->update(deltaTime); });
 
 	if (player->isReadyToLaunch())
 	{
@@ -275,7 +275,9 @@ void Game::checkCollisions()
 		return;
 	}
 
-	if (ballLossArea->collidesWith(*ball))
+	// Balls vs Ball-Loss Invisible Area
+	entities::removeIfColliding(balls, ballLossArea);
+	if (balls.size() == 0)
 	{
 		onBallLoss();
 		return;
@@ -285,21 +287,24 @@ void Game::checkCollisions()
 	entities::checkAndNotifyCollisions(wallColliders, player);
 
 	// Ball vs. Player
-	Hit* hitPlayer = ball->checkCollision(*player);
-	if (hitPlayer != nullptr)
+	for (Entity* ball : balls)
 	{
-		hitPlayer->velocity = player->getVelocity();
-		ball->onCollision(hitPlayer);
-		delete hitPlayer;
-	}
-	else
-	{
-		// Ball vs. Walls
-		entities::checkAndNotifyCollisions(wallColliders, ball);
+		Hit* hitPlayer = ball->checkCollision(*player);
+		if (hitPlayer != nullptr)
+		{
+			hitPlayer->velocity = player->getVelocity();
+			ball->onCollision(hitPlayer);
+			delete hitPlayer;
+		}
+		else
+		{
+			// Ball vs. Walls
+			entities::checkAndNotifyCollisions(wallColliders, ball);
 
-		// Ball vs. Bricks
-		functions::Func onBallHitBrick = [&]() -> void { ball->increaseSpeed(); };
-		entities::checkAndNotifyCollisions(bricks, ball, &onBallHitBrick);
+			// Ball vs. Bricks. The cast is ugly.
+			functions::Func onBallHitBrick = [&]() -> void { reinterpret_cast<Ball*>(ball)->increaseSpeed(); };
+			entities::checkAndNotifyCollisions(bricks, ball, &onBallHitBrick);
+		}
 	}
 
 	// PowerUps vs Player
@@ -388,9 +393,9 @@ void Game::renderGameplay()
 	entities::renderAll(bricks, renderer);
 	entities::renderAll(powerUps, renderer);
 	entities::renderAll(bullets, renderer);
+	entities::renderAll(balls, renderer);
 
 	player->render(renderer);
-	ball->render(renderer);
 	scoresPanel->render(renderer, numLives, score, level);
 }
 
@@ -414,6 +419,8 @@ void Game::onBallLoss()
 
 	entities::deleteAll(powerUps);
 	entities::deleteAll(bullets);
+
+	balls.push_back(Ball::createNew(texture, player->getPaddleTopCenterPosition() + Vector2{ 0.0f, 6.0f }, brickHit, brickHitUnbreakable, paddleHit));
 
 	gameState = GameState::BALL_LOSS;
 	player->setState(PlayerState::DISSOLVE);

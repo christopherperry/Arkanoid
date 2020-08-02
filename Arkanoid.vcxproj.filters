@@ -111,6 +111,9 @@
     <ClCompile Include="src\GameWinPanel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\powerups\DisruptorCapsule.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\sprites\sprite.h">
@@ -237,6 +240,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\GameWinPanel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\powerups\DisruptorCapsule.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

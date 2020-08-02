@@ -22,7 +22,7 @@ public:
 
 	static const int NUM_BRICKS_WIDE = 11;
 
-	static const int START_LIVES = 60;
+	static const int START_LIVES = 6;
 
 	static const int NUM_LEVELS = 5;
 	static const int CAPSULE_COLLECTION_POINTS = 1000;

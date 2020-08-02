@@ -64,9 +64,19 @@ bool entities::containsOnly(const std::vector<Entity*>& entities, std::string ta
 	return true;
 }
 
+//////////////////////////////////////////////////////////////
+// MEMORY LEAK CITY BELOW: TODO - FIX!
+//////////////////////////////////////////////////////////////
+
 void entities::removeDead(std::vector<Entity*>& entities)
 {
 	std::vector<Entity*>::iterator newEnd = std::partition(entities.begin(), entities.end(), [=](Entity* e) -> bool { return e->isAlive(); });
+	entities.erase(newEnd, entities.end());
+}
+
+void entities::removeIfColliding(std::vector<Entity*>& entities, Entity* entity)
+{
+	std::vector<Entity*>::iterator newEnd = std::remove_if(entities.begin(), entities.end(), [=](Entity* e) -> bool { return e->collidesWith(*entity); });
 	entities.erase(newEnd, entities.end());
 }
 
