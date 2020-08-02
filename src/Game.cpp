@@ -323,7 +323,13 @@ void Game::checkCollisions()
 			player->setState(PlayerState::SHRUNK);
 			Sounds::play(shrink);
 		}
-			
+		if (tag == "disruptor")
+		{
+			Entity* ball = balls.at(0);
+			std::vector<Entity*> moreBalls = reinterpret_cast<Ball*>(ball)->disrupt();
+			balls.push_back(moreBalls.at(0));
+			balls.push_back(moreBalls.at(1));
+		}
 	};
 	entities::checkCollidesWithAndNotify(powerUps, player, &onPowerUpHitPlayer);
 

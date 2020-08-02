@@ -35,6 +35,31 @@ void Ball::increaseSpeed()
 	velocity += velocity * 0.1f * (1.0f - velocity.squareMagnitude() / Constants::BALL_SPEED_MAX_SQUARED);
 }
 
+std::vector<Entity*> Ball::disrupt()
+{
+	// Seed the RNG
+	srand(SDL_GetTicks());
+
+	float pi = 2 * std::acos(0);
+	int randomAngleDegrees = (rand() % 180) + 1; // between 1 and 180
+	float randomAngleRadians = randomAngleDegrees * (pi / 180.0f);
+
+	Ball* ballCopyOne = new Ball(*this);
+	ballCopyOne->velocity = velocity.rotated(randomAngleRadians);
+
+	randomAngleDegrees = (rand() % 180) + 1; // between 1 and 180
+	randomAngleRadians = randomAngleDegrees * (pi / 180.0f);
+
+	Ball* ballCopyTwo = new Ball(*this);
+	ballCopyTwo->velocity = velocity.rotated(randomAngleRadians);
+
+	// Make sure they're both pointing up
+	ballCopyOne->velocity.y = abs(ballCopyOne->velocity.y) * -1.0f;
+	ballCopyTwo->velocity.y = abs(ballCopyOne->velocity.y) * -1.0f;
+
+	return std::vector<Entity*>{ ballCopyOne, ballCopyTwo };
+}
+
 void Ball::reset(Vector2 position)
 {
 	this->velocity = Vector2::zero;

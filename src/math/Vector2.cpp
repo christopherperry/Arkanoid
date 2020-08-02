@@ -26,6 +26,14 @@ float Vector2::squareMagnitude()
 	return (x * x) + (y * y);
 }
 
+Vector2 Vector2::rotated(float angleRadians)
+{
+	return Vector2(
+		x * cos(angleRadians) - y * sin(angleRadians),
+		x * sin(angleRadians) + y * cos(angleRadians)
+	);
+}
+
 Vector2 Vector2::normalized()
 {
 	return *this * (1.0f / magnitude());

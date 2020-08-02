@@ -13,6 +13,7 @@ public:
 	float dot(const Vector2& other);
 	float magnitude();
 	float squareMagnitude();
+	Vector2 rotated(float angleRadians);
 	Vector2 normalized();
 	Vector2 operator-(const Vector2& other);
 	Vector2 operator+(const Vector2& other);

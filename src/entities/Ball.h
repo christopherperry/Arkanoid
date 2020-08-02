@@ -17,6 +17,7 @@ public:
 	static Ball* createNew(SDL_Texture* texture, Vector2 position, Mix_Chunk* hitBrickSound, Mix_Chunk* hitUnbreakableBrickSound, Mix_Chunk* hitPaddleSound);
 	void launch();
 	void increaseSpeed();
+	std::vector<Entity*> disrupt();
 	void reset(Vector2 position);
 	void update(float deltaTime);
 	void onCollision(Hit* hit) override;
