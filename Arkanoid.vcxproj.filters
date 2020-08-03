@@ -90,9 +90,6 @@
     <ClCompile Include="src\powerups\ShrinkCapsule.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Constants.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\levels\LevelLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

@@ -13,10 +13,8 @@ enum WinPanelSprites
 	LOGO
 };
 
-GameWinPanel::GameWinPanel(SDL_Texture* texture, SDL_Renderer* renderer, TTF_Font* font, SDL_Rect panelRect)
+GameWinPanel::GameWinPanel(SDL_Texture* texture, SDL_Renderer* renderer, TTF_Font* font, SDL_Rect panelRect) : panelRect{ panelRect }
 {
-	this->panelRect = panelRect;
-
 	SDL_Color white{ 255, 255, 255, 255 };
 
 	text = {

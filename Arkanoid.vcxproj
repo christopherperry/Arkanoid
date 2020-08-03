@@ -159,7 +159,6 @@ copy $(ProjectDir)lib\*  $(OutDir)</Command>
     <ClCompile Include="src\GameWinPanel.cpp" />
     <ClCompile Include="src\RoundStartPanel.cpp" />
     <ClCompile Include="src\Sounds.cpp" />
-    <ClCompile Include="src\Constants.cpp" />
     <ClCompile Include="src\levels\LevelBrickLoader.cpp" />
     <ClCompile Include="src\powerups\ShrinkCapsule.cpp" />
     <ClCompile Include="src\BulletSpawner.cpp" />

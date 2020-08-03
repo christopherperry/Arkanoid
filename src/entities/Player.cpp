@@ -71,7 +71,7 @@ void Player::update(float deltaTime)
 		directionX = 1;
 	}
 
-	velocity = Vector2(directionX * moveSpeed * deltaTime, 0.0f);
+	velocity = Vector2(directionX * Constants::PLAYER_MOVE_SPEED * deltaTime, 0.0f);
 	position.x += velocity.x;
 
 	boundingBox.moveBy(velocity.x, 0);

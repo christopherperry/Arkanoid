@@ -18,10 +18,8 @@ enum RoundStartPanelText
 	ROUND_NUMBER,
 };
 
-RoundStartPanel::RoundStartPanel(SDL_Renderer* renderer, TTF_Font* font, SDL_Rect panelRect)
+RoundStartPanel::RoundStartPanel(SDL_Renderer* renderer, TTF_Font* font, SDL_Rect panelRect) : panelRect{ panelRect }
 {
-	this->panelRect = panelRect;
-
 	SDL_Color red{ 188, 25, 0, 255 };
 
 	text = {

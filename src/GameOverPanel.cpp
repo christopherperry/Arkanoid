@@ -6,10 +6,8 @@ enum GameOverPanelText
 	GAME_OVER
 };
 
-GameOverPanel::GameOverPanel(SDL_Renderer* renderer, TTF_Font* font, SDL_Rect panelRect)
+GameOverPanel::GameOverPanel(SDL_Renderer* renderer, TTF_Font* font, SDL_Rect panelRect) : panelRect{ panelRect }
 {
-	this->panelRect = panelRect;
-
 	SDL_Color red{ 188, 25, 0, 255 };
 
 	text = {

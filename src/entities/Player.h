@@ -24,7 +24,6 @@ class Player: public Entity
 private:
 	bool movingLeft = false;
 	bool movingRight = false;
-	float moveSpeed = 400 / 1000.0f; // pixels per second, time is in milliseconds
 	PlayerSpriteRenderer* spriteRenderer;
 	PlayerState state{ PlayerState::REGULAR };
 	Vector2 startPosition;

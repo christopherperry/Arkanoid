@@ -31,10 +31,8 @@ enum ScoresPanelText
 	LEVEL
 };
 
-ScoresPanel::ScoresPanel(SDL_Renderer* renderer, TTF_Font* font, Vector2 position)
+ScoresPanel::ScoresPanel(SDL_Renderer* renderer, TTF_Font* font, Vector2 position) : position{ position }
 {
-	this->position = position;
-
 	SDL_Color white{ 255, 255, 255, 255 };
 	SDL_Color red{ 188, 25, 0, 255 };
 
