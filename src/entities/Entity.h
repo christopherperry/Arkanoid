@@ -57,7 +57,7 @@ namespace entities
 		for (std::vector<Entity*>::iterator it = newEnd; it != entities.end(); ++it)
 		{
 			f(*it);
-			delete (*it);
+			SafeDelete(*it);
 		}
 		entities.erase(newEnd, entities.end());
 	}

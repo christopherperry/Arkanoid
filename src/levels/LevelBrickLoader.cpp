@@ -9,6 +9,7 @@
 #include "../entities/Wall.h"
 #include "../entities/WallCollider.h"
 #include "../Constants.h"
+#include "../utils/Util.h"
 
 std::vector<std::vector<int>> levelZero()
 {
@@ -262,7 +263,7 @@ LevelBrickLoader::~LevelBrickLoader()
 {
 	for (auto const&[spriteId, sprite] : sprites)
 	{
-		delete sprite;
+		SafeDelete(sprite);
 	}
 }
 

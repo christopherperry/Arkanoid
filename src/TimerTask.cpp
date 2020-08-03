@@ -1,5 +1,6 @@
 #include <algorithm>
 #include "TimerTask.h"
+#include "utils/Util.h"
 
 void TimerTask::update(float deltaTime)
 {
@@ -32,7 +33,7 @@ void TimerTask::removeFinished(std::vector<TimerTask*>& tasks)
 	std::vector<TimerTask*>::iterator newEnd = std::partition(tasks.begin(), tasks.end(), [=](TimerTask* e) -> bool { return !e->isFinished(); });
 	for (std::vector<TimerTask*>::iterator it = newEnd; it != tasks.end(); ++it)
 	{
-		delete (*it);
+		SafeDelete(*it);
 	}
 	tasks.erase(newEnd, tasks.end());
 }

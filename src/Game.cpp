@@ -11,6 +11,7 @@
 #include "Text.h"
 #include "TextRenderer.h"
 #include "utils/Logger.h"
+#include "utils/Util.h"
 
 Game::Game(float windowWidth, float windowHeight, SDL_Renderer* renderer, SDL_Texture* texture) :
 	windowWidth{ windowWidth }, windowHeight{ windowHeight }, renderer{ renderer }, texture{ texture }
@@ -55,11 +56,11 @@ Game::~Game()
 	Mix_FreeMusic(gameStart);
 	Mix_FreeMusic(gameEnd);
 
-	delete player;
-	delete scoresPanel;
-	delete levelLoader;
-	delete bulletSpawner;
-	delete ballLossArea;
+	SafeDelete(player);
+	SafeDelete(scoresPanel);
+	SafeDelete(levelLoader);
+	SafeDelete(bulletSpawner);
+	SafeDelete(ballLossArea);
 }
 
 void Game::loadLevel(int levelNumber)
@@ -294,7 +295,7 @@ void Game::checkCollisions()
 		{
 			hitPlayer->velocity = player->getVelocity();
 			ball->onCollision(hitPlayer);
-			delete hitPlayer;
+			SafeDelete(hitPlayer);
 		}
 		else
 		{

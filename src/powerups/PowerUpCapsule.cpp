@@ -1,4 +1,5 @@
 #include "PowerUpCapsule.h"
+#include "../utils/Util.h"
 
 PowerUpCapsule::PowerUpCapsule(Vector2 position) : Entity(nullptr, AABB{ position, Vector2{ 11.5f, 5.5f } }, position)
 {
@@ -9,7 +10,7 @@ PowerUpCapsule::~PowerUpCapsule()
 {
 	for (auto const&[_, sprite] : sprites)
 	{
-		delete sprite;
+		SafeDelete(sprite);
 	}
 }
 

@@ -7,6 +7,7 @@
 #include "../entities/Brick.h"
 #include "../entities/Wall.h"
 #include "../entities/WallCollider.h"
+#include "../utils/Util.h"
 
 // The tiles are square 31x31
 static const int TILE_SIZE = 31;
@@ -99,11 +100,11 @@ LevelLoader::LevelLoader(SDL_Texture* texture)
 
 LevelLoader::~LevelLoader()
 {
-	delete levelBrickLoader;
+	SafeDelete(levelBrickLoader);
 
 	for (auto const&[spriteId, sprite] : sprites)
 	{
-		delete sprite;
+		SafeDelete(sprite);
 	}
 }
 

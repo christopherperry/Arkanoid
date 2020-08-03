@@ -1,4 +1,5 @@
 #include "Entity.h"
+#include "../utils/Util.h"
 
 bool Entity::collidesWith(Entity& other)
 {
@@ -45,7 +46,7 @@ void entities::deleteAll(std::vector<Entity*>& entities)
 {
 	for (Entity* e : entities)
 	{
-		delete e;
+		SafeDelete(e);
 	}
 	entities.clear();
 }
@@ -97,7 +98,7 @@ void entities::checkAndNotifyCollisions(const std::vector<Entity*>& entities, En
 		{
 			(*other).onCollision(hit);
 			entity->onCollision(hit);
-			delete hit;
+			SafeDelete(hit);
 
 			if (f != nullptr)
 			{
