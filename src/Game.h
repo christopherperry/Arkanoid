@@ -143,6 +143,8 @@ private:
 	void onBallLoss();
 public:
 	Game(float windowWidth, float windowHeight, SDL_Renderer* renderer, SDL_Texture* texture);
+	Game(const Game&) = delete;
+	Game& operator=(const Game&) = delete;
 	~Game();
 	void onEvent(SDL_Event e);
 	void update(float deltaTime);

@@ -1,7 +1,7 @@
-#include "Logger.h"
 #include <string>
 #include <iostream>
 #include <SDL.h>
+#include "Logger.h"
 
 void Logger::logSDLError(const std::string & message)
 {

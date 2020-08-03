@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SDL.h>
-#include "Collider.h"
+#include "Hit.h"
 #include "../math/Vector2.h"
 
 class AABB
@@ -9,10 +9,10 @@ class AABB
 private:
 	void render(SDL_Renderer* renderer, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
 	
-	Vector2 normalLeft = Vector2::left;
-	Vector2 normalRight = Vector2::right;
-	Vector2 normalTop = Vector2::up;
-	Vector2 normalBottom = Vector2::down;
+	Vector2 normalLeft{ Vector2::left };
+	Vector2 normalRight{ Vector2::right };
+	Vector2 normalTop{ Vector2::up };
+	Vector2 normalBottom{ Vector2::down };
 
 public:
 	Vector2 position;

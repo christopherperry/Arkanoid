@@ -9,6 +9,8 @@ class LevelBrickLoader
 {
 public:
 	LevelBrickLoader(SDL_Texture* texture);
+	LevelBrickLoader(const LevelBrickLoader&) = delete;
+	LevelBrickLoader& operator=(const LevelBrickLoader&) = delete;
 	~LevelBrickLoader();
 	std::vector<Entity*> loadLevel(int level);
 private:

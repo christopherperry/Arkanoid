@@ -212,7 +212,6 @@ copy $(ProjectDir)lib\*  $(OutDir)</Command>
     <ClInclude Include="src\ScoresPanel.h" />
     <ClInclude Include="src\entities\BallLossArea.h" />
     <ClInclude Include="src\entities\BackgroundTile.h" />
-    <ClInclude Include="src\collisions\Collider.h" />
     <ClInclude Include="src\collisions\Hit.h" />
     <ClInclude Include="src\entities\Ball.h" />
     <ClInclude Include="src\entities\Player.h" />

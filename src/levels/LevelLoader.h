@@ -11,6 +11,8 @@ class LevelLoader
 {
 public:
 	LevelLoader(SDL_Texture* texture);
+	LevelLoader& operator=(const LevelLoader&) = delete;
+	LevelLoader(const LevelLoader&) = delete;
 	~LevelLoader();
 	std::vector<Entity*> loadWallColliders(int level);
 	std::vector<Entity*> loadNonColliders(int level);

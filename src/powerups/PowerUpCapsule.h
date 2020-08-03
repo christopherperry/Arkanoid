@@ -18,6 +18,8 @@ protected:
 	AnimationFrames animationFrames{ 7, 75, true };
 public:
 	PowerUpCapsule(Vector2 position);
+	PowerUpCapsule(const PowerUpCapsule&) = delete;
+	PowerUpCapsule& operator=(const PowerUpCapsule&) = delete;
 	~PowerUpCapsule();
 	void update(float deltaTimeMillis);
 	void render(SDL_Renderer* renderer) override;
