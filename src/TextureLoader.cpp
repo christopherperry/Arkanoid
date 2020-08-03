@@ -1,7 +1,7 @@
 #include <SDL.h>
 #include <string>
 #include "TextureLoader.h"
-#include "utils/logger.h"
+#include "utils/Logger.h"
 
 SDL_Texture* TextureLoader::load(SDL_Renderer* renderer, const std::string& filename)
 {

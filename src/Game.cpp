@@ -1,16 +1,16 @@
 #include <map>
 #include <vector>
 #include <algorithm>
-#include "Constants.h"
 #include "Game.h"
-#include "sprites/sprite.h"
+#include "Constants.h"
+#include "sprites/Sprite.h"
 #include "entities/Entity.h"
 #include "entities/Player.h"
 #include "entities/Ball.h"
 #include "Sounds.h"
 #include "Text.h"
 #include "TextRenderer.h"
-#include "utils/logger.h"
+#include "utils/Logger.h"
 
 Game::Game(float windowWidth, float windowHeight, SDL_Renderer* renderer, SDL_Texture* texture) :
 	windowWidth{ windowWidth }, windowHeight{ windowHeight }, renderer{ renderer }, texture{ texture }

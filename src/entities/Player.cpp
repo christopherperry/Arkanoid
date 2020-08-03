@@ -1,5 +1,5 @@
 #include "Player.h"
-#include "../utils/logger.h"
+#include "../utils/Logger.h"
 #include "../Constants.h"
 
 // TODO: update this when we have more states

@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <SDL.h>
 #include "../collisions/AABB.h"
-#include "../sprites/sprite.h"
+#include "../sprites/Sprite.h"
 #include "../math/Vector2.h"
 #include "../utils/Functions.h"
 

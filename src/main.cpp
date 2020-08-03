@@ -3,9 +3,8 @@
 #include <SDL_mixer.h>
 #include <SDL_ttf.h>
 #include <map>
-#include "resources.h"
-#include "utils/cleanup.h"
-#include "utils/logger.h"
+#include "Resources.h"
+#include "utils/Logger.h"
 #include "TextureLoader.h"
 #include "Game.h"
 #include "Text.h"
@@ -38,15 +37,16 @@ int main(int argc, char *argv[])
 
 	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	if (renderer == nullptr) {
-		cleanup(window);
 		Logger::logSDLError("SDL_CreateRenderer");
+		SDL_DestroyWindow(window);
 		SDL_Quit();
 		return 1;
 	}
 
 	SDL_Texture* texture = TextureLoader::load(renderer, getResourcePath() + "spritesheet.bmp"); // 640x480
 	if (texture == nullptr) {
-		cleanup(texture, renderer, window);
+		SDL_DestroyWindow(window);
+		SDL_DestroyRenderer(renderer);
 		SDL_Quit();
 		return 1;
 	}
@@ -124,7 +124,9 @@ int main(int argc, char *argv[])
 		lastFrameTime = currentTime;
 	}
 
-	cleanup(texture, renderer, window);
+	SDL_DestroyTexture(texture);
+	SDL_DestroyRenderer(renderer);
+	SDL_DestroyWindow(window);
 
 	Mix_Quit();
 	SDL_Quit();

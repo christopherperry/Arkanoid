@@ -2,7 +2,7 @@
 #include <map>
 #include <vector>
 #include <SDL.h>
-#include "../sprites/sprite.h"
+#include "../sprites/Sprite.h"
 #include "../entities/Entity.h"
 
 class LevelBrickLoader

@@ -3,7 +3,7 @@
 #include <map>
 #include <vector>
 #include "Constants.h"
-#include "sprites/sprite.h"
+#include "sprites/Sprite.h"
 #include "entities/Entity.h"
 #include "entities/Player.h"
 #include "entities/Ball.h"

@@ -3,7 +3,7 @@
 #include <SDL.h>
 #include <map>
 #include "Entity.h"
-#include "../sprites/sprite.h"
+#include "../sprites/Sprite.h"
 #include "../PlayerSpriteRenderer.h"
 
 enum class PlayerState

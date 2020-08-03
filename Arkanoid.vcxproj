@@ -220,7 +220,6 @@ copy $(ProjectDir)lib\*  $(OutDir)</Command>
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\entities\Entity.h" />
     <ClInclude Include="src\collisions\AABB.h" />
-    <ClInclude Include="src\utils\cleanup.h" />
     <ClInclude Include="src\utils\Functions.h" />
     <ClInclude Include="src\utils\logger.h" />
     <ClInclude Include="src\resources.h" />

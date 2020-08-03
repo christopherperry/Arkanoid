@@ -3,7 +3,7 @@
 #include <SDL.h>
 #include <map>
 #include "PowerUpCapsule.h"
-#include "../sprites/sprite.h"
+#include "../sprites/Sprite.h"
 #include "../AnimationFrames.h"
 
 class DisruptorCapsule : public PowerUpCapsule

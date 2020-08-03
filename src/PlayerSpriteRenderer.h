@@ -2,7 +2,7 @@
 
 #include <map>
 #include <SDL.h>
-#include "sprites/sprite.h"
+#include "sprites/Sprite.h"
 #include "math/Vector2.h"
 #include "AnimationFrames.h"
 

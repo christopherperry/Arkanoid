@@ -1,6 +1,6 @@
 #include "GameStartPanel.h"
 #include "TextRenderer.h"
-#include "sprites/sprite.h"
+#include "sprites/Sprite.h"
 
 enum StartPanelText
 {

@@ -4,7 +4,7 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include "Text.h"
-#include "sprites/sprite.h"
+#include "sprites/Sprite.h"
 
 class GameStartPanel
 {

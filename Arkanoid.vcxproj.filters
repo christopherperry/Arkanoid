@@ -137,9 +137,6 @@
     <ClInclude Include="src\ScoresPanel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\utils\cleanup.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\utils\Util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
