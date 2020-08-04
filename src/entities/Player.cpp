@@ -128,7 +128,7 @@ void Player::setState(PlayerState state)
 bool Player::canFireBullets()
 {
 	float currentTime = SDL_GetTicks();
-	bool isBulletTime = (currentTime - lastBulletSpawnTime) >= timeUntilNextBulletSpawn;
+	bool isBulletTime = (currentTime - lastBulletSpawnTime) >= Constants::TIME_BETWEEN_BULLET_SPAWNS;
 	return state == PlayerState::GUNNER && isBulletTime;
 }
 

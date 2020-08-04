@@ -27,7 +27,6 @@ private:
 
 	Sprite* bulletSprite;
 	float lastBulletSpawnTime;
-	const float timeUntilNextBulletSpawn{ 200 };
 
 	PlayerSpriteRenderer* spriteRenderer;
 	PlayerState state{ PlayerState::REGULAR };
