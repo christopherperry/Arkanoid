@@ -9,7 +9,7 @@ Brick::Brick(Sprite * sprite, AABB boundingBox, Vector2 position, int numHitsToD
 	outlineRect = SDL_Rect{ (int) position.x - sizeX, (int) position.y - sizeY, sizeX * 2, sizeY * 2 };
 }
 
-void Brick::render(SDL_Renderer* renderer)
+void Brick::render(SDL_Renderer* renderer) const
 {
 	Entity::render(renderer);
 
@@ -22,7 +22,7 @@ void Brick::onCollision(Hit* hit)
 	totalHits++;
 }
 
-bool Brick::isAlive()
+bool Brick::isAlive() const
 {
 	if (numHitsToDestroy == -1) return true;
 	return totalHits < numHitsToDestroy;

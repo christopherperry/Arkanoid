@@ -11,6 +11,6 @@ public:
 	Bullet(Sprite* sprite, AABB boundingBox, Vector2 position) : Entity(sprite, boundingBox, position) {};
 	void update(float deltaTimeMillis);
 	void onCollision(Hit* hit) override;
-	bool isAlive() override;
+	bool isAlive() const override;
 };
 

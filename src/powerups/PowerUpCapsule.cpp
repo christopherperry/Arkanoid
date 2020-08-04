@@ -21,10 +21,10 @@ void PowerUpCapsule::update(float deltaTimeMillis)
 	animationFrames.update(deltaTimeMillis);
 }
 
-void PowerUpCapsule::render(SDL_Renderer* renderer)
+void PowerUpCapsule::render(SDL_Renderer* renderer) const
 {
 	int frameNumber = animationFrames.getCurrentFrame();
-	Sprite* sprite = sprites[frameNumber];
+	Sprite* sprite = sprites.at(frameNumber);
 
 	SDL_Rect location;
 	location.x = position.x - (sprite->rect.w * 0.5f);
@@ -40,7 +40,7 @@ void PowerUpCapsule::onCollision(Hit* hit)
 	numHits++;
 }
 
-bool PowerUpCapsule::isAlive()
+bool PowerUpCapsule::isAlive() const
 {
 	return numHits == 0;
 }

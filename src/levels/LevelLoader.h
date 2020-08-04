@@ -14,9 +14,9 @@ public:
 	LevelLoader& operator=(const LevelLoader&) = delete;
 	LevelLoader(const LevelLoader&) = delete;
 	~LevelLoader();
-	std::vector<Entity*> loadWallColliders(int level);
-	std::vector<Entity*> loadNonColliders(int level);
-	std::vector<Entity*> loadBricks(int level);
+	std::vector<Entity*> loadWallColliders(int level) const;
+	std::vector<Entity*> loadNonColliders(int level) const;
+	std::vector<Entity*> loadBricks(int level) const;
 private:
 	LevelBrickLoader* levelBrickLoader;
 	std::map<int, Sprite*> sprites;

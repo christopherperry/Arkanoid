@@ -22,9 +22,9 @@ public:
 	PowerUpCapsule& operator=(const PowerUpCapsule&) = delete;
 	~PowerUpCapsule();
 	void update(float deltaTimeMillis);
-	void render(SDL_Renderer* renderer) override;
+	void render(SDL_Renderer* renderer) const override;
 	void onCollision(Hit* hit) override;
-	bool isAlive() override;
-	virtual PowerUp getPowerUp() = 0;
+	bool isAlive() const override;
+	virtual PowerUp getPowerUp() const = 0;
 };
 

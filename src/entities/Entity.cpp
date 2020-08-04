@@ -1,13 +1,13 @@
 #include "Entity.h"
 #include "../utils/Util.h"
 
-bool Entity::collidesWith(Entity& other)
+bool Entity::collidesWith(const Entity& other) const
 {
 	if (!other.isCollidable()) return false;
 	return this->boundingBox.checkCollision(other.boundingBox);
 }
 
-Hit* Entity::checkCollision(Entity& other)
+Hit* Entity::checkCollision(const Entity& other) const
 {
 	if (!other.isCollidable()) return nullptr;
 	Hit* hit = this->boundingBox.checkIntersection(other.boundingBox);
@@ -15,7 +15,7 @@ Hit* Entity::checkCollision(Entity& other)
 	return hit;
 }
 
-void Entity::render(SDL_Renderer* renderer)
+void Entity::render(SDL_Renderer* renderer) const
 {
 	SDL_Rect location;
 	location.x = position.x - (sprite->rect.w * 0.5f);
@@ -32,12 +32,12 @@ void Entity::render(SDL_Renderer* renderer)
 	SDL_RenderSetScale(renderer, 1.0f, 1.0f);
 }
 
-void Entity::renderColliders(SDL_Renderer* renderer)
+void Entity::renderColliders(SDL_Renderer* renderer) const
 {
 	boundingBox.render(renderer);
 }
 
-void Entity::renderCollidersHit(SDL_Renderer* renderer)
+void Entity::renderCollidersHit(SDL_Renderer* renderer) const
 {
 	boundingBox.renderHit(renderer);
 }
@@ -71,17 +71,17 @@ bool entities::containsOnly(const std::vector<Entity*>& entities, std::string ta
 
 void entities::removeDead(std::vector<Entity*>& entities)
 {
-	std::vector<Entity*>::iterator newEnd = std::partition(entities.begin(), entities.end(), [=](Entity* e) -> bool { return e->isAlive(); });
+	std::vector<Entity*>::iterator newEnd = std::partition(entities.begin(), entities.end(), [&](const Entity* e) -> bool { return e->isAlive(); });
 	entities.erase(newEnd, entities.end());
 }
 
-void entities::removeIfColliding(std::vector<Entity*>& entities, Entity* entity)
+void entities::removeIfColliding(std::vector<Entity*>& entities, const Entity& entity)
 {
-	std::vector<Entity*>::iterator newEnd = std::remove_if(entities.begin(), entities.end(), [=](Entity* e) -> bool { return e->collidesWith(*entity); });
+	std::vector<Entity*>::iterator newEnd = std::remove_if(entities.begin(), entities.end(), [&](const Entity* e) -> bool { return e->collidesWith(entity); });
 	entities.erase(newEnd, entities.end());
 }
 
-void entities::renderAll(std::vector<Entity*>& entities, SDL_Renderer* renderer)
+void entities::renderAll(const std::vector<Entity*>& entities, SDL_Renderer* renderer)
 {
 	for (Entity* e : entities)
 	{
@@ -89,15 +89,15 @@ void entities::renderAll(std::vector<Entity*>& entities, SDL_Renderer* renderer)
 	}
 }
 
-void entities::checkAndNotifyCollisions(const std::vector<Entity*>& entities, Entity* entity, functions::Func* f)
+void entities::checkAndNotifyCollisions(const std::vector<Entity*>& entities, Entity& entity, functions::Func* f)
 {
 	for (Entity* other : entities)
 	{
-		Hit* hit = entity->checkCollision(*other);
+		Hit* hit = entity.checkCollision(*other);
 		if (hit != nullptr)
 		{
 			(*other).onCollision(hit);
-			entity->onCollision(hit);
+			entity.onCollision(hit);
 			SafeDelete(hit);
 
 			if (f != nullptr)
@@ -108,11 +108,11 @@ void entities::checkAndNotifyCollisions(const std::vector<Entity*>& entities, En
 	}
 }
 
-void entities::checkCollidesWithAndNotify(const std::vector<Entity*>& entities, Entity* entity, functions::Func1<Entity*>* f)
+void entities::checkCollidesWithAndNotify(const std::vector<Entity*>& entities, Entity& entity, functions::Func1<Entity*>* f)
 {
 	for (Entity* other : entities)
 	{
-		if (other->collidesWith(*entity))
+		if (other->collidesWith(entity))
 		{
 			other->onCollision(nullptr);
 			if (f != nullptr) (*f)(other);

@@ -108,7 +108,7 @@ LevelLoader::~LevelLoader()
 	}
 }
 
-std::vector<Entity*> LevelLoader::loadWallColliders(int level)
+std::vector<Entity*> LevelLoader::loadWallColliders(int level) const
 {
 	// Create separate Entities for the walls because having boxes for each tile causes collision issues
 	Vector2 leftPosition(TILE_SIZE * 0.5f, NUM_TILES_HIGH * TILE_SIZE * 0.5f);
@@ -126,7 +126,7 @@ std::vector<Entity*> LevelLoader::loadWallColliders(int level)
 	return std::vector<Entity*>{ leftWall, rightWall, topWall };
 }
 
-std::vector<Entity*> LevelLoader::loadNonColliders(int level)
+std::vector<Entity*> LevelLoader::loadNonColliders(int level) const
 {
 	std::vector<Entity*> entities;
 	float locationX, locationY;
@@ -141,7 +141,7 @@ std::vector<Entity*> LevelLoader::loadNonColliders(int level)
 			locationX = (j * TILE_SIZE) + OFFSET;
 			Vector2 position{ locationX, locationY };
 			AABB boundingBox{ position, {TILE_SIZE * 0.5f, TILE_SIZE * 0.5f} };
-			entities.push_back(new BackgroundTile{ sprites[SpriteId::BACKGROUND_BLUE], boundingBox, position });
+			entities.push_back(new BackgroundTile{ sprites.at(SpriteId::BACKGROUND_BLUE), boundingBox, position });
 		}
 	}
 
@@ -161,14 +161,14 @@ std::vector<Entity*> LevelLoader::loadNonColliders(int level)
 			locationX = (j * TILE_SIZE) + OFFSET;
 			Vector2 position{ locationX, locationY };
 
-			entities.push_back(new Wall{ sprites[spriteId], position });
+			entities.push_back(new Wall(sprites.at(spriteId), position ));
 		}
 	}
 
 	return entities;
 }
 
-std::vector<Entity*> LevelLoader::loadBricks(int level)
+std::vector<Entity*> LevelLoader::loadBricks(int level) const
 {
 	return levelBrickLoader->loadLevel(level);
 }

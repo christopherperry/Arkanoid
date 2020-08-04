@@ -15,8 +15,8 @@ public:
 	AnimationFrames(int totalFrames, float millisPerFrame, bool isLooping) : totalFrames{ totalFrames }, millisPerFrame{ millisPerFrame }, isLooping{ isLooping } {};
 	void startAnimation();
 	void reset();
-	bool isFinished();
+	bool isFinished() const;
 	void update(float deltaTimeMillis);
-	int getCurrentFrame();
+	int getCurrentFrame() const;
 };
 

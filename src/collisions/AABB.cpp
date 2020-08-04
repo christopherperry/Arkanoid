@@ -22,7 +22,7 @@ void AABB::moveTo(Vector2 position)
 	this->position = position;
 }
 
-bool AABB::checkCollision(const AABB& other)
+bool AABB::checkCollision(const AABB& other) const
 {
 	int thisMinX = position.x - extents.x;
 	int thisMaxX = position.x + extents.x;
@@ -38,7 +38,7 @@ bool AABB::checkCollision(const AABB& other)
 		(thisMinY <= otherMaxY && thisMaxY >= otherMinY);
 }
 
-Hit* AABB::checkIntersection(const AABB& other)
+Hit* AABB::checkIntersection(const AABB& other) const
 {
 	// Difference in positions along the x-axis
 	const float dx = other.position.x - position.x;
@@ -83,17 +83,17 @@ Hit* AABB::checkIntersection(const AABB& other)
 	return hit;
 }
 
-void AABB::render(SDL_Renderer* renderer)
+void AABB::render(SDL_Renderer* renderer) const
 {
 	render(renderer, 0x00, 0xFF, 0x00, 0xFF);
 }
 
-void AABB::renderHit(SDL_Renderer* renderer)
+void AABB::renderHit(SDL_Renderer* renderer) const
 {
 	render(renderer, 0xFF, 0x00F, 0x00, 0xFF);
 }
 
-void AABB::render(SDL_Renderer* renderer, Uint8 r, Uint8 g, Uint8 b, Uint8 a)
+void AABB::render(SDL_Renderer* renderer, Uint8 r, Uint8 g, Uint8 b, Uint8 a) const
 {
 	SDL_Rect renderRect;
 	renderRect.x = position.x - extents.x;
@@ -104,4 +104,3 @@ void AABB::render(SDL_Renderer* renderer, Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 	SDL_SetRenderDrawColor(renderer, r, g, b, a);
 	SDL_RenderDrawRect(renderer, &renderRect);
 }
-

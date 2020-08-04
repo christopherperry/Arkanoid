@@ -21,5 +21,5 @@ public:
 	void reset(Vector2 position);
 	void update(float deltaTime);
 	void onCollision(Hit* hit) override;
-	std::string tag() override { return "ball"; }
+	std::string tag() const override { return "ball"; }
 };

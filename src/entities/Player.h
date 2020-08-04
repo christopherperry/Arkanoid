@@ -26,7 +26,7 @@ private:
 	bool movingRight = false;
 
 	Sprite* bulletSprite;
-	float lastBulletSpawnTime;
+	mutable float lastBulletSpawnTime;
 
 	PlayerSpriteRenderer* spriteRenderer;
 	PlayerState state{ PlayerState::REGULAR };
@@ -34,22 +34,25 @@ private:
 	Vector2 velocity;
 	Player(SDL_Texture* texture, Vector2 position, Vector2 scale);
 public:
+
+	static Player* createNew(SDL_Texture* const texture);
 	Player() = delete;
 	Player(const Player&) = delete;
 	Player& operator=(const Player&) = delete;
-	static Player* createNew(SDL_Texture* texture);
-	Vector2 getPaddleTopCenterPosition();
-	Vector2 getVelocity() override;
+
+	PlayerState getState() const;
+	Vector2 getPaddleTopCenterPosition() const;
+	Vector2 getVelocity() const override;
+	bool isReadyToLaunch() const;
+	void render(SDL_Renderer* renderer) const override;
+	bool canFireBullets() const;
+	std::pair<Entity*, Entity*> fireBullets() const;
+	std::string tag() const override { return "player"; }
+
 	void update(float deltaTime);
 	void onCollision(Hit* hit) override;
 	void onEvent(SDL_Event event);
-	void render(SDL_Renderer* renderer) override;
 	void setState(PlayerState state);
-	bool canFireBullets();
-	std::pair<Entity*, Entity*> fireBullets();
-	PlayerState getState();
-	bool isReadyToLaunch();
 	void reset();
-	std::string tag() override { return "player"; }
 };
 

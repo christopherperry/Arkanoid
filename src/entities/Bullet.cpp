@@ -12,7 +12,7 @@ void Bullet::onCollision(Hit * hit)
 	numHits++;
 }
 
-bool Bullet::isAlive()
+bool Bullet::isAlive() const
 {
 	return numHits == 0;
 }

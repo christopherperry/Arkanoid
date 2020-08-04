@@ -28,9 +28,11 @@ Player* Player::createNew(SDL_Texture * texture)
 	return new Player(texture, position, Vector2{ 1.5f, 1.5f });
 }
 
-Player::Player(SDL_Texture* texture, Vector2 position, Vector2 scale) : Entity(nullptr, AABB{ position, Vector2{ 21.0f, 5.5f } }, position, scale), startPosition{position}
+Player::Player(SDL_Texture* texture, Vector2 position, Vector2 scale) : 
+	Entity(nullptr, boxForState(state, position, scale), position, scale),
+	startPosition{position}
 {
-	boundingBox = boxForState(state, position, scale);
+	//boundingBox = boxForState(state, position, scale);
 	spriteRenderer = new PlayerSpriteRenderer(texture);
 
 	bulletSprite = new Sprite{ texture, SDL_Rect{398, 141, 5, 11} };
@@ -51,12 +53,12 @@ void Player::onEvent(SDL_Event event)
 	}
 }
 
-Vector2 Player::getPaddleTopCenterPosition()
+Vector2 Player::getPaddleTopCenterPosition() const
 {
 	return Vector2(boundingBox.position.x, boundingBox.position.y - boundingBox.extents.y);
 }
 
-Vector2 Player::getVelocity()
+Vector2 Player::getVelocity() const
 {
 	return velocity;
 }
@@ -88,7 +90,7 @@ void Player::onCollision(Hit* hit)
 	boundingBox.moveBy(-hit->delta.x, -hit->delta.y);
 }
 
-void Player::render(SDL_Renderer* renderer)
+void Player::render(SDL_Renderer* renderer) const
 {
 	spriteRenderer->render(renderer, position);
 
@@ -125,14 +127,14 @@ void Player::setState(PlayerState state)
 	}
 }
 
-bool Player::canFireBullets()
+bool Player::canFireBullets() const
 {
 	float currentTime = SDL_GetTicks();
 	bool isBulletTime = (currentTime - lastBulletSpawnTime) >= Constants::TIME_BETWEEN_BULLET_SPAWNS;
 	return state == PlayerState::GUNNER && isBulletTime;
 }
 
-std::pair<Entity*, Entity*> Player::fireBullets()
+std::pair<Entity*, Entity*> Player::fireBullets() const
 {
 	// 19 offset on the x
 	// 11 offset on the y
@@ -151,12 +153,12 @@ std::pair<Entity*, Entity*> Player::fireBullets()
 	return std::pair<Bullet*, Bullet*>(leftBullet, rightBullet);
 }
 
-PlayerState Player::getState()
+PlayerState Player::getState() const
 {
 	return state;
 }
 
-bool Player::isReadyToLaunch()
+bool Player::isReadyToLaunch() const
 {
 	return !spriteRenderer->isAnimating();
 }

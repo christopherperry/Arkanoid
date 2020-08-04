@@ -275,7 +275,7 @@ void Game::checkCollisions()
 	}
 
 	// Balls vs Ball-Loss Invisible Area
-	entities::removeIfColliding(balls, ballLossArea);
+	entities::removeIfColliding(balls, *ballLossArea);
 	if (balls.size() == 0)
 	{
 		onBallLoss();
@@ -283,7 +283,7 @@ void Game::checkCollisions()
 	}
 
 	// Player vs. Walls
-	entities::checkAndNotifyCollisions(wallColliders, player);
+	entities::checkAndNotifyCollisions(wallColliders, *player);
 
 	// Ball vs. Player
 	for (Entity* ball : balls)
@@ -298,11 +298,11 @@ void Game::checkCollisions()
 		else
 		{
 			// Ball vs. Walls
-			entities::checkAndNotifyCollisions(wallColliders, ball);
+			entities::checkAndNotifyCollisions(wallColliders, *ball);
 
 			// Ball vs. Bricks. The cast is ugly.
 			functions::Func onBallHitBrick = [&]() -> void { reinterpret_cast<Ball*>(ball)->increaseSpeed(); };
-			entities::checkAndNotifyCollisions(bricks, ball, &onBallHitBrick);
+			entities::checkAndNotifyCollisions(bricks, *ball, &onBallHitBrick);
 		}
 	}
 
@@ -330,7 +330,7 @@ void Game::checkCollisions()
 			balls.push_back(moreBalls.at(1));
 		}
 	};
-	entities::checkCollidesWithAndNotify(powerUps, player, &onPowerUpHitPlayer);
+	entities::checkCollidesWithAndNotify(powerUps, *player, &onPowerUpHitPlayer);
 
 	// Bullets vs Bricks
 	entities::checkCollidesWithAndEmptyNotify(bullets, bricks);

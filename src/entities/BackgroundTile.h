@@ -6,9 +6,9 @@ class BackgroundTile : public Entity
 {
 public:
 	BackgroundTile(Sprite* sprite, AABB boundingBox, Vector2 position) : Entity(sprite, boundingBox, position) {};
-	void renderColliders(SDL_Renderer* renderer) override { }; // do nothing
+	void renderColliders(SDL_Renderer* renderer) const override { }; // do nothing
 	void update(float deltaTime) override { }; // do nothing
-	bool collidesWith(Entity& other) override { return false; }
-	bool isCollidable() override { return false; }
+	bool collidesWith(const Entity& other) const override { return false; }
+	bool isCollidable() const override { return false; }
 };
 

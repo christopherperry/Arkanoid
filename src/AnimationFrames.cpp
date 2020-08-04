@@ -12,7 +12,7 @@ void AnimationFrames::reset()
 	frameTimerMillis = 0;
 }
 
-bool AnimationFrames::isFinished()
+bool AnimationFrames::isFinished() const
 {
 	if (isLooping)
 	{
@@ -47,7 +47,7 @@ void AnimationFrames::update(float deltaTimeMillis)
 	}
 }
 
-int AnimationFrames::getCurrentFrame()
+int AnimationFrames::getCurrentFrame() const
 {
 	return currentFrame;
 }
