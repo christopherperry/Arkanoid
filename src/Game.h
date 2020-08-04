@@ -17,7 +17,6 @@
 #include "GameOverPanel.h"
 #include "GameWinPanel.h"
 #include "powerups/PowerUpSpawner.h"
-#include "BulletSpawner.h"
 #include "TimerTask.h"
 
 enum class GameState
@@ -122,7 +121,6 @@ private:
 	GameOverPanel* gameOverPanel;
 	GameWinPanel* gameWinPanel;
 	PowerUpSpawner* powerUpSpawner;
-	BulletSpawner* bulletSpawner;
 
 	void renderGameStart();
 	void renderRoundStart();

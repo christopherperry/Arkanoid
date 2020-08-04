@@ -24,6 +24,11 @@ class Player: public Entity
 private:
 	bool movingLeft = false;
 	bool movingRight = false;
+
+	Sprite* bulletSprite;
+	float lastBulletSpawnTime;
+	const float timeUntilNextBulletSpawn{ 200 };
+
 	PlayerSpriteRenderer* spriteRenderer;
 	PlayerState state{ PlayerState::REGULAR };
 	Vector2 startPosition;
@@ -31,6 +36,8 @@ private:
 	Player(SDL_Texture* texture, Vector2 position, Vector2 scale);
 public:
 	Player() = delete;
+	Player(const Player&) = delete;
+	Player& operator=(const Player&) = delete;
 	static Player* createNew(SDL_Texture* texture);
 	Vector2 getPaddleTopCenterPosition();
 	Vector2 getVelocity() override;
@@ -39,6 +46,8 @@ public:
 	void onEvent(SDL_Event event);
 	void render(SDL_Renderer* renderer) override;
 	void setState(PlayerState state);
+	bool canFireBullets();
+	std::pair<Entity*, Entity*> fireBullets();
 	PlayerState getState();
 	bool isReadyToLaunch();
 	void reset();

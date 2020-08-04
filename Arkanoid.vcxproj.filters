@@ -84,9 +84,6 @@
     <ClCompile Include="src\entities\Bullet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\BulletSpawner.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\powerups\ShrinkCapsule.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -201,9 +198,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\entities\Bullet.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\BulletSpawner.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\powerups\ShrinkCapsule.h">

@@ -36,7 +36,6 @@ Game::Game(float windowWidth, float windowHeight, SDL_Renderer* renderer, SDL_Te
 	gameWinPanel = new GameWinPanel(texture, renderer, font, SDL_Rect{ 0, 0, Constants::NUM_TILES_WIDE * Constants::TILE_SIZE, Constants::NUM_TILES_HIGH * Constants::TILE_SIZE });
 	scoresPanel = new ScoresPanel(renderer, font, Vector2((Constants::NUM_TILES_WIDE * Constants::TILE_SIZE) + Constants::OFFSET, 0));
 	levelLoader = new LevelLoader(texture);
-	bulletSpawner = new BulletSpawner(texture);
 
 	player = Player::createNew(texture);
 	balls.push_back(Ball::createNew(texture, player->getPaddleTopCenterPosition() + Vector2{ 0.0f, 6.0f }, brickHit, brickHitUnbreakable, paddleHit));
@@ -59,7 +58,6 @@ Game::~Game()
 	SafeDelete(player);
 	SafeDelete(scoresPanel);
 	SafeDelete(levelLoader);
-	SafeDelete(bulletSpawner);
 	SafeDelete(ballLossArea);
 }
 
@@ -219,9 +217,9 @@ void Game::updateGameplay(float deltaTime)
 	entities::removeDead(bullets);
 	entities::updateEach(bullets, deltaTime);
 
-	if (spacePressed && player->getState() == PlayerState::GUNNER && bulletSpawner->canSpawn())
+	if (spacePressed && player->canFireBullets())
 	{
-		std::pair<Bullet*, Bullet*> bulletPair = bulletSpawner->spawn(player->getPosition());
+		std::pair<Entity*, Entity*> bulletPair = player->fireBullets();
 		bullets.push_back(bulletPair.first);
 		bullets.push_back(bulletPair.second);
 		Sounds::play(gunshot);
